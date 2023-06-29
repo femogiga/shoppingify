@@ -57,7 +57,7 @@ li a {
 
 .list-item {
     border: black 1px solid;
-    padding: .5rem 1rem;
+    padding: .5rem .9rem;
     border-radius: 10px;
 }
 
@@ -182,4 +182,12 @@ meter {
 
 .code-button>li>a {
     color: rgb(var(--color-blue))
+}
+
+li:hover{
+    background-color:  rgb(var(--color-blue));
+    color:white;
+}
+li:hover a{
+    color:white
 }
