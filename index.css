@@ -1,0 +1,171 @@
+:root {
+    --color-black: 0 0 0;
+    --color-blue: 51 87 165
+}
+
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Preset  */
+
+img {
+    max-inline-size: 100%;
+}
+
+body {
+    line-height: 1.2;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    color: rgb(var(--color-black)/.5)
+}
+
+.black {
+    color: rgb(var(--color-black))
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: rgb(var(--color-black))
+}
+
+ul {
+    list-style: none;
+}
+
+li{
+    border-radius:5px;
+}
+
+li a {
+    text-decoration: none;
+    color:rgb(var(--color-black));
+    font-weight: bold;
+}
+
+.list-item {
+    border: black 1px solid;
+    padding: .5rem 1rem;
+    border-radius: 10px;
+}
+
+
+
+.hero {
+    inline-size: 100%;
+    padding-block: 1rem;
+
+}
+
+.container {
+    width: 98%;
+    padding-inline: 1rem;
+
+    margin: 0 auto;
+}
+
+/* *****************utilty classes**************       */
+.flex {
+    display: flex;
+    gap: var(--gap, 1.5rem)
+}
+
+.center {
+    justify-content: center;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+
+
+.grid {
+    display: grid;
+    gap: var(--gap, 2rem)
+}
+
+.flow-point-5 {
+    margin-block-end: .5rem;
+}
+
+
+.flow-1 {
+    margin-block-end: 1rem;
+}
+
+.flow-2 {
+    margin-block-end: 2rem;
+}
+
+.flow-3 {
+    margin-block-end: 3rem;
+}
+
+.radius {
+    border-radius: var(--radius, 10px)
+}
+
+
+/**************************************** */
+
+
+#photo>img {
+    inline-size: 70%;
+
+}
+
+.card {
+    flex-direction: column;
+    --gap: .1rem;
+}
+
+.card img {
+    aspect-ratio: 3/1.3;
+    object-fit: cover;
+
+
+}
+
+.bar {
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+meter {
+    max-width: 70%;
+    width: 14rem;
+
+}
+
+.breadcrumb {
+    text-align: center;
+}
+
+.breadcrumb>li {
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(var(--color-blue));
+    padding-block: .3rem;
+}
+
+.exp {
+    max-inline-size: 6rem
+}
+
+.code-button {
+    text-align: center;
+}
+
+.code-button>li {
+    width: 40%;
+}
