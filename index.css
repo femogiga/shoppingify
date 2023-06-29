@@ -21,11 +21,15 @@ body {
     line-height: 1.2;
     font-size: 1rem;
     font-family: 'Montserrat', sans-serif;
-    color: rgb(var(--color-black)/.5)
+    color: rgb(var(--color-black)/.7)
 }
 
 .black {
     color: rgb(var(--color-black))
+}
+
+.blue {
+    color: rgb(var(--color-blue))
 }
 
 h1,
@@ -41,13 +45,13 @@ ul {
     list-style: none;
 }
 
-li{
-    border-radius:5px;
+li {
+    border-radius: 5px;
 }
 
 li a {
     text-decoration: none;
-    color:rgb(var(--color-black));
+    color: rgb(var(--color-black));
     font-weight: bold;
 }
 
@@ -68,7 +72,6 @@ li a {
 .container {
     width: 98%;
     padding-inline: 1rem;
-
     margin: 0 auto;
 }
 
@@ -132,7 +135,6 @@ li a {
     aspect-ratio: 3/1.3;
     object-fit: cover;
 
-
 }
 
 .bar {
@@ -156,6 +158,11 @@ meter {
     height: 30px;
     border: 1px solid rgb(var(--color-blue));
     padding-block: .3rem;
+
+}
+
+.breadcrumb>li>a {
+    color: rgb(var(--color-blue))
 }
 
 .exp {
@@ -168,4 +175,11 @@ meter {
 
 .code-button>li {
     width: 40%;
+    border: 1px solid rgb(var(--color-blue));
+
+
+}
+
+.code-button>li>a {
+    color: rgb(var(--color-blue))
 }
