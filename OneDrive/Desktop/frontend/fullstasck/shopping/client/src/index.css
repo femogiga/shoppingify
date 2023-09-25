@@ -289,3 +289,30 @@ button {
   border-radius: 12px;
   color: white
 }
+
+.form {
+  position: relative;
+  background-color: unset;
+
+}
+
+.save {
+  padding: 1rem;
+  border-radius: 8px;
+  position: absolute;
+  right: .02rem;
+  border: none;
+  border-color: var(--clr-orange);
+  background-color: var(--clr-orange);
+  color: white;
+  font-weight: 600;
+}
+
+.form>input {
+  padding: .96rem;
+  border: none;
+  border: 1px solid var(--clr-orange);
+  width: 100%;
+  border-radius: 12px;
+  ;
+}

@@ -1,6 +1,20 @@
 import { bottle } from '../imports/importFolder';
 import ProductCard from './ProductCard';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  increment,
+  decrement,
+  revealControls,
+} from '../../features/quantitySlice';
+
 const OperationCard = () => {
+  const dispatch = useDispatch();
+
+
+  const quantities = useSelector((state) => state.quantity.quantities);
+  const visible = useSelector((state)=>state.quantity.visible)
+  console.log(quantities);
+ console.log(visible);
   return (
     <aside className='operation-card'>
       <article className='bottle-cont flex flow-3'>
@@ -26,9 +40,33 @@ const OperationCard = () => {
             <span>Avocado</span>
             <button className='product-button'>3 pc</button>
           </li> */}
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          <ProductCard
+            id={1}
+            productName={'Avocado'}
+            quantities={quantities['avocado']}
+            onIncrement={() => increment({ productId: 'avocado' })}
+            onDecrement={()=>decrement({ productId: 'avocado' })}
+            visible={visible}
+            onVisible={() => dispatch(revealControls())}
+          />
+          <ProductCard
+            id={1}
+            productName={'chicken'}
+            quantities={quantities['chicken']}
+            onIncrement={() => increment({ productId: 'chicken' })}
+            onDecrement={() => decrement({ productId: 'chicken' })}
+            visible={visible}
+            onVisible={() => dispatch(revealControls())}
+          />
+          <ProductCard
+            id={1}
+            productName={'bunchOfCarrot'}
+            quantities={quantities['bunchOfCarrot']}
+            onIncrement={() => increment({ productId: 'bunchOfCarrot' })}
+            onDecrement={()=>decrement({ productId: 'bunchOfCarrot' })}
+            visible={visible}
+            onVisible={() => dispatch(revealControls())}
+          />
         </ul>
       </article>
 
@@ -42,11 +80,39 @@ const OperationCard = () => {
             <span>Avocado</span>
             <button className='product-button'>3 pc</button>
           </li> */}
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          <ProductCard
+            id={4}
+            productName={'chickenLeg'}
+            quantities={quantities['chickenLeg']}
+            onIncrement={() => increment({ productId: 'chickenLeg' })}
+            onDecrement={()=>decrement({ productId: 'chickenLeg' })}
+            visible={visible}
+            onVisible={() => dispatch(revealControls())}
+          />
+          <ProductCard
+            id={5}
+            productName={'porkFillet'}
+            quantities={quantities['porkFillet']}
+            onIncrement={() => increment({ productId: 'porkFillet' })}
+            onDecrement={()=>decrement({ productId: 'porkFillet' })}
+            visible={visible}
+            onVisible={() => dispatch(revealControls())}
+          />
+          <ProductCard
+            id={6}
+            productName={'salmon'}
+            quantities={quantities['salmon']}
+            onIncrement={() => increment({ productId: 'salmon' })}
+            onDecrement={()=>decrement({productId: 'salmon' })}
+            visible={visible}
+            onVisible={() => dispatch(revealControls())}
+          />
         </ul>
       </article>
+      <form className='form'>
+        <input type='text' />
+        <button className='save'>Save</button>
+      </form>
     </aside>
   );
 };
