@@ -1,0 +1,128 @@
+@import url("./pages/home/home.css");
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  --font-sm:.75rem;
+
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+body {
+  /* max-width: 1800px; */
+  max-width: 80%;
+  margin-inline: auto;
+}
+
+ul{
+  list-style: none;
+}
+
+a{
+  text-decoration:none;
+  color:unset;
+}
+
+.container {
+  border: 1px solid black;
+}
+
+.flex {
+  display: flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.item-center {
+  align-items: center;
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.content-center{
+  align-content: center;
+}
+
+.align-self-end{
+  align-self: end;
+}
+
+.gap-x-05 {
+  column-gap: .5rem;
+}
+
+.gap-x-1 {
+  column-gap: 1rem;
+}
+
+.gap-x-2 {
+  column-gap: 2rem;
+}
+
+.gap-x-3 {
+  column-gap: 3rem;
+}
+
+.gap-y-1 {
+  row-gap: 1rem;
+}
+
+.gap-y-2 {
+  row-gap: 2rem;
+}
+
+.gap-y-3 {
+  row-gap: 3rem;
+}
+
+.p-x-1 {
+  padding-inline: 1rem;
+}
+.p-x-2 {
+  padding-inline: 2rem;
+}
+.p-y-1 {
+  padding-block: 1rem;
+}
+
+.mbe-1{
+  margin-block-end:1rem;
+}
+
+.font-white {
+  color: white;
+}
+.font-black {
+  color: black;
+}
+
+.padding-block-1{
+  padding-block:1rem;
+}
+.color-dark-white{
+  color:#979dac
+}
+
+.font-sm{
+  font-size: var(--font-sm);
+}
+
+.hidden{
+  display:none;
+}
