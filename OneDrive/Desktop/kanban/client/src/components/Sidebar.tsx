@@ -13,13 +13,21 @@ import { useDarkMode } from '../context/DarkModeContext';
 import { Link } from 'react-router-dom';
 import NavItem from './NavItem';
 import { useFetchProjects } from '../apis/projectData';
+import useProjectStore from '../statemanagment/projectStore';
 
 const Sidebar = () => {
   const { mode } = useDarkMode();
   const { isPending, data:projectData, error } = useFetchProjects();
   console.log(projectData);
+  const { changeActiveLink,activeLink } = useProjectStore();
+  const handleLinkChange = (e) => {
+    e.preventDefault();
+    // changeActiveLink(id);
+  };
   return (
+
     <aside className={`sidebar ${mode === 'light' ? 'lightmode' : 'darkmode'}`}>
+
       <header
         className={`flex item-center p-x-1 ${
           mode === 'light' ? 'lightmode' : 'darkmode'
@@ -33,7 +41,7 @@ const Sidebar = () => {
         <h3
           className={`${
             mode === 'light' ? 'font-black' : 'font-white '
-          } p-x-1  mbe-1}`}>
+          } p-x-1  mbe-1} font-sm p-y-1`}>
           ALL BOARDS <span>(8)</span>
         </h3>
         <nav className='nav'>

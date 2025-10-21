@@ -11,6 +11,15 @@ const getById = (url:string, id:number) => {
     return axios.get(`${baseUrl}${url}${id}`)
 }
 
+const post = (url,data) => {
+    return axios.post(`${baseUrl}${url}`, data,{
+
+        headers: {
+           'ContentType':'application.json'
+       }
+    });
+}
 
 
-export default {get,getById}
+
+export default {get,getById,post}

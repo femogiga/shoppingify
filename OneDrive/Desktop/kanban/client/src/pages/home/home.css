@@ -2,6 +2,7 @@
     /* height: 100vh; */
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+    position: relative;
 }
 
 .sidebar {
@@ -11,10 +12,10 @@
 
 }
 
-.sidebar > header{
+.sidebar>header {
     position: sticky;
-        top: 0;
-        
+    top: 0;
+
 }
 
 .main-content {
@@ -59,12 +60,18 @@
 
 }
 
+.column-container {
+    min-width: 300px;
+    max-width: 300px
+}
+
 .card {
     /* background-color: #33415c; */
     color: white;
     padding-block: 1rem;
     padding-inline: 1rem;
     border-radius: 8px;
+
 }
 
 .circle {
@@ -161,4 +168,20 @@
 
 .bg-darker {
     background-color: #00072d;
+}
+
+.sub-task-modal {
+    position: absolute;
+    min-width: 20rem;
+    max-width: 25rem;
+
+    background: #33415c;
+    color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.9);
+    z-index: 10;
+    border-radius: 8px;
+
 }

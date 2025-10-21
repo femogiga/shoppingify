@@ -17,6 +17,7 @@ const Header = () => {
         </button>
         <EllipsisVertical className='color-dark-white' />
       </div>
+      
     </header>
   );
 }

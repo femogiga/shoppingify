@@ -2,8 +2,9 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React from 'react';
 import { useDarkMode } from '../context/DarkModeContext';
+import useTaskStore from '../statemanagment/taskStore';
 
-const Card = ({ id, title }) => {
+const Card = (props) => {
   const {
     attributes,
     listeners,
@@ -11,23 +12,42 @@ const Card = ({ id, title }) => {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: props.id });
   const { mode } = useDarkMode()
-
+  console.log('props' ,props)
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
+  const {
+    activeTaskId,
+    modalVisible,
+    setActiveTaskId,
+    showModal,
+    hideModal,
+    setActiveTaskData,
+  } = useTaskStore();
 
+  const handleTaskClick = (e, taskId,props) => {
+    e.preventDefault();
+    setActiveTaskId(taskId);
+     setActiveTaskData(props);
+    showModal();
+    return
+  };
+console.log('activeTaskId',activeTaskId);
   return (
     <article
       className={`${mode === 'light' ? 'lightmode' : 'bg-dark'} card`}
       style={style}
+      onDoubleClick={(e)=>handleTaskClick(e,props.id,props)}
       ref={setNodeRef}
       {...attributes}
       {...listeners}>
-      <p className={mode=== 'light' ? 'font-black': 'font-white'}>{title || 'Build UI for onboarding flow'}</p>
+      <p className={mode === 'light' ? 'font-black' : 'font-white'}>
+        {props.title || 'Build UI for onboarding flow'}
+      </p>
       <p className='color-dark-white font-sm'>
         <span>{1} </span>of<span> {3} </span>subtasks
       </p>
