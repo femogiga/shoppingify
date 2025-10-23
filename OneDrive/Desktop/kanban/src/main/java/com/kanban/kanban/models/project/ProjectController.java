@@ -25,7 +25,7 @@ public class ProjectController {
     @GetMapping
     public ResponseEntity<List<ProjectDTO>> getProjects(){
         try {
-            List<ProjectDTO> projects = projectService.getAllProjectsWithTasksGroupedByStatus();
+            List<ProjectDTO> projects = projectService.getAllProjects();
             if(projects.isEmpty()){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -50,7 +50,7 @@ public class ProjectController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/doing")
     public ResponseEntity<Project> createProject(@RequestBody Project project){
         try {
             Project created = projectService.createProject(project);
@@ -59,6 +59,15 @@ public class ProjectController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @PostMapping
+    public ResponseEntity<Project> createProjectWithDefaultColumns (@RequestBody Project project){
+        try{
+            Project created = projectService.createProjectWithColumns(project);
+            return new ResponseEntity<>(created , HttpStatus.CREATED);
+        }
+        catch(RuntimeException e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

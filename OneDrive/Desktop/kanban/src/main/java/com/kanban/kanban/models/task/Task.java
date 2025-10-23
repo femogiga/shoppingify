@@ -1,8 +1,9 @@
 package com.kanban.kanban.models.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kanban.kanban.models.project.Project;
+import com.kanban.kanban.models.projectcolumn.ProjectColumn;
 import com.kanban.kanban.models.subtask.SubTask;
 import com.kanban.kanban.models.user.User;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Entity
@@ -41,10 +43,19 @@ public class Task {
     @ManyToMany(mappedBy = "tasks")
     private List<User> taskMembers = new ArrayList<>();
 
+    @Transient
+    @JsonProperty("project_id")
+    private Long projectId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="project_id")
     @JsonIgnore
     private Project project;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "projectColumn_id")
+    public ProjectColumn projectColumn;
 
     public Task (String title,String description , Status status,Project project){
         this.title = title;
@@ -114,6 +125,22 @@ public class Task {
         subTask.setTask(null);
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTaskMembers(List<User> taskMembers) {
+        this.taskMembers = taskMembers;
+    }
+    @JsonProperty("project_id")
+    public Long getProjectId() {
+        return project != null ? project.getId() : this.projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
     public List<User> getTaskMembers(){
         return taskMembers;
     }
@@ -130,4 +157,14 @@ public class Task {
         this.taskMembers.remove(user);
 
     }
+
+    public ProjectColumn getProjectColumn() {
+        return projectColumn;
+    }
+
+    public void setProjectColumn(ProjectColumn projectColumn) {
+        this.projectColumn = projectColumn;
+    }
+
+
 }

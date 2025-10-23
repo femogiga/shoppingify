@@ -8,6 +8,7 @@ import BaseLayout from './layout/BaseLayout';
 import { RouterProvider } from 'react-router-dom';
 import Content from './components/Content';
 import CreateProjectModal from './components/CreateProjectModal';
+import CreateTaskModal from './components/CreateTaskModal';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -18,7 +19,7 @@ function App() {
 
       <Route element={<BaseLayout />}>
         {/* <Route path='/projects' element={<Content />} /> */}
-        { <Route path='/dev' element={<CreateProjectModal />} /> }
+        { <Route path='/dev' element={<CreateTaskModal />} /> }
         <Route path='/projects/:id' element={<Content />} />
       </Route>
 

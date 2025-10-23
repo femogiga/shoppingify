@@ -1,6 +1,7 @@
 package com.kanban.kanban.models.project;
 
 
+import com.kanban.kanban.models.projectcolumn.ProjectColumn;
 import com.kanban.kanban.models.task.Status;
 import com.kanban.kanban.models.task.Task;
 import jakarta.persistence.*;
@@ -26,9 +27,13 @@ public class Project {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "project",orphanRemoval = true,cascade = CascadeType.ALL)
+   private List<ProjectColumn> projectColumns = new ArrayList<>();
+
     public Project(String title){
         this.title = title;
         this.tasks = new ArrayList<Task>();
+        this.projectColumns = new ArrayList<>();
         this.status = Status.TODO;
     }
     public Project() {
@@ -66,5 +71,23 @@ public class Project {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public List<ProjectColumn> getProjectColumns() {
+        return projectColumns;
+    }
+
+    public void setProjectColumns(List<ProjectColumn> projectColumns) {
+        this.projectColumns = projectColumns;
+    }
+
+    public void removeProjectColumn(ProjectColumn projectColumn){
+        this.projectColumns.remove(projectColumn);
+
+    }
+
+    public void addProjectColumn(ProjectColumn projectColumn){
+        this.projectColumns.add(projectColumn);
+        projectColumn.setProject(this);
     }
 }

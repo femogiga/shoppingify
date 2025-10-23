@@ -10,16 +10,14 @@ const CreateProjectModal = () => {
     useCreateProject();
 
   const handleSubmit = (e) => {
-    // ✅ Removed projectData parameter
     e.preventDefault();
 
-    // ✅ Validate input
     if (!title.trim()) {
       alert('Please enter a project title');
       return;
     }
 
-    const projectData = { title: title.trim() }; // ✅ Create data inside function
+    const projectData = { title: title.trim() };
 
     createProject(projectData, {
       onSuccess: (data) => {

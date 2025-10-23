@@ -4,6 +4,9 @@ package com.kanban.kanban.models.subtask;
 
 import com.kanban.kanban.models.project.Project;
 import com.kanban.kanban.models.project.ProjectRepository;
+import com.kanban.kanban.models.project.ProjectService;
+import com.kanban.kanban.models.projectcolumn.ProjectColumn;
+import com.kanban.kanban.models.projectcolumn.ProjectColumnRepository;
 import com.kanban.kanban.models.task.Task;
 import com.kanban.kanban.models.task.Status;
 import com.kanban.kanban.models.subtask.SubTask;
@@ -11,6 +14,7 @@ import com.kanban.kanban.models.task.TaskRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.lang.module.ResolutionException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,10 +23,15 @@ public class SubTaskSeeder implements CommandLineRunner {
 
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectService projectService;
+    private final ProjectColumnRepository projectColumnRepository;
 
-    public SubTaskSeeder(TaskRepository taskRepository, ProjectRepository projectRepository) {
+    public SubTaskSeeder(TaskRepository taskRepository, ProjectRepository projectRepository,ProjectService projectService,ProjectColumnRepository projectColumnRepository) {
         this.taskRepository = taskRepository;
         this.projectRepository =projectRepository;
+        this.projectService = projectService;
+        this.projectColumnRepository =  projectColumnRepository;
+
     }
 
     @Override
@@ -36,10 +45,12 @@ public class SubTaskSeeder implements CommandLineRunner {
         System.out.println("🎯 Seeding sample tasks and subtasks...");
 
         Project project1 = new Project("Create front end");
-        projectRepository.save(project1);
+        projectService.createProjectWithColumns(project1);
 
         Project project2 = new Project("Create backend end");
-        projectRepository.save(project2);
+        projectService.createProjectWithColumns(project2);
+
+
 
         // ✅ FIXED: Use the constructor that only takes title, description, status
         Task task1 = new Task("Develop Company Website",
@@ -131,6 +142,17 @@ public class SubTaskSeeder implements CommandLineRunner {
                 Status.DONE,
                 task4
         ));
+
+    ProjectColumn toDoColumn1 = project1.getProjectColumns().stream().filter(column->"TODO".equals(column.getName())).findFirst().orElseThrow(()->new ResolutionException("Column not found"));
+    toDoColumn1.addTask(task1);
+        toDoColumn1.addTask(task2);
+
+        ProjectColumn toDoColumn2 = project2.getProjectColumns().stream().filter(column->"TODO".equals(column.getName())).findFirst().orElseThrow(()->new ResolutionException("Column not found"));
+        toDoColumn2.addTask(task3);
+        toDoColumn2.addTask(task4);
+
+        projectColumnRepository.save(toDoColumn1);
+        projectColumnRepository.save(toDoColumn2);
 
         // Save all tasks
         List<Task> tasks = Arrays.asList(task1, task2, task3, task4);

@@ -4,9 +4,7 @@ package com.kanban.kanban.models.task;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,6 +39,19 @@ public class TaskController {
 //    public ResponseEntity<List<Task>> getTaskById (@PathVariable Long id){
 //        List<Task> task = taskService.getTask
 //    }
+
+
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody  Task task){
+        try{
+            Task created = taskService.saveTaskDefault(task);
+
+            return new ResponseEntity<>(task, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 
 
 }
