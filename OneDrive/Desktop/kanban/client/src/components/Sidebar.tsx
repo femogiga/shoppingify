@@ -19,15 +19,17 @@ const Sidebar = () => {
   const { mode } = useDarkMode();
   const { isPending, data:projectData, error } = useFetchProjects();
   console.log(projectData);
-  const { changeActiveLink,activeLink } = useProjectStore();
+  const { changeActiveLink,activeLink,showProjectModal } = useProjectStore();
   const handleLinkChange = (e) => {
     e.preventDefault();
-    // changeActiveLink(id);
+
   };
+  const handleModalVisibility = (e) => {
+    e.preventDefault();
+    showProjectModal()
+  }
   return (
-
     <aside className={`sidebar ${mode === 'light' ? 'lightmode' : 'darkmode'}`}>
-
       <header
         className={`flex item-center p-x-1 ${
           mode === 'light' ? 'lightmode' : 'darkmode'
@@ -47,12 +49,25 @@ const Sidebar = () => {
         <nav className='nav'>
           <ul className='grid gap-y-1'>
             {projectData &&
-              projectData.map((project) => <NavItem title={project.title} key={`project${project.id}`} path={ project.id} />)}
-
+              projectData.map((project) => (
+                <NavItem
+                  title={project.title}
+                  key={`project${project.id}`}
+                  path={project.id}
+                />
+              ))}
 
             <li className='create nav-item flex item-center gap-x-1 font-white'>
               <SquareKanban />
-              <span>+Create new board</span>
+              <button
+                onClick={handleModalVisibility}
+                style={{
+                  backgroundColor: 'unset',
+                  color: 'rgb(141, 192, 243)',
+                  border: 'none',
+                }}>
+                +Create new board
+              </button>
             </li>
           </ul>
         </nav>

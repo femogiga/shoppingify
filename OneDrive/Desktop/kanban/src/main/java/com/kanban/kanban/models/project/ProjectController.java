@@ -50,6 +50,16 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectDTO> getProjectById(@PathVariable Long id) {
+        try {
+            ProjectDTO project = projectService.getProjectById(id);
+            return new ResponseEntity<>(project, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/doing")
     public ResponseEntity<Project> createProject(@RequestBody Project project){
         try {

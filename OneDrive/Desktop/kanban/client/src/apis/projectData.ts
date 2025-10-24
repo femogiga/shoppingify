@@ -14,9 +14,19 @@ import apiService from '../utils/apiService'
 export const useFetchProjects = () => {
     const { isPending, data, error } = useQuery({
         queryKey: ['allProjects'],
-        queryFn:()=>apiService.get('/projects').then(res=>res.data)
+        queryFn: () => apiService.get('/projects').then(res => res.data)
     })
-    return { isPending , data,error}
+    return { isPending, data, error }
+}
+
+
+export const useFetchProjectById = (id) => {
+    const { isPending, data, error } = useQuery({
+        queryKey: ['projectById',id],
+        queryFn: () => apiService.getById("/projects", id).then(res => res.data)
+
+    })
+    return { isPending, error, projectById: data }
 }
 
 

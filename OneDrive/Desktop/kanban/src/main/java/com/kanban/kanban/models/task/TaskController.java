@@ -46,8 +46,9 @@ public class TaskController {
         try{
             Task created = taskService.saveTaskDefault(task);
 
-            return new ResponseEntity<>(task, HttpStatus.CREATED);
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
         } catch (RuntimeException e) {
+            System.out.println(e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

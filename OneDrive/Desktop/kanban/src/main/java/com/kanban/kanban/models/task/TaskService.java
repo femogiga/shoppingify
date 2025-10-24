@@ -96,6 +96,7 @@ public class TaskService {
         if (taskRepository.existsByTitle(task.getTitle())) {
             throw new TaskAlreadyExistException();
         }
+        System.out.println("projectId " + task.getProjectId());
 
         Project project = projectRepository.findById(task.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project does not exist"));
@@ -104,11 +105,11 @@ public class TaskService {
                 .filter(column -> column.getName().equals("TODO"))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("TODO column does not exist"));
-
+        System.out.println(task.getProjectId());
         // Set both relationships
         task.setProject(project);
         task.setProjectColumn(todoColumn);
-
+        System.out.println("Working here");
         // Just save the task - JPA will handle the rest
         return taskRepository.save(task);
     }

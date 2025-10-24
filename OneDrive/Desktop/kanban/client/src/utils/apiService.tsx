@@ -8,7 +8,7 @@ const get = (url:string) => {
 }
 
 const getById = (url:string, id:number) => {
-    return axios.get(`${baseUrl}${url}${id}`)
+    return axios.get(`${baseUrl}${url}/${id}`)
 }
 
 const post = (url,data) => {

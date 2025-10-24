@@ -4,12 +4,12 @@ import apiService from "../utils/apiService"
 
 export const useCreateTask = () => {
     const queryClient = useQueryClient()
-   
+
     const { mutate, isSuccess, reset, isPending, isError, } = useMutation({
         mutationFn: (taskData) => apiService.post('/tasks', taskData).then(res => res.data),
         mutationKey: ['createTask'],
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['allProjects'] })
+            queryClient.invalidateQueries({ queryKey: ['projectById'] })
         },
         onError: (error) => {
             console.error(error)

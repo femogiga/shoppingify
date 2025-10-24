@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useCreateTask } from '../apis/taskData';
 import { useParams } from 'react-router-dom';
+import useTaskStore from '../statemanagment/taskStore';
 
 const CreateTaskModal = () => {
-  const params = useParams();
-  const project_Id = params.id;
+  const { id } = useParams();
+
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
-    project_id: 2,
+    project_id: parseInt(id),
     status: 'TODO',
   });
   const { createTask, isCreating, isError, isSuccess } = useCreateTask();
+  const { showCreateTaskModal, hideCreateTaskModal } = useTaskStore();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     if (!taskData.title.trim() || !taskData.description.trim()) {
@@ -23,6 +25,7 @@ const CreateTaskModal = () => {
       onSuccess: (data) => {
         console.log('Task successfully created');
         setTaskData({ ...taskData, title: '', description: '' });
+        setTimeout(hideCreateTaskModal, 2000);
       },
       isError: (error) => {
         console.log('Error creating project:', error);
@@ -30,6 +33,10 @@ const CreateTaskModal = () => {
     });
   };
 
+  const createTaskModalVisibility = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    showCreateTaskModal();
+  };
   useEffect(() => {
     console.log(taskData);
   }, [taskData]);

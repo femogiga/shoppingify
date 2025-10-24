@@ -4,7 +4,7 @@ import ColumnContainer from './ColumnContainer';
 import Card from './Card';
 import { Link, useParams } from 'react-router-dom';
 import { useDarkMode } from '../context/DarkModeContext';
-import { useFetchProjects } from '../apis/projectData';
+import { useFetchProjectById, useFetchProjects } from '../apis/projectData';
 
 const Content = () => {
   const [parent, setParent] = useState(null);
@@ -97,7 +97,13 @@ const Content = () => {
        });
      }
    }
- };
+  };
+
+
+  const { projectById } = useFetchProjectById(id)
+
+  console.log("==========>",projectById)
+
   return (
     <section
       className={`${mode === 'light' ? 'bg-light' : 'bg-darker'} content`}
@@ -105,9 +111,9 @@ const Content = () => {
     >
       <DndContext onDragEnd={handleDragEnd}>
         {/* TODO Column */}
-        <ColumnContainer key={'todoCont-1'} id={'TODO'} heading='TODO'>
-          <div className='grid gap-y-2'>
-            {activeProject?.tasksByStatus?.TODO?.map((task) => (
+        {projectById?.projectColumn.map((column) => (
+          <ColumnContainer id={'TODO'} heading={column.name} id={column.name}>
+            {column.tasks.map((task) => (
               <Card
                 key={`todo-${task.id}`}
                 id={task.id}
@@ -115,42 +121,9 @@ const Content = () => {
                 {...task}
               />
             ))}
-          </div>
-        </ColumnContainer>
+          </ColumnContainer>
+        ))}
 
-        {/* DOING Column */}
-        <ColumnContainer key={'doingCont-1'} id={'DOING'} heading={'DOING'}>
-          <div className='grid gap-y-2'>
-            {' '}
-            {/* Added wrapper div */}
-            {activeProject?.tasksByStatus?.DOING?.map((task) => (
-              <Card
-                key={`doing-${task.id}`}
-                id={task.id}
-                title={task.title}
-                {...task}
-              />
-            ))}
-          </div>
-        </ColumnContainer>
-
-        {/* DONE Column */}
-        <ColumnContainer key={'doneCont-1'} id={'DONE'} heading='DONE'>
-          {' '}
-          {/* Fixed heading case */}
-          <div className='grid gap-y-2'>
-            {' '}
-            {/* Added wrapper div */}
-            {activeProject?.tasksByStatus?.DONE?.map((task) => (
-              <Card
-                key={`done-${task.id}`}
-                id={task.id}
-                title={task.title}
-                {...task}
-              />
-            ))}
-          </div>
-        </ColumnContainer>
       </DndContext>
 
       {/* New Column Button */}
