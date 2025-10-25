@@ -1,6 +1,7 @@
 package com.kanban.kanban.models.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kanban.kanban.models.project.Project;
 import com.kanban.kanban.models.projectcolumn.ProjectColumn;
@@ -53,8 +54,8 @@ public class Task {
     private Project project;
 
     @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "projectColumn_id")
+    @JoinColumn(name = "project_column_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "project"})
     public ProjectColumn projectColumn;
 
     public Task (String title,String description , Status status,Project project){

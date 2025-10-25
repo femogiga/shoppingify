@@ -8,5 +8,8 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface ProjectColumnRepository extends JpaRepository<ProjectColumn,Long> {
+public interface ProjectColumnRepository extends JpaRepository<ProjectColumn, Long> {
+
+//    @Query(value = "SELECT * FROM project_column pc WHERE pc.name = :name AND pc.project_id = :projectId", nativeQuery = true)
+//    ProjectColumn findByNameAndProjectId(@Param("name") String name, @Param("projectId") Long projectId);
 }

@@ -38,7 +38,7 @@ const CreateTaskModal = () => {
     showCreateTaskModal();
   };
   useEffect(() => {
-    console.log(taskData);
+    // console.log(taskData);
   }, [taskData]);
   return (
     <article className='sub-task-modal'>

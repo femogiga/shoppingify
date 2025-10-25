@@ -1,6 +1,7 @@
 package com.kanban.kanban.models.projectcolumn;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kanban.kanban.models.project.Project;
 import com.kanban.kanban.models.task.Task;
 import jakarta.persistence.*;
@@ -52,7 +53,7 @@ public class ProjectColumn {
         this.name = name;
     }
 
-
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public Project getProject() {
         return project;
     }
@@ -61,6 +62,7 @@ public class ProjectColumn {
         this.project = project;
     }
 
+    @JsonIgnore
     public List<Task> getTasks() {
         return tasks;
     }

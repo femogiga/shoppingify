@@ -1,6 +1,7 @@
 package com.kanban.kanban.models.subtask;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kanban.kanban.models.task.Status;
 import com.kanban.kanban.models.task.Task;
 import com.kanban.kanban.models.user.User;
@@ -37,6 +38,7 @@ public class SubTask {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JoinColumn( name="task_id",nullable = false)
     private Task task;
 
@@ -69,6 +71,10 @@ public class SubTask {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {

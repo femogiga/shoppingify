@@ -52,6 +52,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/tasks/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/tasks/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/tasks/**").permitAll()
                        .requestMatchers(HttpMethod.GET, "/api/projects").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/projects/**").permitAll()
@@ -59,6 +61,9 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/tasks/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/columns/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/columns/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/subtasks/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/subtasks/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/subtasks/**").permitAll()
 
 
 

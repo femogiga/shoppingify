@@ -26,3 +26,22 @@ export const useCreateTask = () => {
         reset
     }
 }
+
+
+export const useUpdateTask = (id) => {
+    const queryClient = useQueryClient()
+    const { mutate, isError, reset, isSuccess, isPending } = useMutation({
+        mutationFn: (data) => apiService.update(`/tasks/${id}`, data).then(res => res.data),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['projectById'] });
+            queryClient.invalidateQueries({ queryKey: ['allProjects'] });
+
+        },
+        onError: (error) => {
+            console.error(error)
+        },
+        onSettled: () => setTimeout(() => reset, 3000)
+
+    })
+    return { taskUpdateMutate: mutate, reset, isSuccess, isError, isPending }
+}

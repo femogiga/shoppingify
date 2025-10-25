@@ -54,5 +54,30 @@ public class TaskController {
 
     }
 
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Task> updateTask(@RequestBody Task task){
+//        try{
+//            System.out.println(task.getProjectColumn());
+//            Task updatedTask = taskService.updateTask(task);
+//            return new ResponseEntity<>(updatedTask,HttpStatus.OK);
+//        } catch (RuntimeException e) {
+//            System.out.println(e);
+//    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+@PutMapping("/{id}")
+public ResponseEntity<Task> updateTask(@PathVariable Long id ,@RequestBody Task task) {
+    try {
+        System.out.println("Received task: " + task);
+        System.out.println("ProjectColumn: " + task.getProjectColumn());
+        System.out.println("ProjectColumn ID: " + (task.getProjectColumn() != null ? task.getProjectColumn().getId() : "null"));
 
+        Task updatedTask = taskService.updateTask(id,task);
+        return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+    } catch (RuntimeException e) {
+        System.out.println("Update error: " + e.getMessage());
+        e.printStackTrace();
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
 }

@@ -102,29 +102,30 @@ const Content = () => {
 
   const { projectById } = useFetchProjectById(id)
 
-  console.log("==========>",projectById)
+  // console.log("==========>",projectById)
 
   return (
     <section
       className={`${mode === 'light' ? 'bg-light' : 'bg-darker'} content`}
       style={{ display: 'flex', gap: '1rem', padding: '1rem' }} // Added flex layout
     >
-      <DndContext onDragEnd={handleDragEnd}>
+      {/* <DndContext onDragEnd={handleDragEnd}> */}
         {/* TODO Column */}
         {projectById?.projectColumn.map((column) => (
-          <ColumnContainer id={'TODO'} heading={column.name} id={column.name}>
+          <ColumnContainer key={column.name} heading={column.name} id={column.name}>
             {column.tasks.map((task) => (
               <Card
                 key={`todo-${task.id}`}
                 id={task.id}
                 title={task.title}
                 {...task}
+                projectColumns = {projectById.projectColumn}
               />
             ))}
           </ColumnContainer>
         ))}
 
-      </DndContext>
+      {/* </DndContext> */}
 
       {/* New Column Button */}
       <div>

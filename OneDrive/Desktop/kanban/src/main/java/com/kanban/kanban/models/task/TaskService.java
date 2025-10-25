@@ -1,5 +1,7 @@
 package com.kanban.kanban.models.task;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kanban.kanban.exceptions.TaskAlreadyExistException;
 import com.kanban.kanban.models.project.Project;
 import com.kanban.kanban.models.project.ProjectRepository;
@@ -8,11 +10,9 @@ import com.kanban.kanban.models.projectcolumn.ProjectColumnRepository;
 import com.kanban.kanban.models.subtask.SubTaskDTO;
 import com.kanban.kanban.models.user.UserDTO;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -74,7 +74,7 @@ public class TaskService {
                                         subTask.getTitle(),
                                         subTask.getDescription(),
                                         subTask.getStatus(),
-
+                                        subTask.getTask().getId(),
                                         // Map subtask members
                                         subTask.getMembers().stream().distinct()
                                                 .map(member -> new UserDTO(
@@ -113,4 +113,80 @@ public class TaskService {
         // Just save the task - JPA will handle the rest
         return taskRepository.save(task);
     }
+
+
+    public Task updateTask(Long id,Task updatedTask) {
+
+            System.out.println("=== TASK DETAILS ===");
+            System.out.println("ID: " + updatedTask.getId());
+            System.out.println("Title: " + updatedTask.getTitle());
+            System.out.println("Description: " + updatedTask.getDescription());
+            System.out.println("Status: " + updatedTask.getStatus());
+
+            if (updatedTask.getProjectColumn() != null) {
+                System.out.println("ProjectColumn ID: " + updatedTask.getProjectColumn().getId());
+                System.out.println("ProjectColumn Name: " + updatedTask.getProjectColumn().getName());
+            } else {
+                System.out.println("ProjectColumn: null");
+            }
+
+            System.out.println("====================");
+
+        Task currentTask = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        // Basic fields
+        if (updatedTask.getTitle() != null) currentTask.setTitle(updatedTask.getTitle());
+        if (updatedTask.getDescription() != null) currentTask.setDescription(updatedTask.getDescription());
+        if (updatedTask.getStatus() != null) currentTask.setStatus(updatedTask.getStatus());
+
+        // Handle column move
+        if (updatedTask.getProjectColumn() != null && updatedTask.getProjectColumn().getId() != null) {
+            Long columnId = updatedTask.getProjectColumn().getId();
+            ProjectColumn newColumn = projectColumnRepository.findById(columnId)
+                    .orElseThrow(() -> new RuntimeException("Column not found"));
+
+            if (currentTask.getProjectColumn() != null) {
+                currentTask.getProjectColumn().removeTask(currentTask);
+            }
+
+            currentTask.setProjectColumn(newColumn);
+            newColumn.addTask(currentTask);
+        }
+
+        return taskRepository.save(currentTask);
+    }
+
+//    public Task updateTask( TaskUpdateDTO taskUpdate) {
+//        Task currentTask = taskRepository.findById(taskUpdate.getId())
+//                .orElseThrow(() -> new RuntimeException("Task not found"));
+//
+//        // Update basic fields
+//        if (taskUpdate.getTitle() != null) {
+//            currentTask.setTitle(taskUpdate.getTitle());
+//        }
+//        if (taskUpdate.getDescription() != null) {
+//            currentTask.setDescription(taskUpdate.getDescription());
+//        }
+//        if (taskUpdate.getStatus() != null) {
+//            currentTask.setStatus(taskUpdate.getStatus());
+//        }
+//
+//        // Handle column change
+//        if (taskUpdate.getProjectColumnId() != null) {
+//            ProjectColumn newColumn = projectColumnRepository.findById(taskUpdate.getProjectColumnId())
+//                    .orElseThrow(() -> new RuntimeException("Column not found"));
+//
+//            // Remove from old column
+//            if (currentTask.getProjectColumn() != null) {
+//                currentTask.getProjectColumn().removeTask(currentTask);
+//            }
+//
+//            // Add to new column
+//            currentTask.setProjectColumn(newColumn);
+//            newColumn.addTask(currentTask);
+//        }
+//
+//        return taskRepository.save(currentTask);
+//    }
 }

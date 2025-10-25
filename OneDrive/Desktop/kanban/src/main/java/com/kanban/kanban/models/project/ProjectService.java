@@ -66,6 +66,7 @@ public class ProjectService {
                                         subTask.getTitle(),
                                         subTask.getDescription(),
                                         subTask.getStatus(),
+                                        subTask.getTask().getId(),
                                         subTask.getMembers().stream().map(user -> new UserDTO(
                                                 user.getId(),
                                                 user.getFirstname(),
@@ -106,6 +107,7 @@ public class ProjectService {
                                         subTask.getTitle(),
                                         subTask.getDescription(),
                                         subTask.getStatus(),
+                                        subTask.getTask().getId(),
                                         subTask.getMembers().stream().map(user -> new UserDTO(
                                                 user.getId(),
                                                 user.getFirstname(),

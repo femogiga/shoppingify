@@ -14,7 +14,7 @@ const Card = (props) => {
     isDragging,
   } = useSortable({ id: props.id });
   const { mode } = useDarkMode()
-  console.log('props' ,props)
+  // console.log('props' ,props)
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -36,7 +36,11 @@ const Card = (props) => {
     showModal();
     return
   };
-console.log('activeTaskId',activeTaskId);
+  // console.log("=====>",props.projectColumns)
+  // console.log('activeTaskId',activeTaskId);
+
+
+
   return (
     <article
       className={`${mode === 'light' ? 'lightmode' : 'bg-dark'} card`}

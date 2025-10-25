@@ -20,6 +20,14 @@ const post = (url,data) => {
     });
 }
 
+const update = (url, data) => {
+    return axios.put(`${baseUrl}${url}`, data, {
+      headers: {
+        ContentType: 'application.json',
+      },
+    });
+}
 
 
-export default {get,getById,post}
+
+export default {get,getById,post,update}
