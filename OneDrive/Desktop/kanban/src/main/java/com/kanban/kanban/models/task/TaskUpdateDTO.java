@@ -4,10 +4,10 @@ public class TaskUpdateDTO {
     public Long id;
     private String title;
     private String description;
-    private Status status;
+    private String status;
     private Long projectColumnId; // Only pass column ID
 
-    public TaskUpdateDTO(Long id ,String title , String description, Status status ,Long projectColumnId){
+    public TaskUpdateDTO(Long id ,String title , String description, String status ,Long projectColumnId){
         this.id = id;
         this.title = title;
         this.description = description;
@@ -39,11 +39,11 @@ public class TaskUpdateDTO {
         this.description = description;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

@@ -115,8 +115,8 @@ public class TaskService {
     }
 
 
-    public Task updateTask(Long id,Task updatedTask) {
-
+    public Task updateTask(Long id, Task updatedTask) {
+        try {
             System.out.println("=== TASK DETAILS ===");
             System.out.println("ID: " + updatedTask.getId());
             System.out.println("Title: " + updatedTask.getTitle());
@@ -132,61 +132,34 @@ public class TaskService {
 
             System.out.println("====================");
 
-        Task currentTask = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+            Task currentTask = taskRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Task not found"));
 
-        // Basic fields
-        if (updatedTask.getTitle() != null) currentTask.setTitle(updatedTask.getTitle());
-        if (updatedTask.getDescription() != null) currentTask.setDescription(updatedTask.getDescription());
-        if (updatedTask.getStatus() != null) currentTask.setStatus(updatedTask.getStatus());
+            // Basic fields
+            if (updatedTask.getTitle() != null) currentTask.setTitle(updatedTask.getTitle());
+            if (updatedTask.getDescription() != null) currentTask.setDescription(updatedTask.getDescription());
+            if (updatedTask.getStatus() != null) currentTask.setStatus(updatedTask.getStatus());
 
-        // Handle column move
-        if (updatedTask.getProjectColumn() != null && updatedTask.getProjectColumn().getId() != null) {
-            Long columnId = updatedTask.getProjectColumn().getId();
-            ProjectColumn newColumn = projectColumnRepository.findById(columnId)
-                    .orElseThrow(() -> new RuntimeException("Column not found"));
+            // Handle column move
+            if (updatedTask.getProjectColumn() != null && updatedTask.getProjectColumn().getId() != null) {
+                Long columnId = updatedTask.getProjectColumn().getId();
+                ProjectColumn newColumn = projectColumnRepository.findById(columnId)
+                        .orElseThrow(() -> new RuntimeException("Column not found"));
 
-            if (currentTask.getProjectColumn() != null) {
-                currentTask.getProjectColumn().removeTask(currentTask);
+                if (currentTask.getProjectColumn() != null) {
+                    currentTask.getProjectColumn().removeTask(currentTask);
+                }
+
+                currentTask.setProjectColumn(newColumn);
+                newColumn.addTask(currentTask);
             }
 
-            currentTask.setProjectColumn(newColumn);
-            newColumn.addTask(currentTask);
+            return taskRepository.save(currentTask);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
+             throw new RuntimeException();
         }
 
-        return taskRepository.save(currentTask);
     }
-
-//    public Task updateTask( TaskUpdateDTO taskUpdate) {
-//        Task currentTask = taskRepository.findById(taskUpdate.getId())
-//                .orElseThrow(() -> new RuntimeException("Task not found"));
-//
-//        // Update basic fields
-//        if (taskUpdate.getTitle() != null) {
-//            currentTask.setTitle(taskUpdate.getTitle());
-//        }
-//        if (taskUpdate.getDescription() != null) {
-//            currentTask.setDescription(taskUpdate.getDescription());
-//        }
-//        if (taskUpdate.getStatus() != null) {
-//            currentTask.setStatus(taskUpdate.getStatus());
-//        }
-//
-//        // Handle column change
-//        if (taskUpdate.getProjectColumnId() != null) {
-//            ProjectColumn newColumn = projectColumnRepository.findById(taskUpdate.getProjectColumnId())
-//                    .orElseThrow(() -> new RuntimeException("Column not found"));
-//
-//            // Remove from old column
-//            if (currentTask.getProjectColumn() != null) {
-//                currentTask.getProjectColumn().removeTask(currentTask);
-//            }
-//
-//            // Add to new column
-//            currentTask.setProjectColumn(newColumn);
-//            newColumn.addTask(currentTask);
-//        }
-//
-//        return taskRepository.save(currentTask);
-//    }
 }

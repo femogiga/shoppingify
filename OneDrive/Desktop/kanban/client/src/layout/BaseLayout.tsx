@@ -37,6 +37,7 @@ const BaseLayout = () => {
           {modalVisible && createPortal(<SubTaskModal />, body)}
           {projectModalVisible && createPortal(<CreateProjectModal />, body)}
           {createTaskModalVisible && createPortal(<CreateTaskModal />, body)}
+          
           <Outlet />
         </main>
       </div>

@@ -8,6 +8,6 @@ import com.kanban.kanban.models.user.UserDTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public record TaskDTO(Long id , String title, String description, Status status, List<UserDTO> taskMembers , List<SubTaskDTO> subTasks ) {
+public record TaskDTO(Long id , String title, String description, String status, List<UserDTO> taskMembers , List<SubTaskDTO> subTasks ) {
 
 }

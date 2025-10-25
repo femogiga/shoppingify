@@ -1,6 +1,8 @@
 package com.kanban.kanban.models.projectcolumn;
 
 
+import com.kanban.kanban.models.project.Project;
+import com.kanban.kanban.models.project.ProjectRepository;
 import com.kanban.kanban.models.project.ProjectService;
 import com.kanban.kanban.models.task.Task;
 import com.kanban.kanban.models.task.TaskRepository;
@@ -17,12 +19,14 @@ public class ProjectColumnService {
     public final ProjectColumnRepository projectColumnRepository;
     public final TaskService taskService;
     public final TaskRepository taskRepository;
+    public final ProjectRepository projectRepository;
 
 
-    public ProjectColumnService(ProjectColumnRepository projectColumnRepository, TaskService taskService, TaskRepository taskRepository) {
+    public ProjectColumnService(ProjectColumnRepository projectColumnRepository, TaskService taskService, TaskRepository taskRepository,ProjectRepository projectRepository) {
         this.projectColumnRepository = projectColumnRepository;
         this.taskService = taskService;
         this.taskRepository = taskRepository;
+        this.projectRepository = projectRepository;
     }
 
     public ProjectColumn moveTaskToColumn(Long taskId, Long columnId) {
@@ -41,6 +45,22 @@ public class ProjectColumnService {
     public List<ProjectColumn> getAll() {
 
         return projectColumnRepository.findAll();
+    }
+    public ProjectColumn createProjectColumn(Long id , ProjectColumn column){
+        Project currentProject = projectRepository.findById(id).orElseThrow(()-> new RuntimeException("project not found exception"));
+        // Safe version with null check
+        boolean nameExist = currentProject.getProjectColumns() != null &&
+                currentProject.getProjectColumns().stream()
+                        .anyMatch(col -> col.getName() != null &&
+                                col.getName().equalsIgnoreCase(column.getName()));
+
+        if (nameExist) {
+            throw new RuntimeException("Column name '" + column.getName() + "' already exists in this project");
+        }
+        currentProject.getProjectColumns().add(column);
+        column.setProject(currentProject);
+//        projectRepository.save(currentProject);
+      return  projectColumnRepository.save(column);
     }
 }
 

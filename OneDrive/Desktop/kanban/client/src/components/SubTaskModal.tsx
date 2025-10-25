@@ -93,9 +93,12 @@ const SubTaskModal = () => {
                 }}
                 disabled={isPending} // ✅ Disable during update
               >
-                <option value='TODO'>Todo</option>
+                {activeTaskData?.projectColumns?.map((col) => (
+                  <option key={col.id} value={col.name}>{col.name }</option>
+                ))}
+                {/* <option value='TODO'>Todo</option>
                 <option value='DOING'>Doing</option>
-                <option value='DONE'>Done</option>
+                <option value='DONE'>Done</option> */}
               </select>
               {isPending && <div>Updating...</div>}
             </fieldset>

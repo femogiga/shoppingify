@@ -4,12 +4,19 @@ import useTaskStore from '../statemanagment/taskStore';
 import useProjectStore from '../statemanagment/projectStore';
 
 const BackDrop = () => {
-  const { createTaskModalVisible, hideCreateTaskModal } = useTaskStore();
-  const { projectModalVisible, hideProjectModal } =
-    useProjectStore();
-    const handleBackdropClick = () => {
-        hideProjectModal();
-        hideCreateTaskModal();
+  const {
+    createTaskModalVisible,
+    hideCreateTaskModal,
+    showModal,
+    hideModal,
+    modalVisible,
+  } = useTaskStore();
+  const { projectModalVisible, hideProjectModal } = useProjectStore();
+
+  const handleBackdropClick = () => {
+    hideProjectModal();
+    hideCreateTaskModal();
+    hideModal();
   };
   return (
     <div
@@ -20,8 +27,11 @@ const BackDrop = () => {
         bottom: 0,
         left: 0,
         right: 0,
-        zIndex: projectModalVisible || createTaskModalVisible ? 5 : -5,
-        background: 'rgba(0,0,0,.2)',
+        zIndex:
+          projectModalVisible || createTaskModalVisible || modalVisible
+            ? 5
+            : -5,
+        background: 'rgba(0,0,0,.4)',
       }}></div>
   );
 };

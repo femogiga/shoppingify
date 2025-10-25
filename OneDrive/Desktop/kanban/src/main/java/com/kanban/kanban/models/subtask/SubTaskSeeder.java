@@ -55,7 +55,7 @@ public class SubTaskSeeder implements CommandLineRunner {
         // ✅ FIXED: Use the constructor that only takes title, description, status
         Task task1 = new Task("Develop Company Website",
                 "Create a responsive company website with modern design and SEO optimization. The website should showcase our services and portfolio.",
-                Status.DOING,project1
+                "DOING",project1
         );
 
         // ✅ FIXED: Add subtasks after creating the task
@@ -84,7 +84,7 @@ public class SubTaskSeeder implements CommandLineRunner {
         Task task2 = new Task(
                 "Build Mobile Application",
                 "Develop a cross-platform mobile app for both iOS and Android using React Native.",
-                Status.TODO,project1
+                "TODO",project1
         );
 
         task2.addSubTask(new SubTask(
@@ -105,7 +105,7 @@ public class SubTaskSeeder implements CommandLineRunner {
         Task task3 = new Task(
                 "Database Migration Project",
                 "Transfer existing database from local server to cloud with zero downtime migration strategy.",
-                Status.DOING,project2
+                "DOING",project2
         );
 
         task3.addSubTask(new SubTask(
@@ -126,7 +126,7 @@ public class SubTaskSeeder implements CommandLineRunner {
         Task task4 = new Task(
                 "API Development for Frontend",
                 "Develop comprehensive REST API for frontend applications with proper documentation and error handling.",
-                Status.DONE,project2
+                "DONE",project2
         );
 
         task4.addSubTask(new SubTask(
@@ -160,9 +160,9 @@ public class SubTaskSeeder implements CommandLineRunner {
 
         System.out.println("✅ Seeded " + tasks.size() + " sample tasks!");
         System.out.println("📊 Status Breakdown:");
-        System.out.println("   - TODO: " + countTasksByStatus(tasks, Status.TODO));
-        System.out.println("   - DOING: " + countTasksByStatus(tasks, Status.DOING));
-        System.out.println("   - DONE: " + countTasksByStatus(tasks, Status.DONE));
+        System.out.println("   - TODO: " + countTasksByStatus(tasks, "TODO"));
+        System.out.println("   - DOING: " + countTasksByStatus(tasks, "DOING"));
+        System.out.println("   - DONE: " + countTasksByStatus(tasks, "DONE"));
 
         int totalSubTasks = tasks.stream()
                 .mapToInt(task -> task.getSubTasks().size())
@@ -170,7 +170,7 @@ public class SubTaskSeeder implements CommandLineRunner {
         System.out.println("   - Total Subtasks: " + totalSubTasks);
     }
 
-    private long countTasksByStatus(List<Task> tasks, Status status) {
-        return tasks.stream().filter(task -> task.getStatus() == status).count();
+    private long countTasksByStatus(List<Task> tasks, String status) {
+        return tasks.stream().filter(task -> task.getStatus().equals(status) ).count();
     }
 }

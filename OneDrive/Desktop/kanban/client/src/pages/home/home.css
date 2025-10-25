@@ -52,8 +52,9 @@
     grid-column: 1/-1;
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(10rem, 18.75rem);
+    grid-auto-columns: minmax(8rem, 18.75rem);
     column-gap: 1rem;
+   
     /* background: #001233; */
     min-height: 100vh;
     padding-inline: 2rem;
@@ -62,7 +63,7 @@
 
 .column-container {
     min-width: 300px;
-    max-width: 300px
+    max-width: 300px;
 }
 
 .card {
@@ -71,7 +72,7 @@
     padding-block: 1rem;
     padding-inline: 1rem;
     border-radius: 8px;
-
+    margin-block-end: 1rem;
 }
 
 .circle {

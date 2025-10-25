@@ -1,11 +1,13 @@
 import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query"
 import apiService from "../utils/apiService"
+import useTaskStore from "../statemanagment/taskStore"
 
 
 
 
 export const useUpdateSubTask = (id) => {
     const queryClient = useQueryClient()
+    const{hideModal}=useTaskStore()
     const { isSuccess, isPending, mutate,isError,reset } = useMutation({
         mutationFn:(data) => apiService.update(`/subtasks/${parseInt(id)}`,data),
         mutationKey: ['updateSubtask'],

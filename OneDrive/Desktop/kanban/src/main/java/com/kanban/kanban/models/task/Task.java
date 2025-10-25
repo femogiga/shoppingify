@@ -35,8 +35,7 @@ public class Task {
 
 //    @NotBlank(message = "Status cannot be null and must be TODO or DOING or DONE")
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    private String status;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL ,mappedBy = "task",orphanRemoval = true)
     private List<SubTask> subTasks = new ArrayList<>();
@@ -58,7 +57,7 @@ public class Task {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "project"})
     public ProjectColumn projectColumn;
 
-    public Task (String title,String description , Status status,Project project){
+    public Task (String title,String description , String status,Project project){
         this.title = title;
         this.description = description;
         this.status = status;
@@ -100,11 +99,11 @@ public class Task {
         this.subTasks = subTasks;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
