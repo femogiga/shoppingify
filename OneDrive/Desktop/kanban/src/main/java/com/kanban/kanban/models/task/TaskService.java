@@ -1,7 +1,5 @@
 package com.kanban.kanban.models.task;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kanban.kanban.exceptions.TaskAlreadyExistException;
 import com.kanban.kanban.models.project.Project;
 import com.kanban.kanban.models.project.ProjectRepository;
@@ -13,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -161,5 +160,39 @@ public class TaskService {
              throw new RuntimeException();
         }
 
+    }
+
+
+    public TaskDTO getTaskById(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+
+        return new TaskDTO(
+                task.getId(),
+                task.getTitle(),
+                task.getDescription(),
+                task.getStatus(),
+                task.getTaskMembers().stream().map(user -> new UserDTO(
+                        user.getId(),
+                        user.getFirstname(),
+                        user.getLastname(),
+                        user.getEmail(),
+                        user.getPhotoUrl()
+                )).toList(),
+                task.getSubTasks().stream().map(subTask -> new SubTaskDTO(
+                        subTask.getId(),
+                        subTask.getTitle(),
+                        subTask.getDescription(),
+                        subTask.getStatus(),
+                        subTask.getTask().getId(),
+                        subTask.getMembers().stream().map(user -> new UserDTO(
+                                user.getId(),
+                                user.getFirstname(),
+                                user.getLastname(),
+                                user.getEmail(),
+                                user.getPhotoUrl()
+                        )).toList()
+                )).toList()
+        );
     }
 }

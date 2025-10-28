@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("api/tasks")
@@ -52,6 +53,20 @@ public class TaskController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskDTO> getById(@PathVariable Long id){
+        try{
+            TaskDTO task = taskService.getTaskById(id);
+            return new ResponseEntity<>(task,HttpStatus.OK);
+
+        }
+        catch(RuntimeException e){
+            System.out.println(e);
+            return new  ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 //    @PutMapping("/{id}")

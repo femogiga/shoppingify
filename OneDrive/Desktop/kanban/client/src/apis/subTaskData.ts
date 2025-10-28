@@ -12,9 +12,9 @@ export const useUpdateSubTask = (id) => {
         mutationFn:(data) => apiService.update(`/subtasks/${parseInt(id)}`,data),
         mutationKey: ['updateSubtask'],
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['projectById', id] })
             queryClient.invalidateQueries({ queryKey: ['projectById'] })
-            queryClient.invalidateQueries({ queryKey: ['allprojects'] })
+            queryClient.invalidateQueries({ queryKey: ['allProjects'] })
+            queryClient.invalidateQueries({ queryKey: ['taskDataById'] })
 
 
         },

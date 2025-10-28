@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import useTaskStore from '../statemanagment/taskStore';
 import { EllipsisVertical } from 'lucide-react';
 import SubstackCheckbox from './SubstackCheckbox';
-import { useUpdateTask } from '../apis/taskData';
+import { useGetTaskById, useUpdateTask } from '../apis/taskData';
 import { useParams } from 'react-router-dom';
+import { useDarkMode } from '../context/DarkModeContext';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 
 const SubTaskModal = () => {
   const { activeTaskId, activeTaskData } = useTaskStore();
@@ -12,9 +14,19 @@ const SubTaskModal = () => {
   );
   const [status, setStatus] = useState(activeTaskData?.status);
   const { id } = useParams();
+  const { mode } = useDarkMode();
+   const [count, setCount] = useState(0);
+  const queryClient = useQueryClient();
+  const { taskData } = useGetTaskById(activeTaskData?.id);
 
+  console.log(taskData)
+  // console.log(count);
   console.log('activeTaskData:', activeTaskData);
-  console.log('columns:', activeTaskData?.projectColumns);
+  // console.log('columns:', activeTaskData?.projectColumns);
+  const reCalcCount = taskData && taskData?.subTasks.filter(task => task.status === 'DONE')
+  console.log({reCalcCount});
+
+
 
   const handleTaskStatusChange = (e) => {
     e.preventDefault();
@@ -37,7 +49,7 @@ const SubTaskModal = () => {
       title: activeTaskData.title,
       description: activeTaskData.description,
       status: newStatus,
-      projectColumn: { id: newTaskColumn.id }, // ✅ Now this has the correct column
+      projectColumn: { id: newTaskColumn.id },
     };
 
     console.log('Sending update:', updatedData);
@@ -55,8 +67,24 @@ const SubTaskModal = () => {
     });
   };
 
+  const completedTask = useMemo(() =>  activeTaskData.subTasks.filter( (subTask) => subTask.status === 'DONE'),[activeTaskData.subTasks])
+
+
+
+
+    // queryClient.invalidateQueries({ queryKey: ['allProjects'] });
+
+    // console.log('completed', completedCount);
+
+
+  // Call this when you know data has changed
+
+
   return (
-    <article className='sub-task-modal'>
+    <article
+      className={`sub-task-modal ${
+        mode === 'light' ? 'bg-light' : 'bg-darker'
+      }`}>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
         <div className='flex item-center justify-between'>
           <p>
@@ -70,11 +98,12 @@ const SubTaskModal = () => {
           <p className='mbe-05'>
             Subtask
             <span>
-              ({2} of {3})
+              ({reCalcCount && reCalcCount.length} of{' '}
+              {activeTaskData?.subTasks.length})
             </span>
           </p>
           <form>
-            <fieldset>
+            <fieldset style={{ marginBlockEnd: '2rem' }}>
               {activeTaskData?.subTasks?.map((subtask) => (
                 <SubstackCheckbox key={`subTask-${subtask.id}`} {...subtask} />
               ))}
@@ -94,7 +123,9 @@ const SubTaskModal = () => {
                 disabled={isPending} // ✅ Disable during update
               >
                 {activeTaskData?.projectColumns?.map((col) => (
-                  <option key={col.id} value={col.name}>{col.name }</option>
+                  <option key={col.id} value={col.name}>
+                    {col.name}
+                  </option>
                 ))}
                 {/* <option value='TODO'>Todo</option>
                 <option value='DOING'>Doing</option>

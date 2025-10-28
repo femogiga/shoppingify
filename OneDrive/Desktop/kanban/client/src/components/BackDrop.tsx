@@ -2,6 +2,7 @@ import React from 'react';
 import { useCreateTask } from './../apis/taskData';
 import useTaskStore from '../statemanagment/taskStore';
 import useProjectStore from '../statemanagment/projectStore';
+import useColumnStore from '../statemanagment/columnStore';
 
 const BackDrop = () => {
   const {
@@ -18,6 +19,7 @@ const BackDrop = () => {
     hideCreateTaskModal();
     hideModal();
   };
+  const { columnModalVisible } = useColumnStore();
   return (
     <div
       onClick={handleBackdropClick}
@@ -28,7 +30,10 @@ const BackDrop = () => {
         left: 0,
         right: 0,
         zIndex:
-          projectModalVisible || createTaskModalVisible || modalVisible
+          projectModalVisible ||
+          createTaskModalVisible ||
+          modalVisible ||
+          columnModalVisible
             ? 5
             : -5,
         background: 'rgba(0,0,0,.4)',

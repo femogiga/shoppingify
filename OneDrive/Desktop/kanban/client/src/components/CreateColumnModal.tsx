@@ -3,12 +3,14 @@ import { useCreateTask } from '../apis/taskData';
 import { useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import { useCreateColumn } from '../apis/columnData';
+import useColumnStore from '../statemanagment/columnStore';
 
 const CreateColumnModal = ({ mode }) => {
   const [name, setName] = useState('');
   const { id } = useParams();
   const { createColumnMutation, reset, isPending, isError, isSuccess } =
     useCreateColumn(id);
+  const {hideColumnModal} =useColumnStore()
 
   const handleCreateColumn = (e) => {
     e.preventDefault();
@@ -16,6 +18,7 @@ const CreateColumnModal = ({ mode }) => {
     createColumnMutation(data, {
       onSuccess: () => {
         console.log('column successfully created');
+        setTimeout(hideColumnModal,3000);
       },
       onError: (error) => {
         console.error(error);

@@ -9,6 +9,10 @@ import useProjectStore from '../statemanagment/projectStore';
 import CreateProjectModal from './../components/CreateProjectModal';
 import CreateTaskModal from '../components/CreateTaskModal';
 import BackDrop from '../components/BackDrop';
+import Container from '../components/Container';
+import CreateColumnModal from '../components/CreateColumnModal';
+import { useDarkMode } from '../context/DarkModeContext';
+import useColumnStore from '../statemanagment/columnStore';
 
 const BaseLayout = () => {
   const {
@@ -19,17 +23,18 @@ const BaseLayout = () => {
     hideModal,
     createTaskModalVisible,
   } = useTaskStore();
-   const {
-     showProjectModal,
-     hideProjectModal,
-     projectModal,
-     projectModalVisible,
-   } = useProjectStore();
+  const {
+    showProjectModal,
+    hideProjectModal,
+    projectModal,
+    projectModalVisible,
+  } = useProjectStore();
   const body = document.querySelector('.home');
-  console.log(body);
+  const { mode } = useDarkMode()
+  const{columnModalVisible} = useColumnStore()
   return (
     <>
-      <div className='home'>
+      <div className={`home ${mode === 'light' ? 'bg-light' : 'bg-darker'}`}>
         <BackDrop />
         <Sidebar />
         <main className='main-content'>
@@ -37,7 +42,8 @@ const BaseLayout = () => {
           {modalVisible && createPortal(<SubTaskModal />, body)}
           {projectModalVisible && createPortal(<CreateProjectModal />, body)}
           {createTaskModalVisible && createPortal(<CreateTaskModal />, body)}
-          
+          {columnModalVisible &&
+            createPortal(<CreateColumnModal mode={mode} />, body)}
           <Outlet />
         </main>
       </div>

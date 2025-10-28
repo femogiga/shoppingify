@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useUpdateSubTask } from '../apis/subTaskData';
 
 const SubstackCheckbox = (props) => {
   const { updateMutation } = useUpdateSubTask(parseInt(props.id));
-
+  const ref = useRef(null)
   // Local checkbox state mirrors props.status initially
   const [isChecked, setIsChecked] = useState(props.status === 'DONE');
 
@@ -12,7 +12,7 @@ const SubstackCheckbox = (props) => {
     setIsChecked(newChecked); // instant UI feedback
 
     const newStatus = newChecked === true ? 'DONE' : 'DOING';
-
+   
     const tdata = {
       id: props.id,
       title: props.title,
@@ -32,8 +32,9 @@ const SubstackCheckbox = (props) => {
   };
 
   return (
-    <div className='flex gap-x-1 item-center mbe-05 bg-darker p-x-05 p-y-05 rounded-sm color-dark-white'>
+    <div className='subtaskcheckbox flex gap-x-1 item-center mbe-05 bg-darker p-x-05 p-y-05 rounded-sm color-dark-white'>
       <input
+        ref={ref}
         type='checkbox'
         onChange={handleStatusChange}
         checked={isChecked}

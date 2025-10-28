@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import apiService from "../utils/apiService"
 
 
@@ -44,4 +44,13 @@ export const useUpdateTask = (id) => {
 
     })
     return { taskUpdateMutate: mutate, reset, isSuccess, isError, isPending }
+}
+
+
+export const useGetTaskById = (id) => {
+    const { isPending, data, error } = useQuery({
+        queryFn: () => apiService.getById('/tasks',parseInt(id)).then(res => res.data),
+        queryKey:['taskDataById',id]
+    })
+    return {taskData:data,error,isGettingActiveData:isPending}
 }

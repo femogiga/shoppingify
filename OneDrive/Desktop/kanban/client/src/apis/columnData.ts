@@ -9,8 +9,8 @@ export const useCreateColumn = (id) => {
     const { mutate, reset, isPending, isError, isSuccess } = useMutation({
         mutationFn: (data) => apiService.post(`/columns/${id}`, data).then(res => res.data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['projectById', id] })
-            queryClient.invalidateQueries({ queryKey: ['allrojects'] })
+            queryClient.invalidateQueries({ queryKey: ['projectById'] })
+            queryClient.invalidateQueries({ queryKey: ['allProjects'] })
         },
         onError: (error) => {
             console.error(error);

@@ -37,7 +37,7 @@ export const useCreateProject = () => {
         mutationFn: (projectData) => apiService.post('/projects', projectData).then(res => res.data),
         mutationKey: ['createProject'],
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['allprojects'] })
+            queryClient.invalidateQueries({ queryKey: ['allProjects'] })
             queryClient.setQueryData(['allProjects'], (old) => old ? [...old, data] : [data])
         },
         onError: (error) => {

@@ -1,15 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import useColumnStore from '../statemanagment/columnStore';
 
-const NewColumnButton = ({mode}) => {
+const NewColumnButton = ({ mode }) => {
+  const { showColumnModal } = useColumnStore();
+
+ const handleButtonClick = (e:React.FormEvent<HTMLAnchorElement>) => {
+   e.preventDefault();
+   e.stopPropagation()
+   showColumnModal()
+  }
   return (
     <Link
+      onClick={handleButtonClick}
       to=''
       style={{
         display: 'grid',
         placeItems: 'center',
         height: '80vh',
-        backgroundColor: mode === 'light' ? 'lightgray' : '#33415c',
+        backgroundColor: mode === 'light' ? 'lightgray' : 'hsl(235deg 12% 19%)',
         color: mode === 'light' ? 'black' : 'white',
         textDecoration: 'none',
         borderRadius: '1rem',

@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useDarkMode } from '../context/DarkModeContext';
 import useTaskStore from '../statemanagment/taskStore';
 
@@ -39,8 +39,14 @@ const Card = (props) => {
   // console.log("=====>",props.projectColumns)
   // console.log('activeTaskId',activeTaskId);
 
-
-
+  console.log(props)
+  const totalTask = props.subTasks.length;
+  const completedTask = useMemo(
+    () => props.subTasks.filter((subTask) => subTask.status === 'DONE'),
+    [props.subTasks]
+  );
+  console.log({ totalTask })
+  console.log(completedTask.length)
   return (
     <article
       className={`${mode === 'light' ? 'lightmode' : 'bg-dark'} card`}
@@ -53,7 +59,7 @@ const Card = (props) => {
         {props.title || 'Build UI for onboarding flow'}
       </p>
       <p className='color-dark-white font-sm'>
-        <span>{1} </span>of<span> {3} </span>subtasks
+        <span>{completedTask.length} </span>of<span> {totalTask} </span>subtasks
       </p>
     </article>
   );

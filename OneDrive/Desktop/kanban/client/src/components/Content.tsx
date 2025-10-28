@@ -143,7 +143,7 @@ const Content = () => {
           <NewColumnButton mode={mode} />
         </>
       </div>
-      <CreateColumnModal mode={mode} />
+     
     </section>
   );
 };

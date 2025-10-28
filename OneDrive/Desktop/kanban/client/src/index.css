@@ -18,7 +18,7 @@
 
 body {
   /* max-width: 1800px; */
-  max-width: 80%;
+  max-width: 100%;
   margin-inline: auto;
 }
 
@@ -142,7 +142,7 @@ fieldset {
 }
 
 .color-dark-white {
-  color: #979dac
+  color:hsl(216deg 15% 57%);
 }
 
 .font-sm {
