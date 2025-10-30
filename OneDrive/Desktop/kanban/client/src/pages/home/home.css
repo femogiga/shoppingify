@@ -196,3 +196,12 @@
     border-radius: 8px;
 
 }
+
+
+.delete-edit-modal{
+    border:1px solid white;
+    border-radius: .6rem;
+    padding-left:.8rem;
+    padding-block:.4rem;
+
+}

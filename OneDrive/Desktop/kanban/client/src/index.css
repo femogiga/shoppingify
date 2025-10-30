@@ -84,7 +84,9 @@ fieldset {
 .gap-x-3 {
   column-gap: 3rem;
 }
-
+.gap-y-05 {
+  row-gap: .5rem;
+}
 .gap-y-1 {
   row-gap: 1rem;
 }
@@ -155,4 +157,13 @@ fieldset {
 
 .rounded-sm {
   border-radius: .2rem
+}
+
+
+.relative{
+  position:relative;
+}
+
+.absolute{
+  position:absolute;
 }

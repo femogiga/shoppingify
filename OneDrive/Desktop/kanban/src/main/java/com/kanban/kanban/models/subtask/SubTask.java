@@ -26,8 +26,8 @@ public class SubTask {
     @Column(nullable = false,length = 255)
     private String title;
 
-    @NotBlank(message = "Description cannot be null")
-    @Size(min=5 , max = 1000 ,message = "Description must be between 5 and 1000 characters")
+
+//    @Size(min=5 , max = 1000 ,message = "Description must be between 5 and 1000 characters")
     @Column(nullable = false)
     private String description;
 

@@ -7,6 +7,7 @@ import { useDarkMode } from '../context/DarkModeContext';
 import { useFetchProjectById, useFetchProjects } from '../apis/projectData';
 import NewColumnButton from './NewColumnButton';
 import CreateColumnModal from './CreateColumnModal';
+import { colorGenerator } from '../utils/colorGenerator';
 
 const Content = () => {
   const [parent, setParent] = useState(null);
@@ -15,11 +16,12 @@ const Content = () => {
   const id = parseInt(params.id);
 
   const { data: projectData } = useFetchProjects();
-  const activeProject = projectData?.find((project) => project.id === id);
+ // const activeProject = projectData?.find((project) => project.id === id);
+  const{projectById} = useFetchProjectById(id)
 
   useEffect(() => {}, [id, params, projectData]);
 
-  console.log('project', activeProject);
+  console.log('project', projectById);
 
   const [tasks, setTasks] = useState({
     TODO: [], // Changed to uppercase to match your API
@@ -101,10 +103,9 @@ const Content = () => {
     }
   };
 
-  const { projectById } = useFetchProjectById(id);
 
-  // console.log("==========>",projectById)
-
+   console.log("==========>",projectById)
+//
   return (
     <section
       className={`${mode === 'light' ? 'bg-light' : 'bg-darker'} content`}
@@ -112,10 +113,12 @@ const Content = () => {
     >
       {/* <DndContext onDragEnd={handleDragEnd}> */}
       {/* TODO Column */}
-      {projectById?.projectColumn.map((column) => (
+      {projectById?.projectColumn.map((column,index) => (
         <ColumnContainer
           key={column.name}
           heading={column.name}
+          taskCount={column?.tasks.length}
+          statusColor={colorGenerator(index)}
           id={column.name}>
           {column.tasks.map((task) => (
             <div key={`todo-${task.id}`}>
@@ -143,7 +146,7 @@ const Content = () => {
           <NewColumnButton mode={mode} />
         </>
       </div>
-     
+
     </section>
   );
 };

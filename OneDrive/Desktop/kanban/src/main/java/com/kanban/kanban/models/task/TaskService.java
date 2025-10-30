@@ -5,11 +5,15 @@ import com.kanban.kanban.models.project.Project;
 import com.kanban.kanban.models.project.ProjectRepository;
 import com.kanban.kanban.models.projectcolumn.ProjectColumn;
 import com.kanban.kanban.models.projectcolumn.ProjectColumnRepository;
+import com.kanban.kanban.models.subtask.SubTask;
 import com.kanban.kanban.models.subtask.SubTaskDTO;
+import com.kanban.kanban.models.subtask.SubTaskRepository;
 import com.kanban.kanban.models.user.UserDTO;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,12 +23,15 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final ProjectColumnRepository projectColumnRepository;
+    @Autowired
+    private final SubTaskRepository subTaskRepository;
 
-    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, ProjectColumnRepository projectColumnRepository) {
+    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, ProjectColumnRepository projectColumnRepository, SubTaskRepository subTaskRepository) {
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
         this.projectColumnRepository = projectColumnRepository;
 
+        this.subTaskRepository = subTaskRepository;
     }
 
     public List<Task> getTasks() {
@@ -95,21 +102,39 @@ public class TaskService {
         if (taskRepository.existsByTitle(task.getTitle())) {
             throw new TaskAlreadyExistException();
         }
-        System.out.println("projectId " + task.getProjectId());
 
         Project project = projectRepository.findById(task.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project does not exist"));
 
-        ProjectColumn todoColumn = project.getProjectColumns().stream()
-                .filter(column -> column.getName().equals("TODO"))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("TODO column does not exist"));
-        System.out.println(task.getProjectId());
-        // Set both relationships
+        // Get the FIRST column instead of hardcoded "TODO"
+        ProjectColumn firstColumn = project.getProjectColumns().stream()
+                .findFirst() // Get the first column
+                .orElseThrow(() -> new RuntimeException("No columns exist in this project"));
+
+        // Or if you want to ensure it's sorted by creation order:
+        // Sort by ID (creation order)
+        ProjectColumn column = project.getProjectColumns().stream().min(Comparator.comparing(ProjectColumn::getId))
+                .orElseThrow(() -> new RuntimeException("No columns exist in this project"));
+
+        System.out.println("Adding task to first column: " + firstColumn.getName());
+
+        // Set relationships
         task.setProject(project);
-        task.setProjectColumn(todoColumn);
-        System.out.println("Working here");
-        // Just save the task - JPA will handle the rest
+        task.setProjectColumn(column);
+
+
+        if (task.getSubTasks() != null) {
+            for (SubTask subtask : task.getSubTasks()) {
+                subtask.setStatus(Status.TODO);
+                subtask.setDescription("Fill in later");
+
+                subtask.setTask(task); // Set the relationship BEFORE saving
+
+                System.out.println("Subtask with task reference: " + subtask);
+            }
+        }
+
+        // Save task (subtasks will be saved due to cascade if configured properly)
         return taskRepository.save(task);
     }
 

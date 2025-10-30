@@ -2,10 +2,12 @@ package com.kanban.kanban.models.project;
 
 import com.kanban.kanban.models.projectcolumn.ProjectColumn;
 import com.kanban.kanban.models.projectcolumn.ProjectColumnDTO;
+import com.kanban.kanban.models.projectcolumn.ProjectColumnRepository;
 import com.kanban.kanban.models.subtask.SubTaskDTO;
 import com.kanban.kanban.models.task.TaskDTO;
 import com.kanban.kanban.models.user.UserDTO;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +17,9 @@ import java.util.List;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectColumnRepository projectColumnRepository;
 
     public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
@@ -30,15 +35,23 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    @Transactional
     public Project createProjectWithColumns(Project project) {
-        project.addProjectColumn(new ProjectColumn("TODO"));
-        project.addProjectColumn(new ProjectColumn("DOING"));
-        project.addProjectColumn(new ProjectColumn("DONE"));
+        // Handle default columns if none provided
+        if (project.getProjectColumns() == null || project.getProjectColumns().isEmpty()) {
+            project.addProjectColumn(new ProjectColumn("TODO"));
+            project.addProjectColumn(new ProjectColumn("DOING"));
+            project.addProjectColumn(new ProjectColumn("DONE"));
+        } else {
+            // Ensure bidirectional relationship for provided columns
+            for (ProjectColumn column : project.getProjectColumns()) {
+                column.setProject(project);
+            }
+        }
 
+        // Save project (columns will be saved due to cascade)
         return projectRepository.save(project);
-
     }
-
 
     public List<ProjectDTO> getAllProjects() {
         return projectRepository.findAll().stream().map(project -> new ProjectDTO(
