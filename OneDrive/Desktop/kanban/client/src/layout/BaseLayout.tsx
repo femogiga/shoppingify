@@ -13,6 +13,7 @@ import Container from '../components/Container';
 import CreateColumnModal from '../components/CreateColumnModal';
 import { useDarkMode } from '../context/DarkModeContext';
 import useColumnStore from '../statemanagment/columnStore';
+import EditTaskModal from '../components/EditTaskModal';
 
 const BaseLayout = () => {
   const {
@@ -22,6 +23,7 @@ const BaseLayout = () => {
     showModal,
     hideModal,
     createTaskModalVisible,
+    editTaskModalVisible,
   } = useTaskStore();
   const {
     showProjectModal,
@@ -44,6 +46,9 @@ const BaseLayout = () => {
           {createTaskModalVisible && createPortal(<CreateTaskModal />, body)}
           {columnModalVisible &&
             createPortal(<CreateColumnModal mode={mode} />, body)}
+          {    editTaskModalVisible
+ &&
+            createPortal(<EditTaskModal mode={mode} />, body)}
           <Outlet />
         </main>
       </div>

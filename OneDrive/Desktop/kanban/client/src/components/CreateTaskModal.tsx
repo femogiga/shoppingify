@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useCreateTask } from '../apis/taskData';
 import { useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
+import { X } from 'lucide-react';
 
 const CreateTaskModal = () => {
   const { id } = useParams();
@@ -25,7 +26,7 @@ const CreateTaskModal = () => {
       .filter((subTask) => subTask.trim() !== '')
       .map((objectTitle) => ({ title: objectTitle.trim() }));
     e.preventDefault();
-    const dataToSend = { ...taskData,subTasks:subTasksData };
+    const dataToSend = { ...taskData, subTasks: subTasksData };
     createTask(dataToSend, {
       onSuccess: (data) => {
         console.log('Task successfully created');
@@ -55,6 +56,11 @@ const CreateTaskModal = () => {
   const handNewSubTaskInput = (e) => {
     e.preventDefault();
     setSubTasks([...subTasks, '']);
+  };
+  const handleCancelInput = (index) => {
+
+  const  filtered = subTasks.filter((_,i) => i !== index);
+    setSubTasks(filtered)
   };
   return (
     <article className='sub-task-modal'>
@@ -95,18 +101,23 @@ const CreateTaskModal = () => {
               <label>Subtasks</label>
               <div className='grid gap-y-05'>
                 {subTasks.map((subTask, index) => (
-                  <input
-                    type='text'
-                    style={{ width: '100%', padding: '.4rem' }}
-                    name='title'
-                    value={subTask}
-                    onChange={(e) =>
-                      handleSubtaskInputChange(index, e.target.value)
-                    }
-                    placeholder='title'
-                    disabled={isCreating}
-                    key={`subtaskInput${index}`}
-                  />
+                  <div className='flex'>
+                    <input
+                      type='text'
+                      style={{ width: '100%', padding: '.4rem' }}
+                      name='title'
+                      value={subTask}
+                      onChange={(e) =>
+                        handleSubtaskInputChange(index, e.target.value)
+                      }
+                      placeholder='title'
+                      disabled={isCreating}
+                      key={`subtaskInput${index}`}
+                    />
+                    <button type='button' onClick={()=>handleCancelInput(index)}>
+                      <X />
+                    </button>
+                  </div>
                 ))}
               </div>
               <button

@@ -7,7 +7,8 @@ import DeleteEditModal from './DeleteEditModal';
 
 const Header = () => {
   const { mode } = useDarkMode();
-  const { showCreateTaskModal } = useTaskStore();
+  const { showCreateTaskModal } =
+    useTaskStore();
   const [isOpen, setIsOpen] = useState(false)
 
   const handleIsOpen = (e) => {
@@ -32,7 +33,7 @@ const Header = () => {
           <Link to='' onClick={handleIsOpen}>
             <EllipsisVertical className='color-dark-white' />
           </Link>
-          {isOpen && <DeleteEditModal  modalStyle={{ right: "2rem", width: "10rem", top: '3rem' }} />}
+          {isOpen && <DeleteEditModal setIsOpen={setIsOpen} modalStyle={{ right: "2rem", width: "10rem", top: '3rem' }} />}
         </div>
       </div>
     </header>

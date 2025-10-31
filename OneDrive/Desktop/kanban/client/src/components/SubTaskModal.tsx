@@ -3,15 +3,23 @@ import useTaskStore from '../statemanagment/taskStore';
 import { EllipsisVertical } from 'lucide-react';
 import SubstackCheckbox from './SubstackCheckbox';
 import { useGetTaskById, useUpdateTask } from '../apis/taskData';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useDarkMode } from '../context/DarkModeContext';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 
 const SubTaskModal = () => {
-  const { activeTaskId, activeTaskData } = useTaskStore();
+  const { activeTaskId, activeTaskData, showEditTaskModal, hideEditTaskModal } =
+    useTaskStore();
   const { taskUpdateMutate, isSuccess, isError, isPending } = useUpdateTask(
     activeTaskData.id
   );
+
+
+  const handleShowEditModal = (e) => {
+    e.preventDefault();
+    showEditTaskModal();
+
+  };
   const [status, setStatus] = useState(activeTaskData?.status);
   const { id } = useParams();
   const { mode } = useDarkMode();
@@ -24,7 +32,7 @@ const SubTaskModal = () => {
   console.log('activeTaskData:', activeTaskData);
   // console.log('columns:', activeTaskData?.projectColumns);
   const reCalcCount = taskData && taskData?.subTasks.filter(task => task.status === 'DONE')
-  console.log({reCalcCount});
+  // console.log({reCalcCount});
 
 
 
@@ -91,7 +99,9 @@ const SubTaskModal = () => {
             {activeTaskData?.title ||
               'Lorem ipsum dolor sit amet consectetur adipisicing elit.Recusandaeut'}
           </p>
-          <EllipsisVertical className='color-dark-white' size='30' />
+          <Link onClick={handleShowEditModal}>
+            <EllipsisVertical className='color-dark-white' size='30' />
+          </Link>
         </div>
         <p className='color-dark-white'>{activeTaskData?.description}</p>
         <div>

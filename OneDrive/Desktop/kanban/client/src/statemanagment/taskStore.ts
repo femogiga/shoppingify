@@ -5,7 +5,8 @@ const useTaskStore = create((set) => ({
     modalVisible: false,
     activeTaskData: null,
     createTaskModalVisible: false,
-    
+    editTaskModalVisible:false,
+
     setActiveTaskId: (newTaskId: number) => set({ activeTask: newTaskId }),
     showModal: () => set({ modalVisible: true }),
     hideModal: () => set({ modalVisible: false }),
@@ -17,6 +18,8 @@ const useTaskStore = create((set) => ({
     }),
     showCreateTaskModal: () => set({ createTaskModalVisible: true }),
     hideCreateTaskModal: () => set({ createTaskModalVisible: false }),
+    showEditTaskModal: () => set({ editTaskModalVisible: true }),
+    hideEditTaskModal: () => set({ editTaskModalVisible: false }),
 
 }));
 
