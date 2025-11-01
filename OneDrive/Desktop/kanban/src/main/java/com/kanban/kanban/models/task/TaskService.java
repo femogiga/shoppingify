@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -163,6 +164,20 @@ public class TaskService {
             if (updatedTask.getTitle() != null) currentTask.setTitle(updatedTask.getTitle());
             if (updatedTask.getDescription() != null) currentTask.setDescription(updatedTask.getDescription());
             if (updatedTask.getStatus() != null) currentTask.setStatus(updatedTask.getStatus());
+            if (updatedTask.getSubTasks() != null && !updatedTask.getSubTasks().isEmpty()) {
+                List<SubTask> newSubtasks = updatedTask.getSubTasks().stream()
+                        .filter(subTask -> subTask.getId() == null) // Only new subtasks
+                        .filter(subTask -> !subTaskRepository.existsByTitleAndTaskId(
+                                subTask.getTitle(), currentTask.getId())) // Check within current task
+                        .map(subTask -> {
+                            subTask.setTask(currentTask); // Set the task relationship
+                            return subTaskRepository.save(subTask);
+                        })
+                        .toList();
+
+                newSubtasks.forEach(currentTask::addSubTask);
+                System.out.println("Added " + newSubtasks.size() + " new subtasks");
+            }
 
             // Handle column move
             if (updatedTask.getProjectColumn() != null && updatedTask.getProjectColumn().getId() != null) {
@@ -219,5 +234,16 @@ public class TaskService {
                         )).toList()
                 )).toList()
         );
+    }
+
+    public void deleteTask(Long id){
+        Task task = taskRepository.findById(id).orElseThrow(()->new RuntimeException("Task not found"));
+        if (task.getProjectColumn() != null) {
+            task.getProjectColumn().removeTask(task);
+        }
+        task.getSubTasks().clear();
+        task.getTaskMembers().clear();
+
+        taskRepository.delete(task);
     }
 }

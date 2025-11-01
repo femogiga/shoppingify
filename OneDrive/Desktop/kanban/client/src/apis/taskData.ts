@@ -54,3 +54,23 @@ export const useGetTaskById = (id) => {
     })
     return {taskData:data,error,isGettingActiveData:isPending}
 }
+
+
+
+export const useDeleteTaskMutation = () => {
+    const queryClient = useQueryClient();
+
+    const { isError, mutate, isSuccess, isPending, error } = useMutation({
+        mutationFn: (id: number) => apiService.remove("/tasks", id).then(res => res.data),
+        mutationKey: ['deletetask'],
+        onSuccess: () => {
+            console.log('Successfully deleted');
+            // Invalidate relevant queries to refetch data
+            queryClient.invalidateQueries({ queryKey: ['projectById'] });
+            queryClient.invalidateQueries({ queryKey: ['allProjects'] });
+        },
+        onError: (error) => console.error('Delete task error:', error)
+    });
+
+    return { deleteMutation: mutate, isSuccess, isPending, isError, error };
+};

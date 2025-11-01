@@ -4,21 +4,28 @@ import { useDarkMode } from '../context/DarkModeContext';
 import useTaskStore from '../statemanagment/taskStore';
 import { Link } from 'react-router-dom';
 import DeleteEditModal from './DeleteEditModal';
+import useModalStore from '../statemanagment/modalStore';
 
 const Header = () => {
   const { mode } = useDarkMode();
-  const { showCreateTaskModal } =
-    useTaskStore();
-  const [isOpen, setIsOpen] = useState(false)
+  const { showCreateTaskModal } = useTaskStore();
+  const { showDeleteProjectModal, hideDeleteProjectModal } = useModalStore();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleIsOpen = (e) => {
     e.preventDefault();
-    setIsOpen(true)
-  }
+    setIsOpen(true);
+  };
 
   const createTaskModalVisibility = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     showCreateTaskModal();
+  };
+
+  const handleShowDeleteProjectModal = (e) => {
+    e.preventDefault();
+    setIsOpen(false); // closes deleteEditModal
+    showDeleteProjectModal(); //open the delete confimation modal
   };
   return (
     <header className={`${mode === 'light' ? 'lightmode' : 'darkmode'} header`}>
@@ -33,7 +40,15 @@ const Header = () => {
           <Link to='' onClick={handleIsOpen}>
             <EllipsisVertical className='color-dark-white' />
           </Link>
-          {isOpen && <DeleteEditModal setIsOpen={setIsOpen} modalStyle={{ right: "2rem", width: "10rem", top: '3rem' }} />}
+          {isOpen && (
+            <DeleteEditModal
+              headerText={'Board'}
+              setIsOpen={setIsOpen}
+              onOpenDelete={handleShowDeleteProjectModal}
+              onOpenEdit={''}
+              modalStyle={{ right: '2rem', width: '10rem', top: '3rem' }}
+            />
+          )}
         </div>
       </div>
     </header>

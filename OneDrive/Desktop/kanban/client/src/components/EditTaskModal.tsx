@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useCreateTask, useGetTaskById } from '../apis/taskData';
+import { useCreateTask, useDeleteTaskMutation, useGetTaskById, useUpdateTask } from '../apis/taskData';
 import { useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import { InfinityIcon, X } from 'lucide-react';
@@ -17,7 +17,8 @@ const EditTaskModal = ({ mode }) => {
     activeTaskId,
     activeTaskData,
   } = useTaskStore();
-
+  const{deleteMutation} = useDeleteTaskMutation()
+  const { taskUpdateMutate } = useUpdateTask(activeTaskData.id);
   const [updateData, setUpdateData] = useState({
     id: activeTaskData.id,
     title: activeTaskData.title,
@@ -39,7 +40,12 @@ const EditTaskModal = ({ mode }) => {
       ...updateData,
       subTasks: [
         ...updateData.subTasks,
-        { title: '', task_id: activeTaskData.id },
+        {
+          title: '',
+          task_id: activeTaskData.id,
+          status: 'TODO',
+          description: 'Add description',
+        },
       ],
     };
     setUpdateData(currentTaskdata);
@@ -52,12 +58,30 @@ const EditTaskModal = ({ mode }) => {
     );
     setUpdateData({ ...intialData, subTasks: filteredSubtask });
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    taskUpdateMutate(updateData, {
+      onSuccess: () => {
+        console.log('Successfully updated');
+                setTimeout(hideEditTaskModal, 2000);
+
+      },
+      onError: (error) => {
+        console.error('Update failed:', error);
+        // Optionally revert status on error
+      },
+    });
+  };
+
+
+
   return (
     <article className='sub-task-modal'>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
         <p>Edit Task</p>
 
-        <form onSubmit={'handleSubmit'}>
+        <form onSubmit={handleSubmit}>
           <div className='grid gap-y-1'>
             <div>
               <label htmlFor='title'>Title</label>
@@ -89,7 +113,7 @@ const EditTaskModal = ({ mode }) => {
             </div>
             <div>
               <label>Subtasks</label>
-              <div className='grid gap-y-05'>
+              <div className='grid gap-y-05 mbe-1'>
                 {updateData.subTasks.map((subTask, index) => (
                   <div className='flex'>
                     <input
@@ -113,12 +137,27 @@ const EditTaskModal = ({ mode }) => {
               <button
                 type='button'
                 onClick={handlAddSubTaskInput}
-                style={{ width: '100%', paddingBlock: '.6rem' }}>
+                style={{
+                  width: '100%',
+                  paddingBlock: '.6rem',
+                  borderRadius: '1rem',
+                  border: 'none',
+                  outline: 'none',
+                }}>
                 <span>+ </span> Add New SubTask
               </button>
             </div>
-            <button type='submit' className='p-x-1 p-y-05 rounded-sm'>
-              {isCreating ? 'Creating' : 'Submit'}
+            <button
+              type='submit'
+              className='p-x-1 p-y-05 rounded-sm bg-blue-md rounded-md'
+              style={{
+                borderRadius: '1rem',
+                border: 'none',
+                outline: 'none',
+                color: '#ffff',
+                paddingBlock: '.6rem',
+              }}>
+              {isCreating ? 'Creating' : 'Save changes'}
             </button>
           </div>
         </form>

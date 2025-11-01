@@ -3,6 +3,7 @@ import { useCreateTask } from './../apis/taskData';
 import useTaskStore from '../statemanagment/taskStore';
 import useProjectStore from '../statemanagment/projectStore';
 import useColumnStore from '../statemanagment/columnStore';
+import useModalStore from '../statemanagment/modalStore';
 
 const BackDrop = () => {
   const {
@@ -11,13 +12,26 @@ const BackDrop = () => {
     showModal,
     hideModal,
     modalVisible,
+    editTaskModalVisible,
+    hideEditTaskModal,
   } = useTaskStore();
   const { projectModalVisible, hideProjectModal } = useProjectStore();
+  const {
+    deleteModalVisible,
+    hideDeleteModal,
+    deleteProjectModal,
+    showDeleteProjectModal,
+    hideDeleteProjectModal,
+  } = useModalStore();
 
   const handleBackdropClick = () => {
     hideProjectModal();
     hideCreateTaskModal();
     hideModal();
+    hideDeleteModal();
+    hideEditTaskModal()
+    hideDeleteProjectModal();
+
   };
   const { columnModalVisible } = useColumnStore();
   return (
@@ -33,7 +47,10 @@ const BackDrop = () => {
           projectModalVisible ||
           createTaskModalVisible ||
           modalVisible ||
-          columnModalVisible
+          columnModalVisible ||
+          deleteModalVisible ||
+          editTaskModalVisible ||
+          deleteProjectModal
             ? 5
             : -5,
         background: 'rgba(0,0,0,.4)',

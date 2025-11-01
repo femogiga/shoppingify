@@ -182,8 +182,8 @@
 
 .sub-task-modal {
     position: absolute;
-    width:30rem;
-    min-width: 20rem;
+    /* width:30rem; */
+     min-width: 24rem; 
     max-width: 30rem;
 
     background: #33415c;

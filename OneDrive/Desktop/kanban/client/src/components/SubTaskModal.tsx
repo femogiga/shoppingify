@@ -6,6 +6,8 @@ import { useGetTaskById, useUpdateTask } from '../apis/taskData';
 import { Link, useParams } from 'react-router-dom';
 import { useDarkMode } from '../context/DarkModeContext';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import DeleteEditModal from './DeleteEditModal';
+import useModalStore from '../statemanagment/modalStore';
 
 const SubTaskModal = () => {
   const { activeTaskId, activeTaskData, showEditTaskModal, hideEditTaskModal } =
@@ -13,28 +15,29 @@ const SubTaskModal = () => {
   const { taskUpdateMutate, isSuccess, isError, isPending } = useUpdateTask(
     activeTaskData.id
   );
-
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleShowEditModal = (e) => {
     e.preventDefault();
-    showEditTaskModal();
-
+    e.stopPropagation();
+    setIsOpen(true);
   };
   const [status, setStatus] = useState(activeTaskData?.status);
   const { id } = useParams();
   const { mode } = useDarkMode();
-   const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);
   const queryClient = useQueryClient();
   const { taskData } = useGetTaskById(activeTaskData?.id);
+  const { hideModal } = useTaskStore();
+  const { hideDeleteModal, showDeleteModal } = useModalStore();
 
-  console.log(taskData)
+  console.log(taskData);
   // console.log(count);
   console.log('activeTaskData:', activeTaskData);
   // console.log('columns:', activeTaskData?.projectColumns);
-  const reCalcCount = taskData && taskData?.subTasks.filter(task => task.status === 'DONE')
+  const reCalcCount =
+    taskData && taskData?.subTasks.filter((task) => task.status === 'DONE');
   // console.log({reCalcCount});
-
-
 
   const handleTaskStatusChange = (e) => {
     e.preventDefault();
@@ -75,22 +78,40 @@ const SubTaskModal = () => {
     });
   };
 
-  const completedTask = useMemo(() =>  activeTaskData.subTasks.filter( (subTask) => subTask.status === 'DONE'),[activeTaskData.subTasks])
+  const completedTask = useMemo(
+    () =>
+      activeTaskData.subTasks.filter((subTask) => subTask.status === 'DONE'),
+    [activeTaskData.subTasks]
+  );
+
+  const handleShowEditTaskModal = (e) => {
+    e.preventDefault();
+    showEditTaskModal();
+    hideDeleteModal();
+    hideModal();
+    setIsOpen(false);
+  };
+
+  const handleShowDeleteModal = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    showDeleteModal();
+    setIsOpen(false);
+    hideEditTaskModal();
+
+    hideModal();
+  };
 
 
+  // queryClient.invalidateQueries({ queryKey: ['allProjects'] });
 
-
-    // queryClient.invalidateQueries({ queryKey: ['allProjects'] });
-
-    // console.log('completed', completedCount);
-
+  // console.log('completed', completedCount);
 
   // Call this when you know data has changed
 
-
   return (
     <article
-      className={`sub-task-modal ${
+      className={`sub-task-modal  ${
         mode === 'light' ? 'bg-light' : 'bg-darker'
       }`}>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
@@ -144,6 +165,22 @@ const SubTaskModal = () => {
               {isPending && <div>Updating...</div>}
             </fieldset>
           </form>
+
+          {isOpen && (
+            <DeleteEditModal
+              onOpenEdit={handleShowEditTaskModal}
+              onOpenDelete={handleShowDeleteModal}
+              headerText={'Task'}
+              setIsOpen={setIsOpen}
+              modalStyle={{
+                right: '2rem',
+                width: '10rem',
+                top: '3rem',
+                background: '#fff',
+                color: 'black',
+              }}
+            />
+          )}
         </div>
       </div>
     </article>

@@ -4,7 +4,7 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   --font-sm: .75rem;
-
+--clr-blue-md : hsl(242deg 48% 58%)
 }
 
 *,
@@ -147,6 +147,10 @@ fieldset {
   color:hsl(216deg 15% 57%);
 }
 
+.bg-blue-md {
+  background-color: var(--clr-blue-md);
+}
+
 .font-sm {
   font-size: var(--font-sm);
 }
@@ -155,6 +159,9 @@ fieldset {
   display: none;
 }
 
+.rounded-md {
+  border-radius: 1rem;
+}
 .rounded-sm {
   border-radius: .2rem
 }

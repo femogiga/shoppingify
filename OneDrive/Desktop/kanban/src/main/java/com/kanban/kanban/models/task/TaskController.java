@@ -95,4 +95,17 @@ public ResponseEntity<Task> updateTask(@PathVariable Long id ,@RequestBody Task 
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+
+@DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTask(@PathVariable Long id){
+        try {
+            taskService.deleteTask(id);
+            return new ResponseEntity<>("Task was sucessfully deleted",HttpStatus.OK);
+        } catch (RuntimeException e) {
+            System.out.println(e);
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+}
 }

@@ -14,6 +14,9 @@ import CreateColumnModal from '../components/CreateColumnModal';
 import { useDarkMode } from '../context/DarkModeContext';
 import useColumnStore from '../statemanagment/columnStore';
 import EditTaskModal from '../components/EditTaskModal';
+import DeleteModal from './../components/DeleteModal';
+import useModalStore from '../statemanagment/modalStore';
+import DeleteProjectModal from '../components/DeletePojectModal';
 
 const BaseLayout = () => {
   const {
@@ -32,8 +35,9 @@ const BaseLayout = () => {
     projectModalVisible,
   } = useProjectStore();
   const body = document.querySelector('.home');
-  const { mode } = useDarkMode()
-  const{columnModalVisible} = useColumnStore()
+  const { mode } = useDarkMode();
+  const { columnModalVisible } = useColumnStore();
+  const { deleteModalVisible, deleteProjectModal } = useModalStore();
   return (
     <>
       <div className={`home ${mode === 'light' ? 'bg-light' : 'bg-darker'}`}>
@@ -46,9 +50,12 @@ const BaseLayout = () => {
           {createTaskModalVisible && createPortal(<CreateTaskModal />, body)}
           {columnModalVisible &&
             createPortal(<CreateColumnModal mode={mode} />, body)}
-          {    editTaskModalVisible
- &&
+          {editTaskModalVisible &&
             createPortal(<EditTaskModal mode={mode} />, body)}
+          {deleteModalVisible &&
+            createPortal(<DeleteModal mode={mode} />, body)}
+          {deleteProjectModal &&
+            createPortal(<DeleteProjectModal mode={mode} />, body)}
           <Outlet />
         </main>
       </div>

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SubTaskRepository extends CrudRepository<SubTask,Long> {
     boolean existsByTitle(String title);
+    boolean existsByTitleAndTaskId(String title, Long taskId);
+
 }
