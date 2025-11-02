@@ -4,7 +4,9 @@ const useModalStore = create((set) => ({
 
     deleteModalVisible: false,
     deleteEditModal: false,
-    deleteProjectModal:false,
+    deleteProjectModal: false,
+    editProjectModalVisible: false,
+
     showDeleteModal: () => set({ deleteModalVisible: true }),
     hideDeleteModal: () => set({ deleteModalVisible: false }),
 
@@ -13,6 +15,9 @@ const useModalStore = create((set) => ({
 
     showDeleteProjectModal: () => set({ deleteProjectModal: true }),
     hideDeleteProjectModal: () => set({ deleteProjectModal: false }),
+
+    showEditProjectModal: () => set({ editProjectModalVisible: true }),
+    hideEditProjectModal: () => set({ editProjectModalVisible: false }),
 
 }));
 

@@ -9,7 +9,13 @@ import useModalStore from '../statemanagment/modalStore';
 const Header = () => {
   const { mode } = useDarkMode();
   const { showCreateTaskModal } = useTaskStore();
-  const { showDeleteProjectModal, hideDeleteProjectModal } = useModalStore();
+  const {
+    showDeleteProjectModal,
+    hideDeleteProjectModal,
+    editProjectModal,
+    showEditProjectModal,
+    hideEditProjectModal
+  } = useModalStore();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleIsOpen = (e) => {
@@ -27,6 +33,13 @@ const Header = () => {
     setIsOpen(false); // closes deleteEditModal
     showDeleteProjectModal(); //open the delete confimation modal
   };
+
+
+  const handleShowEditProjectModal = (e) => {
+    e.preventDefault();
+    setIsOpen(false); // closes deleteEditModal
+    showEditProjectModal()
+  }
   return (
     <header className={`${mode === 'light' ? 'lightmode' : 'darkmode'} header`}>
       <h2 className={mode === 'light' ? 'font-black' : 'font-white'}>
@@ -45,7 +58,7 @@ const Header = () => {
               headerText={'Board'}
               setIsOpen={setIsOpen}
               onOpenDelete={handleShowDeleteProjectModal}
-              onOpenEdit={''}
+              onOpenEdit={handleShowEditProjectModal}
               modalStyle={{ right: '2rem', width: '10rem', top: '3rem' }}
             />
           )}

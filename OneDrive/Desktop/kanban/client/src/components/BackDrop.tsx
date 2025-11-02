@@ -18,22 +18,27 @@ const BackDrop = () => {
   const { projectModalVisible, hideProjectModal } = useProjectStore();
   const {
     deleteModalVisible,
+
     hideDeleteModal,
     deleteProjectModal,
+    editProjectModalVisible,
     showDeleteProjectModal,
     hideDeleteProjectModal,
+    showEditProjectModal,
+    hideEditProjectModal,
   } = useModalStore();
+  const { columnModalVisible, hideColumnModal } = useColumnStore();
 
   const handleBackdropClick = () => {
     hideProjectModal();
     hideCreateTaskModal();
     hideModal();
     hideDeleteModal();
-    hideEditTaskModal()
+    hideEditTaskModal();
     hideDeleteProjectModal();
-
+    hideEditProjectModal();
+    hideColumnModal();
   };
-  const { columnModalVisible } = useColumnStore();
   return (
     <div
       onClick={handleBackdropClick}
@@ -50,7 +55,8 @@ const BackDrop = () => {
           columnModalVisible ||
           deleteModalVisible ||
           editTaskModalVisible ||
-          deleteProjectModal
+          deleteProjectModal ||
+          editProjectModalVisible
             ? 5
             : -5,
         background: 'rgba(0,0,0,.4)',
