@@ -1,6 +1,6 @@
 import { SquareKanban } from 'lucide-react';
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import useProjectStore from '../statemanagment/projectStore';
 import { useDarkMode } from '../context/DarkModeContext';
 
@@ -20,13 +20,14 @@ const NavItem: React.FC<INavItem> = ({ title, path }) => {
       className={`nav-item flex item-center gap-x-1 ${
         mode === 'dark' ? 'color-dark-white' : 'color-dark-white'
       }`}>
-      <Link
+      <NavLink
+        style={({ isActive }) => isActive ? {background : 'red'} : {}}
         to={`projects/${path}`}
         onClick={(e) => changeActiveLink(path)}
         className="nav-item flex item-center gap-x-1 color-dark-white">
         <SquareKanban />
         <span >{title}</span>
-      </Link>
+      </NavLink>
     </li>
   );
 }
