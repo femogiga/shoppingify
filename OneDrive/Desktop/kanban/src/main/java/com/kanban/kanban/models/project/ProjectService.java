@@ -133,4 +133,36 @@ public class ProjectService {
                 )).toList()
         )).filter(project->project.id().equals(id)).findFirst().orElseThrow(()->new RuntimeException("project not found"));
     }
+
+    public Project updateProject(Long id, Project updatedProject) {
+        System.out.println("Incoming title: " + updatedProject.getTitle());
+
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        System.out.println("title of update: " + updatedProject.getTitle());
+
+        // Update title - this part actually works
+        if (updatedProject.getTitle() != null && !project.getTitle().equals(updatedProject.getTitle())) {
+            project.setTitle(updatedProject.getTitle());
+        }
+
+        // Fix column updating logic
+        if (updatedProject.getProjectColumns() != null) {
+            for (ProjectColumn updatedColumn : updatedProject.getProjectColumns()) {
+                // Find the corresponding column in the existing project
+                project.getProjectColumns().stream()
+                        .filter(existingColumn -> existingColumn.getId().equals(updatedColumn.getId()))
+                        .findFirst()
+                        .ifPresent(existingColumn -> {
+                            // Update the column name if changed
+                            if (!existingColumn.getName().equals(updatedColumn.getName())) {
+                                existingColumn.setName(updatedColumn.getName());
+                            }
+                        });
+            }
+        }
+
+        return projectRepository.save(project);
+    }
 }

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useCreateProject, useFetchProjectById } from '../apis/projectData';
+import { useCreateProject, useFetchProjectById, useUpdateProjectAndColumn } from '../apis/projectData';
 import { useParams } from 'react-router-dom';
 import { X } from 'lucide-react';
+import useModalStore from '../statemanagment/modalStore';
 
 const EditProjectModal = () => {
   const id = useParams()?.id;
@@ -10,13 +11,21 @@ const EditProjectModal = () => {
   const activeTitle = projectById?.title;
   const [title, setTitle] = useState(activeTitle || ''); // Fixed: Use || instead of ??
   const [columns, setColumns] = useState([]);
-  const { createProject, isCreating, isSuccess, isError, error } =
-    useCreateProject();
+  // const { createProject, isCreating, isSuccess, isError, error } =
+  //   useCreateProject();
+const { showEditProjectModal, hideEditProjectModal } = useModalStore();
 
+  const {
+    updateProjectMutation,
+    isUpdating,
+    isError,
+    isSuccess,
+    error,
+  } = useUpdateProjectAndColumn(id);
   useEffect(() => {
     setColumns(activeColumns);
     setTitle(activeTitle || '');
-  }, [id, activeColumns, activeTitle]); // Removed title from dependencies
+  }, [id, activeColumns, activeTitle,]); // Removed title from dependencies
 
   console.log(columns);
 
@@ -58,17 +67,19 @@ const EditProjectModal = () => {
       }));
 
     const projectData = {
-      id: id,
+      id: parseInt(id),
       title: title.trim(),
       projectColumns: columnData,
     };
     //console.log(projectData)
     //return
-    createProject(projectData, {
+    updateProjectMutation(projectData, {
       onSuccess: (data) => {
         console.log('Project created', data);
         setTitle('');
-        setColumns([]);
+        hideEditProjectModal()
+        // setColumns([]);
+
       },
       onError: (error) => {
         console.log('Error creating project:', error);
@@ -88,7 +99,7 @@ const EditProjectModal = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder='Enter project title'
-            disabled={isCreating}
+            disabled={isUpdating}
           />
 
           <div>
@@ -105,14 +116,14 @@ const EditProjectModal = () => {
                       }
                       placeholder={`Column ${index + 1}`}
                       style={{ width: '100%', padding: '.4rem' }}
-                      disabled={isCreating}
+                      disabled={isUpdating}
                     />
                     {columns.length > 1 && (
                       <button
                         style={{ width: '2rem' }}
                         type='button'
                         onClick={() => removeColumn(index)}
-                        disabled={isCreating}>
+                        disabled={isUpdating}>
                         <X />
                       </button>
                     )}
@@ -123,13 +134,13 @@ const EditProjectModal = () => {
               type='button'
               onClick={addNewColumn}
               style={{ width: '100%', paddingBlock: '.6rem' }}
-              disabled={isCreating}>
+              disabled={isUpdating}>
               <span>+ </span> Add New Column
             </button>
           </div>
 
-          <button type='submit' disabled={isCreating || !title.trim()}>
-            {isCreating ? 'Creating...' : 'Create Project'}
+          <button type='submit' disabled={isUpdating || !title.trim()}>
+            {isUpdating ? 'Updating...' : 'Update Project'}
           </button>
         </form>
       </div>

@@ -56,6 +56,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT, "/api/tasks/**").permitAll()
                        .requestMatchers(HttpMethod.GET, "/api/projects").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/projects/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/projects/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/tasks/**").permitAll()

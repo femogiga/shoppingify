@@ -22,7 +22,7 @@ export const useFetchProjects = () => {
 
 export const useFetchProjectById = (id) => {
     const { isPending, data, error } = useQuery({
-        queryKey: ['projectById',id],
+        queryKey: ['projectById', id],
         queryFn: () => apiService.getById("/projects", id).then(res => res.data)
 
     })
@@ -59,4 +59,25 @@ export const useCreateProject = () => {
         error,
         reset
     };
+}
+
+
+
+export const useUpdateProjectAndColumn = (id) => {
+    const queryClient = useQueryClient();
+    const { mutate, isError, isSuccess, reset, error, isPending } = useMutation({
+        mutationFn: (data) => apiService.update(`/projects/${parseInt(id)}`, data).then(res => res.data),
+        mutationKey: ['updateProject'],
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['allProjects'] })
+            queryClient.invalidateQueries({ queryKey: ['projectById'] })
+
+        },
+        onError: (error) => console.error('Update failed ', error),
+        onSettled: () => {
+            // Reset after 3 seconds on success
+            setTimeout(() => reset(), 3000);
+        }
+    })
+    return { updateProjectMutation: mutate, isUpdating: isPending, isError, isSuccess, error }
 }

@@ -80,4 +80,15 @@ public class ProjectController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Project> updateProject(@PathVariable  Long id,@RequestBody Project project) {
+        try {
+            Project updatedProject = projectService.updateProject(id, project);
+            return new ResponseEntity<>(updatedProject, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
 }
