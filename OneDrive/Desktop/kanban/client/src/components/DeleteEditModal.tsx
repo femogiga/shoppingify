@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import useModalStore from '../statemanagment/modalStore';
+import { useDarkMode } from '../context/DarkModeContext';
 
 const DeleteEditModal = ({
   isOpen,
@@ -22,6 +23,7 @@ const DeleteEditModal = ({
     showModal,
   } = useTaskStore();
   const { showDeleteModal, hideDeleteModal } = useModalStore();
+  const {mode} = useDarkMode()
   const handleShowEditModal = (e) => {
     e.preventDefault();
     showEditTaskModal();
@@ -42,12 +44,12 @@ const DeleteEditModal = ({
 
   return (
     <div
-      className='delete-edit-modal absolute font-white grid'
+      className={`delete-edit-modal absolute font-white grid ${mode==='light' ? 'bg-white' : 'bg-dark'}`}
       style={modalStyle}>
-      <Link onClick={onOpenEdit}>
+      <Link onClick={onOpenEdit} className='color-dark-white'>
         Edit <span>{headerText}</span>
       </Link>
-      <Link onClick={onOpenDelete}>
+      <Link onClick={onOpenDelete} className="font-red">
         Delete <span>{headerText}</span>
       </Link>
     </div>

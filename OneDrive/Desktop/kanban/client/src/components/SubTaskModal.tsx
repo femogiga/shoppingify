@@ -102,21 +102,26 @@ const SubTaskModal = () => {
     hideModal();
   };
 
-
   // queryClient.invalidateQueries({ queryKey: ['allProjects'] });
 
   // console.log('completed', completedCount);
 
   // Call this when you know data has changed
 
+  //      className={`${mode === 'light' ? 'bg-light' : 'bg-darker'} content`}
+
   return (
     <article
       className={`sub-task-modal  ${
-        mode === 'light' ? 'bg-light' : 'bg-darker'
+        mode === 'light' ? 'bg-white' : 'bg-darker'
       }`}>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
         <div className='flex item-center justify-between'>
-          <p>
+          <p
+            style={{
+              color: mode === 'light' ? 'black' : 'white',
+              fontWeight: 'bold'
+            }}>
             {activeTaskData?.title ||
               'Lorem ipsum dolor sit amet consectetur adipisicing elit.Recusandaeut'}
           </p>
@@ -126,7 +131,7 @@ const SubTaskModal = () => {
         </div>
         <p className='color-dark-white'>{activeTaskData?.description}</p>
         <div>
-          <p className='mbe-05'>
+          <p className='mbe-05 color-dark-white'>
             Subtask
             <span>
               ({reCalcCount && reCalcCount.length} of{' '}
@@ -140,6 +145,7 @@ const SubTaskModal = () => {
               ))}
             </fieldset>
             <fieldset>
+              <label className='color-dark-white'>Current Status</label>
               <select
                 value={status}
                 onChange={handleTaskStatusChange}
@@ -147,8 +153,8 @@ const SubTaskModal = () => {
                 style={{
                   width: '100%',
                   padding: '.4rem',
-                  background: '#33415c',
-                  color: 'white',
+                  background: mode === 'light' ? 'white' : '#33415c',
+                  color: mode === 'light' ? 'black' : 'white',
                   border: '1px solid #979dac',
                 }}
                 disabled={isPending} // ✅ Disable during update

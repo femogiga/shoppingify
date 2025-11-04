@@ -135,34 +135,39 @@ public class ProjectService {
     }
 
     public Project updateProject(Long id, Project updatedProject) {
-        System.out.println("Incoming title: " + updatedProject.getTitle());
-
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        System.out.println("title of update: " + updatedProject.getTitle());
-
-        // Update title - this part actually works
-        if (updatedProject.getTitle() != null && !project.getTitle().equals(updatedProject.getTitle())) {
+        // Update title
+        if (updatedProject.getTitle() != null) {
             project.setTitle(updatedProject.getTitle());
         }
 
-        // Fix column updating logic
+        // Handle all columns in single pass - updates and new columns
         if (updatedProject.getProjectColumns() != null) {
             for (ProjectColumn updatedColumn : updatedProject.getProjectColumns()) {
-                // Find the corresponding column in the existing project
-                project.getProjectColumns().stream()
-                        .filter(existingColumn -> existingColumn.getId().equals(updatedColumn.getId()))
-                        .findFirst()
-                        .ifPresent(existingColumn -> {
-                            // Update the column name if changed
-                            if (!existingColumn.getName().equals(updatedColumn.getName())) {
-                                existingColumn.setName(updatedColumn.getName());
-                            }
-                        });
+                if (updatedColumn.getId() == null) {
+                    // NEW COLUMN - Add to project
+                    updatedColumn.setProject(project);
+                    project.addProjectColumn(updatedColumn);
+                } else {
+                    // EXISTING COLUMN - Update if name changed
+                    project.getProjectColumns().stream()
+                            .filter(col -> col.getId().equals(updatedColumn.getId()))
+                            .findFirst()
+                            .ifPresent(col -> col.setName(updatedColumn.getName()));
+                }
             }
         }
 
         return projectRepository.save(project);
     }
+
+    public void deleteProject(Long id){
+        if(id == null){
+            throw new RuntimeException("Project does not exist");
+        }
+        projectRepository.deleteById(id);
+    }
+
 }

@@ -81,3 +81,23 @@ export const useUpdateProjectAndColumn = (id) => {
     })
     return { updateProjectMutation: mutate, isUpdating: isPending, isError, isSuccess, error }
 }
+
+export const useDeleteProjectMutation = () => {
+    const queryClient = useQueryClient();
+
+    const { mutate, isError, isSuccess, reset, error, isPending } = useMutation({
+        mutationFn: (id) => apiService.remove("/projects", parseInt(id)).then(res => res.data),
+        mutationKey: ['deleteProject'],
+        onSuccess: (data) => {
+            console.log("Project successfullly deleted")
+            queryClient.invalidateQueries({ queryKey: ['allProjects'] })
+            queryClient.invalidateQueries({ queryKey: ['projectById'] })
+
+        },
+        onError: (error) => console.error(error),
+        onSettled: () => setTimeout(() => reset, 3000)
+
+    })
+    return { deleteProjectMutation: mutate, isDeleting: isPending, isError, isSuccess, error }
+
+}

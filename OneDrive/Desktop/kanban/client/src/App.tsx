@@ -9,6 +9,7 @@ import { RouterProvider } from 'react-router-dom';
 import Content from './components/Content';
 import CreateProjectModal from './components/CreateProjectModal';
 import CreateTaskModal from './components/CreateTaskModal';
+import BlankContent from './components/BlankContent';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -16,13 +17,13 @@ const queryClient = new QueryClient();
 function App() {
 
   const routes = createRoutesFromElements(
+    <Route element={<BaseLayout />}>
+      {/* <Route path='/projects' element={<Content />} /> */}
+      {<Route path='/dev' element={<CreateTaskModal />} />}
+      <Route path='/projects' element={<BlankContent />} />
 
-      <Route element={<BaseLayout />}>
-        {/* <Route path='/projects' element={<Content />} /> */}
-        { <Route path='/dev' element={<CreateTaskModal />} /> }
-        <Route path='/projects/:id' element={<Content />} />
-      </Route>
-
+      <Route path='/projects/:id' element={<Content />} />
+    </Route>
   );
 
 const router = createBrowserRouter(routes)

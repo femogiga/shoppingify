@@ -186,7 +186,7 @@
      min-width: 30rem;
     max-width: 30rem;
 
-    background: #33415c;
+    /* background: #33415c; */
     color: white;
     top: 50%;
     left: 50%;
@@ -203,5 +203,7 @@
     border-radius: .6rem;
     padding-left:.8rem;
     padding-block:.4rem;
+    display:grid;
+    row-gap: .5rem;
 
 }

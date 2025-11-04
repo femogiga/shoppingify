@@ -1,31 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { useCreateTask, useDeleteTaskMutation } from '../apis/taskData';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import { X } from 'lucide-react';
 import useModalStore from '../statemanagment/modalStore';
-import { useFetchProjectById } from '../apis/projectData';
+import {
+  useDeleteProjectMutation,
+  useFetchProjectById,
+} from '../apis/projectData';
 
 const DeleteProjectModal = ({ mode, headerText, title, onDelete }) => {
   const { hideDeleteModal, hideDeleteProjectModal, showDeleteProjectModal } =
     useModalStore();
-  const { activeTaskData } = useTaskStore();
-  const { deleteMutation } = useDeleteTaskMutation();
-  const id = useParams().id
-  console.log(id)
-  const { projectById } = useFetchProjectById(id);
+  const { deleteProjectMutation } = useDeleteProjectMutation();
+  const id = useParams().id ;
+  const navigate = useNavigate()
+  console.log(id);
+  const { projectById } = useFetchProjectById(parseInt(id));
   const handleCancel = (e) => {
     e.preventDefault();
     hideDeleteModal();
-    hideDeleteProjectModal()
+    hideDeleteProjectModal();
   };
-console.log({projectById})
-  const handleDeleteTask = (e) => {
+  // console.log({ projectById });
+  const handleDeleteProject = (e) => {
     e.stopPropagation();
-    deleteMutation(activeTaskData.id, {
+    deleteProjectMutation(id, {
       onSuccess: () => {
         console.log('successfully deleted');
-        hideDeleteModal();
+        hideDeleteProjectModal();
+        navigate('/projects')
       },
       onError: () => console.log('An error has occurred'),
     });
@@ -39,14 +43,17 @@ console.log({projectById})
           </p>
 
           <p className='mbe-1'>
-            Are you sure you want to delete project " <span style={{color:'red'}}>{projectById?.title} </span>" associated tasks and it's
-            subtasks? This action cannot be reversed
+            Are you sure you want to delete project "
+            <span style={{ color: 'red' }}>
+              {projectById && projectById?.title}
+            </span>
+            " associated tasks and it's subtasks? This action cannot be reversed
           </p>
 
           <div className='flex justify-between '>
             <button
               type='button'
-              onClick={handleDeleteTask}
+              onClick={handleDeleteProject}
               className='p-y-05 p-x-05'
               style={{
                 width: '46%',

@@ -23,13 +23,13 @@ public class ProjectController {
 
 
     @GetMapping
-    public ResponseEntity<List<ProjectDTO>> getProjects(){
+    public ResponseEntity<List<ProjectDTO>> getProjects() {
         try {
             List<ProjectDTO> projects = projectService.getAllProjects();
-            if(projects.isEmpty()){
+            if (projects.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(projects,HttpStatus.OK);
+            return new ResponseEntity<>(projects, HttpStatus.OK);
         } catch (RuntimeException e) {
             System.out.println(e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -37,13 +37,13 @@ public class ProjectController {
     }
 
     @GetMapping("/projectwithtask")
-    public ResponseEntity<List<Project>> getProjectsWithTask(){
+    public ResponseEntity<List<Project>> getProjectsWithTask() {
         try {
             List<Project> projects = projectService.getProjects();
-            if(projects.isEmpty()){
+            if (projects.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(projects,HttpStatus.OK);
+            return new ResponseEntity<>(projects, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -61,7 +61,7 @@ public class ProjectController {
     }
 
     @PostMapping("/doing")
-    public ResponseEntity<Project> createProject(@RequestBody Project project){
+    public ResponseEntity<Project> createProject(@RequestBody Project project) {
         try {
             Project created = projectService.createProject(project);
             return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -69,19 +69,19 @@ public class ProjectController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping
-    public ResponseEntity<Project> createProjectWithDefaultColumns (@RequestBody Project project){
-        try{
+    public ResponseEntity<Project> createProjectWithDefaultColumns(@RequestBody Project project) {
+        try {
             Project created = projectService.createProjectWithColumns(project);
-            return new ResponseEntity<>(created , HttpStatus.CREATED);
-        }
-        catch(RuntimeException e){
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Project> updateProject(@PathVariable  Long id,@RequestBody Project project) {
+    public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project project) {
         try {
             Project updatedProject = projectService.updateProject(id, project);
             return new ResponseEntity<>(updatedProject, HttpStatus.OK);
@@ -91,4 +91,14 @@ public class ProjectController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteProject(@PathVariable Long id) {
+        try {
+            projectService.deleteProject(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }
