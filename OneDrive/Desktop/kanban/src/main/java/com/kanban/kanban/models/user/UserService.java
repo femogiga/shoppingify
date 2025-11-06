@@ -73,4 +73,22 @@ public class UserService {
     }
 
 
+    public Optional<User> findUserByEmail (String email){
+       return  userRepository.findUserByEmail(email);
+    }
+
+
+    public User updateUserRoles(Long id, List<String> roles) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        user.setRoles(roles);
+        return userRepository.save(user);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+
 }

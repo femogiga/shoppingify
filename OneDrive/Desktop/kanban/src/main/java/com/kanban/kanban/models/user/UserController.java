@@ -6,6 +6,7 @@ import com.kanban.kanban.exceptions.UserNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')") // Extra security layer
     public ResponseEntity<List<User>> getAllUsers(){
         try{
             List<User> users =(List<User>) userRepository.findAll();
@@ -38,6 +40,13 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        Optional<User> user = userService.findUserByEmail(email);
+        return user.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}")
@@ -68,6 +77,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long id) {
         try {
             userService.delete(id);
@@ -85,6 +95,17 @@ public class UserController {
         } catch (Exception e) {
             Map<String, String> error = Map.of("error", "Internal server error");
             return ResponseEntity.internalServerError().body(error); // 500 with message
+        }
+    }
+
+    @PutMapping("/{id}/roles")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> updateUserRoles(@PathVariable Long id, @RequestBody List<String> roles) {
+        try {
+            User updatedUser = userService.updateUserRoles(id, roles);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

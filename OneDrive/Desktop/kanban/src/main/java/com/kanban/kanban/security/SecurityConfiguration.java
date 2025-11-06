@@ -1,81 +1,91 @@
 package com.kanban.kanban.security;
 
-/*
- * Copyright 2020 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
-/**
- * An example of explicitly configuring Spring Security with the defaults.
- *
- * @author Rob Winch
- */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    @Autowired
+    private JwtAuthEntryPoint jwtAuthEntryPoint;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-       return  http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/users/public/**").permitAll() // Public endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll() // Allow GET without auth
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll() // Allow POST without auth
-                        .requestMatchers(HttpMethod.PUT, "/api/users/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/tasks/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/tasks/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/tasks/**").permitAll()
-                       .requestMatchers(HttpMethod.GET, "/api/projects").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/projects/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/projects/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/projects/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/tasks/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/columns/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/columns/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/subtasks/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/subtasks/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/subtasks/**").permitAll()
 
-
-
-
-
-                        .anyRequest().authenticated() // All other requests require auth
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(jwtAuthEntryPoint)
                 )
-                .httpBasic(Customizer.withDefaults()).build();
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeHttpRequests(authz -> authz
+                        // Public endpoints - no auth required
+                        .requestMatchers("/api/auth/**").permitAll() // Allow login/register
+                        .requestMatchers("/api/users/public/**").permitAll()
+
+                        // 🔒 USER ENDPOINTS - SECURED
+                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll() // Allow registration only
+                        .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN") // Only admin can see all users
+                        .requestMatchers(HttpMethod.GET, "/api/users/{id}").authenticated() // Users can see their own profile
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").authenticated() // Require auth for updates
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN") // Only admin can delete
+
+                        // Project endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/projects").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/projects/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/projects/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/projects/**").hasRole("ADMIN")
+
+                        // Task endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/tasks/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/tasks/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/tasks/**").authenticated()
+
+                        // Column endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/columns/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/columns/**").authenticated()
+
+                        // Subtask endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/subtasks/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/subtasks/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/subtasks/**").authenticated()
+
+                        // Admin endpoints
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

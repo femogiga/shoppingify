@@ -53,13 +53,19 @@ public class User {
     @JoinTable(name="task_users" , joinColumns = @JoinColumn(name="user_id",insertable = true,updatable = true) , inverseJoinColumns = @JoinColumn(name="task_id",insertable = true,updatable = true))
     private List<Task> tasks = new ArrayList<>();
 
-    public User(String firstname,String lastname,String email,String password,String photoUrl){
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="user_roles" , joinColumns = @JoinColumn(name="user_id"))
+    @Column(name="roles")
+    private List<String> roles = new ArrayList<>();
+
+    public User(String firstname,String lastname,String email,String password,String photoUrl , List<String> roles){
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.photoUrl = photoUrl;
         this.tasks = new ArrayList<>();
+        this.roles = roles != null ? roles : List.of("USER");
     }
 
     public User(){
@@ -155,4 +161,11 @@ public class User {
         task.getTaskMembers().remove(this);
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 }
