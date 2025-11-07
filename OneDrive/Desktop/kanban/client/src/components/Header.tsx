@@ -5,16 +5,18 @@ import useTaskStore from '../statemanagment/taskStore';
 import { Link } from 'react-router-dom';
 import DeleteEditModal from './DeleteEditModal';
 import useModalStore from '../statemanagment/modalStore';
+import { AuthAvatarButton } from './AuthAvatarButton';
 
 const Header = () => {
   const { mode } = useDarkMode();
   const { showCreateTaskModal } = useTaskStore();
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const {
     showDeleteProjectModal,
     hideDeleteProjectModal,
     editProjectModal,
     showEditProjectModal,
-    hideEditProjectModal
+    hideEditProjectModal,
   } = useModalStore();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,7 +24,12 @@ const Header = () => {
     e.preventDefault();
     setIsOpen(true);
   };
-
+  // @Handler  handleShowAuthModal handles the visibility of login ,register @Component AuthAvatarButton
+  const handleShowAuthModal = (e) => {
+    e.preventDefault();
+    setShowAuthModal(!showAuthModal);
+  };
+  // @Handler createTaskModalVisibility handles the modal for creating task
   const createTaskModalVisibility = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     showCreateTaskModal();
@@ -34,17 +41,26 @@ const Header = () => {
     showDeleteProjectModal(); //open the delete confimation modal
   };
 
-
-  const handleShowEditProjectModal = (e) => {
+  const handleShowEditProjectModal = (
+    e: React.MouseEvent<HTMLAnchorElement>
+  ) => {
     e.preventDefault();
     setIsOpen(false); // closes deleteEditModal
-    showEditProjectModal()
-  }
+    showEditProjectModal();
+  };
   return (
     <header className={`${mode === 'light' ? 'lightmode' : 'darkmode'} header`}>
-      <h2 className={mode === 'light' ? 'font-black' : 'font-white'}>
-        Platform Launch
-      </h2>
+      <div className='flex items-center gap-x-2'>
+        <h2 className={mode === 'light' ? 'font-black' : 'font-white'}>
+          Platform Launch
+        </h2>
+        <AuthAvatarButton
+          showAuthModal={showAuthModal}
+          onShowAuthModal={handleShowAuthModal}
+          setShowAuthModal={setShowAuthModal}
+        />
+      </div>
+
       <div className='relative'>
         <div className='flex gap-x-2 item-center '>
           <button onClick={createTaskModalVisibility}>

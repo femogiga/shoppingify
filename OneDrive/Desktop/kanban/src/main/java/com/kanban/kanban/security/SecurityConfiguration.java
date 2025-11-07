@@ -49,24 +49,24 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN") // Only admin can delete
 
                         // Project endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/projects").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/projects").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/projects/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/projects/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/projects/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/projects/**").hasRole("ADMIN")
 
                         // Task endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tasks/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/tasks/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/tasks/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/tasks/**").authenticated()
 
                         // Column endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/columns/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/columns/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/columns/**").authenticated()
 
                         // Subtask endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/subtasks/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/subtasks/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/subtasks/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/subtasks/**").authenticated()
 

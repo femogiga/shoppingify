@@ -14,7 +14,10 @@ import apiService from '../utils/apiService'
 export const useFetchProjects = () => {
     const { isPending, data, error } = useQuery({
         queryKey: ['allProjects'],
-        queryFn: () => apiService.get('/projects').then(res => res.data)
+        queryFn: () => apiService.get('/projects').then(res => res.data),
+        enabled: !!localStorage.getItem('auth'),
+        staleTime: 5 * 60 * 1000,
+
     })
     return { isPending, data, error }
 }
@@ -23,7 +26,9 @@ export const useFetchProjects = () => {
 export const useFetchProjectById = (id) => {
     const { isPending, data, error } = useQuery({
         queryKey: ['projectById', id],
-        queryFn: () => apiService.getById("/projects", id).then(res => res.data)
+        queryFn: () => apiService.getById("/projects", id).then(res => res.data),
+        enabled: !!localStorage.getItem('auth'),
+        staleTime: 5 * 60 * 1000,
 
     })
     return { isPending, error, projectById: data }
@@ -48,7 +53,8 @@ export const useCreateProject = () => {
         onSettled: () => {
             // Reset after 3 seconds on success
             setTimeout(() => reset(), 3000);
-        }
+        },
+
 
     })
     return {
