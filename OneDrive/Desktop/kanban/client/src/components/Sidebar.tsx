@@ -57,8 +57,8 @@ const Sidebar = () => {
                 />
               ))}
 
-            <li className='create nav-item flex item-center gap-x-1 font-white'>
-              <SquareKanban />
+            <li className='create nav-item flex item-center gap-x-1 font-white p-x-2'>
+              <SquareKanban size={'2rem'} />
               <button
                 onClick={handleModalVisibility}
                 style={{

@@ -26,7 +26,7 @@ public class ProjectColumn {
     private Project project;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY ,cascade = CascadeType.DETACH,mappedBy = "projectColumn")
+    @OneToMany(fetch = FetchType.LAZY ,cascade = CascadeType.REMOVE,mappedBy = "projectColumn")
     private List<Task> tasks = new ArrayList<>();
 
     public ProjectColumn(String name){

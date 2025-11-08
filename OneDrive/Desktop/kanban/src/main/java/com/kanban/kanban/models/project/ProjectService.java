@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -134,6 +137,38 @@ public class ProjectService {
         )).filter(project->project.id().equals(id)).findFirst().orElseThrow(()->new RuntimeException("project not found"));
     }
 
+//    public Project updateProject(Long id, Project updatedProject) {
+//        Project project = projectRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Project not found"));
+//
+//        // Update title
+//        if (updatedProject.getTitle() != null) {
+//            project.setTitle(updatedProject.getTitle());
+//        }
+//
+//        // Handle all columns in single pass - updates and new columns
+//        if (updatedProject.getProjectColumns() != null) {
+//            for (ProjectColumn updatedColumn : updatedProject.getProjectColumns()) {
+//                if (updatedColumn.getId() == null) {
+//                    // NEW COLUMN - Add to project
+//                    updatedColumn.setProject(project);
+//                    project.addProjectColumn(updatedColumn);
+//                } else {
+//                    // EXISTING COLUMN - Update if name changed
+//                    project.getProjectColumns().stream()
+//                            .filter(col -> col.getId().equals(updatedColumn.getId()))
+//                            .findFirst()
+//                            .ifPresent(col -> col.setName(updatedColumn.getName()))
+//
+//                }
+//            }
+//
+//        }
+//
+//        return projectRepository.save(project);
+//    }
+
+
     public Project updateProject(Long id, Project updatedProject) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
@@ -143,8 +178,23 @@ public class ProjectService {
             project.setTitle(updatedProject.getTitle());
         }
 
-        // Handle all columns in single pass - updates and new columns
+        // Handle all columns in single pass - updates, new columns, and deletions
         if (updatedProject.getProjectColumns() != null) {
+            // Get IDs of updated columns (existing columns being updated or kept)
+            Set<Long> updatedColumnIds = updatedProject.getProjectColumns().stream()
+                    .map(ProjectColumn::getId)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            // Remove columns that are not in the updated list
+            List<ProjectColumn> columnsToRemove = project.getProjectColumns().stream()
+                    .filter(col -> !updatedColumnIds.contains(col.getId()))
+                    .toList();
+
+            // Remove from project
+            columnsToRemove.forEach(project::removeProjectColumn);
+
+            // Process updated columns
             for (ProjectColumn updatedColumn : updatedProject.getProjectColumns()) {
                 if (updatedColumn.getId() == null) {
                     // NEW COLUMN - Add to project
@@ -155,7 +205,11 @@ public class ProjectService {
                     project.getProjectColumns().stream()
                             .filter(col -> col.getId().equals(updatedColumn.getId()))
                             .findFirst()
-                            .ifPresent(col -> col.setName(updatedColumn.getName()));
+                            .ifPresent(col -> {
+                                if (updatedColumn.getName() != null) {
+                                    col.setName(updatedColumn.getName());
+                                }
+                            });
                 }
             }
         }

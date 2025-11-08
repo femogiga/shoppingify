@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class AuthService {
 
@@ -28,7 +27,6 @@ public class AuthService {
 
     @Autowired
     private JwtService jwtService;
-
 
     public AuthResponse register(RegisterRequest registerRequest){
         if(userRepository.existsByEmail(registerRequest.getEmail())){
@@ -49,7 +47,6 @@ public class AuthService {
             user.setRoles(registerRequest.getRoles());
         }
         User savedUser  = userRepository.save(user);
-        // Generate JWT token
 
         String token = jwtService.generateToken(savedUser.getEmail(),savedUser.getRoles());
 
@@ -58,6 +55,7 @@ public class AuthService {
                 savedUser.getEmail(),
                 savedUser.getFirstname(),
                 savedUser.getLastname(),
+                savedUser.getPhotoUrl(), // ✅ ADDED THIS
                 savedUser.getRoles()
         );
     }
@@ -79,11 +77,10 @@ public class AuthService {
                 user.getEmail(),
                 user.getFirstname(),
                 user.getLastname(),
+                user.getPhotoUrl(), // ✅ ADDED THIS
                 user.getRoles()
         );
-
     }
-
 
     public Optional<User> getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

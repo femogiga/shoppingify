@@ -27,7 +27,7 @@ export const useFetchProjectById = (id) => {
     const { isPending, data, error } = useQuery({
         queryKey: ['projectById', id],
         queryFn: () => apiService.getById("/projects", id).then(res => res.data),
-        enabled: !!localStorage.getItem('auth'),
+        enabled: !!id && !!localStorage.getItem('auth'),
         staleTime: 5 * 60 * 1000,
 
     })

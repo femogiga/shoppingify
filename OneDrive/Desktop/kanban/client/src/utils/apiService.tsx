@@ -1,10 +1,15 @@
 import axios from 'axios';
+import { useAuthStore } from '../statemanagment/AuthStore';
 
 const baseUrl = 'http://localhost:7000/api';
-const storageData = JSON.parse(localStorage.getItem('auth')) ;
-const token = storageData?.token
+
+// Helper function to get fresh token
+const getToken = () => {
+  return useAuthStore.getState().token;
+};
 
 const get = (url: string) => {
+  const token = getToken();
   return axios.get(`${baseUrl}${url}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -13,6 +18,9 @@ const get = (url: string) => {
 };
 
 const getById = (url: string, id: number) => {
+  const token = getToken();
+    console.log({ token });
+
   return axios.get(`${baseUrl}${url}/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -20,27 +28,46 @@ const getById = (url: string, id: number) => {
   });
 };
 
-const post = (url, data) => {
+const post = (url: string, data: any) => {
+  const token = getToken();
+ // console.log({token})
   return axios.post(`${baseUrl}${url}`, data, {
     headers: {
-      ContentType: 'application.json',
-    },
-  });
-};
-
-const update = (url, data) => {
-  return axios.put(`${baseUrl}${url}`, data, {
-    headers: {
-      ContentType: 'application.json',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   });
 };
 
-const remove = (url: String, path: number) => {
-  return axios.delete(`${baseUrl}${url}/${path}`, {
-    headers: { ContentType: 'application.json' },
+
+const authPost = (url: string, data: any) => {
+  const token = getToken();
+
+  return axios.post(`${baseUrl}${url}`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
 };
 
-export default { get, getById, post, update, remove };
+const update = (url: string, data: any) => {
+  const token = getToken();
+  return axios.put(`${baseUrl}${url}`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const remove = (url: string, id: number) => {
+  const token = getToken();
+  return axios.delete(`${baseUrl}${url}/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export default { get, getById, post, update, remove, authPost };

@@ -1,7 +1,15 @@
-import React, { useState, type Dispatch, type SetStateAction } from 'react';
+import React, {
+  useEffect,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLoginMutation, useRegisterMutation } from '../apis/authData';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '../statemanagment/AuthStore';
+import { useFetchProjects } from '../apis/projectData';
+import { User } from 'lucide-react';
 
 interface IAuthModal {
   showAuthModal: boolean;
@@ -23,15 +31,13 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
   const [photoUrl, setphotoUrl] = useState<string>('');
 
   const { loginMutate, isLoggingIn, error, isError, isSuccess, reset } =
-        useLoginMutation();
-    const {
-      registerMutate,
-      isRegistering,
-
-    } = useRegisterMutation();
+    useLoginMutation();
+  const { registerMutate, isRegistering } = useRegisterMutation();
+  const { data } = useFetchProjects();
+  const { user, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
+  console.log(user?.photoUrl);
   /*
    * @param formType and @Handler setFormtype are used to
    * set the visibility of inputs depending on whether
@@ -54,22 +60,22 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
 
     loginMutate(loginData, {
       onSuccess: (data) => {
-        localStorage.setItem('auth', JSON.stringify(data));
+        // localStorage.setItem('auth', JSON.stringify(data));
         setEmail('');
         setPassword('');
         setShowAuthModal(false);
         navigate('/projects');
-        window.location.reload();
+        //window.location.reload();
       },
       onError: (error) => console.error(error),
     });
   };
 
   const handleRegister = (e: React.FormEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      if (password !== repeatPassword) {
-          console.log("Password is not the same")
-      }
+    e.preventDefault();
+    if (password !== repeatPassword) {
+      console.log('Password is not the same');
+    }
     const registerData = {
       email: email.trim(),
       password: password.trim(),
@@ -101,15 +107,37 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
     navigate('/projects');
     window.location.reload();
   };
-    const photo = localStorage.getItem('auth')
-    const photoUrlString = photo?.photoUrl
+
   return (
-    <div className='relative'>
+    <div className='relative flex item-center'>
       <Link onClick={onShowAuthModal}>
-        <img
-                  style={{ width: '2.4rem', aspectRatio: 1, borderRadius: '50%' }}
-                  src={ 'https://images.pexels.com/photos/34123077/pexels-photo-34123077.jpeg'}
-        />
+        {isAuthenticated ? (
+          <img
+            style={{
+              width: '2.4rem',
+              aspectRatio: 1,
+              borderRadius: '50%',
+              objectFit: 'cover',
+              overflowClipMargin: 'unset',
+            }}
+            src={
+              user?.photoUrl ||
+              'https://images.pexels.com/photos/34123077/pexels-photo-34123077.jpeg'
+            }
+          />
+        ) : (
+          <div>
+            <User
+              color='white'
+              size='36'
+              style={{
+                borderRadius: '50%',
+                border: '1px solid white',
+                padding: '.1rem',
+              }}
+            />
+          </div>
+        )}
       </Link>
       {showAuthModal && (
         <div
@@ -117,17 +145,25 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
             color: 'white',
             border: '1px solid white',
             display: 'grid',
-            width: '14rem',
+            width: '20rem',
             paddingBlock: '.5rem',
             paddingInline: '.4rem',
             position: 'absolute',
             zIndex: '10',
             rowGap: '.4rem',
+            top: '3rem',
+            borderRadius: '.8rem',
           }}>
-          <Link onClick={handleLogout}>Sign out</Link>
+          {isAuthenticated && (
+            <Link style={{ color: 'red' }} onClick={handleLogout}>
+              Sign out
+            </Link>
+          )}
           <div className='flex justify-between'>
-            <Link onClick={handleLoginFormType}>Sign in</Link>
-            <Link onClick={handleRegisterFormType}>Register</Link>
+            {!isAuthenticated && (
+              <Link onClick={handleLoginFormType}>Sign in</Link>
+            )}
+            {!isAuthenticated && <Link onClick={handleRegisterFormType}>Register</Link>}
           </div>
           <input
             type='email'

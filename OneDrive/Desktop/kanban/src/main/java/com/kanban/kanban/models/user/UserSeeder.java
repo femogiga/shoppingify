@@ -30,9 +30,9 @@ public class UserSeeder implements CommandLineRunner {
         userRepository.deleteAll();
 
         // Create sample users
-        User admin = new User("John", "Doe", "admin@kanban.com", passwordEncoder.encode("admin123"), "https://example.com/admin.jpg", List.of("ADMIN","USER"));
-        User user1 = new User("Alice", "Smith", "alice@kanban.com", passwordEncoder.encode("password123"), "https://example.com/alice.jpg" , List.of("USER"));
-        User user2 = new User("Bob", "Johnson", "bob@kanban.com", passwordEncoder.encode("password123"), "https://example.com/bob.jpg", List.of("USER"));
+        User admin = new User("John", "Doe", "admin@kanban.com", passwordEncoder.encode("admin123"), "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg", List.of("ADMIN","USER"));
+        User user1 = new User("Alice", "Smith", "alice@kanban.com", passwordEncoder.encode("password123"), "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg" , List.of("USER"));
+        User user2 = new User("Bob", "Johnson", "bob@kanban.com", passwordEncoder.encode("password123"), "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg", List.of("USER"));
 
         userRepository.save(admin);
         userRepository.save(user1);

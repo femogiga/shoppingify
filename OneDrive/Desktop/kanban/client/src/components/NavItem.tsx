@@ -25,7 +25,7 @@ const NavItem: React.FC<INavItem> = ({ title, path }) => {
         to={`projects/${path}`}
         onClick={(e) => changeActiveLink(path)}
         className="nav-item flex item-center gap-x-1 color-dark-white">
-        <SquareKanban />
+        <SquareKanban size={'2rem'}/>
         <span >{title}</span>
       </NavLink>
     </li>
