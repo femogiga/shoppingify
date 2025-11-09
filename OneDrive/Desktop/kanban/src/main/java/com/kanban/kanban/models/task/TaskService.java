@@ -8,7 +8,9 @@ import com.kanban.kanban.models.projectcolumn.ProjectColumnRepository;
 import com.kanban.kanban.models.subtask.SubTask;
 import com.kanban.kanban.models.subtask.SubTaskDTO;
 import com.kanban.kanban.models.subtask.SubTaskRepository;
+import com.kanban.kanban.models.user.User;
 import com.kanban.kanban.models.user.UserDTO;
+import com.kanban.kanban.models.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,12 +29,14 @@ public class TaskService {
     @Autowired
     private final SubTaskRepository subTaskRepository;
 
-    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, ProjectColumnRepository projectColumnRepository, SubTaskRepository subTaskRepository) {
+    @Autowired
+    private UserRepository userRepository;
+    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, ProjectColumnRepository projectColumnRepository, SubTaskRepository subTaskRepository ,UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
         this.projectColumnRepository = projectColumnRepository;
-
         this.subTaskRepository = subTaskRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Task> getTasks() {
@@ -245,5 +249,14 @@ public class TaskService {
         task.getTaskMembers().clear();
 
         taskRepository.delete(task);
+    }
+
+    public User addUserToTask(Long taskId,User addedUser){
+        User user = userRepository.findById(addedUser.getId()).orElseThrow(()-> new RuntimeException("User does not exist"));
+        Task task = taskRepository.findById(taskId).orElseThrow(()-> new RuntimeException("Task does not exist"));
+        task.addTaskMember(user);
+        user.addTask(task);
+        taskRepository.save(task);
+        return userRepository.save(user);
     }
 }

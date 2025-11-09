@@ -1,6 +1,7 @@
 package com.kanban.kanban.models.task;
 
 
+import com.kanban.kanban.models.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -106,6 +107,16 @@ public ResponseEntity<Task> updateTask(@PathVariable Long id ,@RequestBody Task 
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
+        }
+}
+
+@PostMapping("/{id}")
+    public  ResponseEntity<User> addUserToTask (@PathVariable  Long id , @RequestBody User user){
+        try{
+           User addedUser =  taskService.addUserToTask(id, user);
+            return new ResponseEntity<>(addedUser, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return  new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
         }
 }
 }

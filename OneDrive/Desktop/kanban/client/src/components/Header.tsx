@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EllipsisVertical } from 'lucide-react';
 import { useDarkMode } from '../context/DarkModeContext';
 import useTaskStore from '../statemanagment/taskStore';
@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 import DeleteEditModal from './DeleteEditModal';
 import useModalStore from '../statemanagment/modalStore';
 import { AuthAvatarButton } from './AuthAvatarButton';
+import Avatar from './Avatar';
+import { useUserdata } from '../apis/userData';
+import { generateFullname } from '../utils/fullname';
 
 const Header = () => {
   const { mode } = useDarkMode();
@@ -19,7 +22,9 @@ const Header = () => {
     hideEditProjectModal,
   } = useModalStore();
   const [isOpen, setIsOpen] = useState(false);
-
+  const { AllUserData, isUsersPending, isUserSError } = useUserdata();
+  const [searchedUser, setSearchedUser] = useState('');
+  console.log({ AllUserData });
   const handleIsOpen = (e) => {
     e.preventDefault();
     setIsOpen(true);
@@ -48,6 +53,23 @@ const Header = () => {
     setIsOpen(false); // closes deleteEditModal
     showEditProjectModal();
   };
+
+  const handleSearchUsers = () => {
+    const filteredUser = AllUserData?.filter(
+      (user) =>
+        generateFullname(user.firstname, user.lastname)
+          .toLowerCase()
+          .includes(searchedUser.toLowerCase()) ||
+        user.firstname.toLowerCase().includes(searchedUser.toLowerCase()) ||
+        user.lastname.toLowerCase().includes(searchedUser.toLowerCase())
+    );
+
+    return filteredUser;
+  };
+
+  useEffect(() => {}, []);
+  const searchedOptions = handleSearchUsers();
+  console.log(searchedOptions);
   return (
     <header className={`${mode === 'light' ? 'lightmode' : 'darkmode'} header`}>
       <div className='flex items-center gap-x-2'>
@@ -59,6 +81,58 @@ const Header = () => {
           onShowAuthModal={handleShowAuthModal}
           setShowAuthModal={setShowAuthModal}
         />
+      </div>
+
+      <div
+        className='avatar-container flex gap-x-1 item-center relative'
+        style={{ width: '40%' }}>
+        <form>
+          <input
+            id='users'
+            name='user'
+            value={searchedUser}
+            autoComplete='off'
+            style={{ paddingBlock: '.6rem' }}
+            onChange={(e) => setSearchedUser(e.target.value)}
+          />
+          {searchedUser && (
+            <article
+              className='grid gap-y-05 absolute bg-darker p-y-05'
+              style={{
+                boxShadow: '0 2px 4px rgba(0,0,0,0.5)',
+                width: '12rem',
+                backgroundColor: '',
+                top: '3rem',
+              }}>
+              {searchedOptions &&
+                searchedOptions.map((user) => (
+                  <div>
+                    <div
+                      className='flex gap-x-05  item-center justify-between p-x-05 '
+                      style={{ color: 'white' }}>
+                      <p>{generateFullname(user.firstname, user.lastname)}</p>
+                      <img
+                        src={user.photoUrl}
+                        style={{
+                          width: '2rem',
+                          height: '2rem',
+                          borderRadius: '50%',
+                          objectFit: 'cover',
+                          zIndex: 10,
+                          overflowClipMargin: 'unset',
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+            </article>
+          )}
+        </form>
+        <div className='flex item-center gap-x-05'>
+          <Avatar />
+          <Avatar />
+          <Avatar />
+        </div>
       </div>
 
       <div className='relative'>

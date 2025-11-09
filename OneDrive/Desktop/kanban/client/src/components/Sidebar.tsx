@@ -14,20 +14,20 @@ import { Link } from 'react-router-dom';
 import NavItem from './NavItem';
 import { useFetchProjects } from '../apis/projectData';
 import useProjectStore from '../statemanagment/projectStore';
+import Avatar from './Avatar';
 
 const Sidebar = () => {
   const { mode } = useDarkMode();
-  const { isPending, data:projectData, error } = useFetchProjects();
+  const { isPending, data: projectData, error } = useFetchProjects();
   console.log(projectData);
-  const { changeActiveLink,activeLink,showProjectModal } = useProjectStore();
+  const { changeActiveLink, activeLink, showProjectModal } = useProjectStore();
   const handleLinkChange = (e) => {
     e.preventDefault();
-
   };
   const handleModalVisibility = (e) => {
     e.preventDefault();
-    showProjectModal()
-  }
+    showProjectModal();
+  };
   return (
     <aside className={`sidebar ${mode === 'light' ? 'lightmode' : 'darkmode'}`}>
       <header
@@ -56,7 +56,7 @@ const Sidebar = () => {
                   path={project.id}
                 />
               ))}
-
+            
             <li className='create nav-item flex item-center gap-x-1 font-white p-x-2'>
               <SquareKanban size={'2rem'} />
               <button

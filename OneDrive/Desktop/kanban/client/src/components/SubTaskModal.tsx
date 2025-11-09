@@ -8,6 +8,9 @@ import { useDarkMode } from '../context/DarkModeContext';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import DeleteEditModal from './DeleteEditModal';
 import useModalStore from '../statemanagment/modalStore';
+import Avatar from './Avatar';
+import { generateFullname } from '../utils/fullname';
+import { useAddUserToTaskMutation, useUserdata } from '../apis/userData';
 
 const SubTaskModal = () => {
   const { activeTaskId, activeTaskData, showEditTaskModal, hideEditTaskModal } =
@@ -16,6 +19,7 @@ const SubTaskModal = () => {
     activeTaskData.id
   );
   const [isOpen, setIsOpen] = useState(false);
+  const [addedUser, setAddedUser] = useState(null);
 
   const handleShowEditModal = (e) => {
     e.preventDefault();
@@ -30,7 +34,9 @@ const SubTaskModal = () => {
   const { taskData } = useGetTaskById(activeTaskData?.id);
   const { hideModal } = useTaskStore();
   const { hideDeleteModal, showDeleteModal } = useModalStore();
-
+  const { AllUserData, isUsersPending, isUserSError } = useUserdata();
+  const [searchedUser, setSearchedUser] = useState('');
+  const { addUserToTaskMutation } = useAddUserToTaskMutation(activeTaskId);
   console.log(taskData);
   // console.log(count);
   console.log('activeTaskData:', activeTaskData);
@@ -78,6 +84,27 @@ const SubTaskModal = () => {
     });
   };
 
+  const handleaddUserToTask = (user) => {
+    e.preventDefault();
+
+    // ✅ Move this INSIDE the function to use the newStatus
+
+    const userData = {
+      taskId: activeTaskData.id,
+      userId: user?.id,
+    };
+
+    addUserToTaskMutation(userData, {
+      onSuccess: () => {
+        console.log('Successfully added');
+      },
+      onError: (error) => {
+        console.error('Update failed:', error);
+        // Optionally revert status on error
+      },
+    });
+  };
+
   const completedTask = useMemo(
     () =>
       activeTaskData.subTasks.filter((subTask) => subTask.status === 'DONE'),
@@ -102,6 +129,23 @@ const SubTaskModal = () => {
     hideModal();
   };
 
+  const handleSearchUsers = () => {
+    const filteredUser = AllUserData?.filter(
+      (user) =>
+        generateFullname(user.firstname, user.lastname)
+          .toLowerCase()
+          .includes(searchedUser.toLowerCase()) ||
+        user.firstname.toLowerCase().includes(searchedUser.toLowerCase()) ||
+        user.lastname.toLowerCase().includes(searchedUser.toLowerCase())
+    );
+
+    return filteredUser;
+  };
+
+  useEffect(() => {}, []);
+  const searchedOptions = handleSearchUsers();
+  console.log(searchedOptions);
+
   // queryClient.invalidateQueries({ queryKey: ['allProjects'] });
 
   // console.log('completed', completedCount);
@@ -120,7 +164,7 @@ const SubTaskModal = () => {
           <p
             style={{
               color: mode === 'light' ? 'black' : 'white',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
             }}>
             {activeTaskData?.title ||
               'Lorem ipsum dolor sit amet consectetur adipisicing elit.Recusandaeut'}
@@ -130,6 +174,59 @@ const SubTaskModal = () => {
           </Link>
         </div>
         <p className='color-dark-white'>{activeTaskData?.description}</p>
+
+        <div
+          className='avatar-container flex gap-x-1  relative'
+          style={{ width: '40%' }}>
+          <form>
+            <input
+              id='users'
+              name='user'
+              value={searchedUser}
+              autoComplete='off'
+              style={{ paddingBlock: '.4rem' }}
+              onChange={(e) => setSearchedUser(e.target.value)}
+            />
+            {searchedUser && (
+              <article
+                className='grid gap-y-05 absolute bg-darker p-y-05'
+                style={{
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.5)',
+                  width: '12rem',
+                  backgroundColor: '',
+                  top: '3rem',
+                }}>
+                {searchedOptions &&
+                  searchedOptions.map((user) => (
+                    <div onClick={() => handleaddUserToTask(user)}>
+                      <div
+                        className='flex gap-x-05  item-center justify-between p-x-05 '
+                        style={{ color: 'white' }}>
+                        <p>{generateFullname(user.firstname, user.lastname)}</p>
+                        <img
+                          src={user.photoUrl}
+                          style={{
+                            width: '2rem',
+                            height: '2rem',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            zIndex: 10,
+                            overflowClipMargin: 'unset',
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+              </article>
+            )}
+          </form>
+          <div className='flex item-center gap-x-05'>
+            <Avatar />
+            <Avatar />
+            <Avatar />
+          </div>
+        </div>
+
         <div>
           <p className='mbe-05 color-dark-white'>
             Subtask
