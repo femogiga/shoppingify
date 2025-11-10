@@ -36,7 +36,7 @@ const SubTaskModal = () => {
   const { hideDeleteModal, showDeleteModal } = useModalStore();
   const { AllUserData, isUsersPending, isUserSError } = useUserdata();
   const [searchedUser, setSearchedUser] = useState('');
-  const { addUserToTaskMutation } = useAddUserToTaskMutation(activeTaskId);
+  const { addUserToTaskMutation } = useAddUserToTaskMutation(activeTaskData.id);
   console.log(taskData);
   // console.log(count);
   console.log('activeTaskData:', activeTaskData);
@@ -85,18 +85,23 @@ const SubTaskModal = () => {
   };
 
   const handleaddUserToTask = (user) => {
-    e.preventDefault();
+
 
     // ✅ Move this INSIDE the function to use the newStatus
 
     const userData = {
-      taskId: activeTaskData.id,
-      userId: user?.id,
+      // taskId: activeTaskData.id,
+      id: user?.id,
     };
 
     addUserToTaskMutation(userData, {
       onSuccess: () => {
         console.log('Successfully added');
+                    queryClient.invalidateQueries({
+                      queryKey: ['projectById'],
+                    });
+
+
       },
       onError: (error) => {
         console.error('Update failed:', error);
@@ -222,8 +227,8 @@ const SubTaskModal = () => {
           </form>
           <div className='flex item-center gap-x-05'>
             <Avatar />
-            <Avatar />
-            <Avatar />
+            {taskData?.taskMembers.map(user => <Avatar key={`taskMembers${user.id}` } src={user.photoUrl} />)}
+
           </div>
         </div>
 

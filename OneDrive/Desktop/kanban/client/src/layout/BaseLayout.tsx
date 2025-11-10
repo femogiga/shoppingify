@@ -40,6 +40,7 @@ const BaseLayout = () => {
   const { columnModalVisible } = useColumnStore();
   const { deleteModalVisible, deleteProjectModal, editProjectModalVisible } =
     useModalStore();
+  
   return (
     <>
       <div className={`home ${mode === 'light' ? 'bg-light' : 'bg-darker'}`}>

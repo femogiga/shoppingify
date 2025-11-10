@@ -2,7 +2,7 @@ import { User } from 'lucide-react';
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-const Avatar = () => {
+const Avatar = ({src}) => {
   return (
     <Link onClick={''}>
 
@@ -14,7 +14,8 @@ const Avatar = () => {
             objectFit: 'cover',
             overflowClipMargin: 'unset',
           }}
-          src={
+        src={
+            src ||
 
             'https://images.pexels.com/photos/34123077/pexels-photo-34123077.jpeg'
           }

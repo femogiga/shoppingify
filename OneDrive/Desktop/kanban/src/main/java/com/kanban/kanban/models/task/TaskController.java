@@ -110,7 +110,7 @@ public ResponseEntity<Task> updateTask(@PathVariable Long id ,@RequestBody Task 
         }
 }
 
-@PostMapping("/{id}")
+@PostMapping("/{id}/users")
     public  ResponseEntity<User> addUserToTask (@PathVariable  Long id , @RequestBody User user){
         try{
            User addedUser =  taskService.addUserToTask(id, user);

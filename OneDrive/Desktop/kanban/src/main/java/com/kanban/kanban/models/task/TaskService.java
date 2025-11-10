@@ -254,6 +254,9 @@ public class TaskService {
     public User addUserToTask(Long taskId,User addedUser){
         User user = userRepository.findById(addedUser.getId()).orElseThrow(()-> new RuntimeException("User does not exist"));
         Task task = taskRepository.findById(taskId).orElseThrow(()-> new RuntimeException("Task does not exist"));
+        if(task.getTaskMembers().contains(user)){
+            throw new RuntimeException("User already exist in task");
+        }
         task.addTaskMember(user);
         user.addTask(task);
         taskRepository.save(task);
