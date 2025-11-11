@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 const useModalStore = create((set) => ({
-
+    createUserModalVisible:false,
     deleteModalVisible: false,
     deleteEditModal: false,
     deleteProjectModal: false,
@@ -18,6 +18,9 @@ const useModalStore = create((set) => ({
 
     showEditProjectModal: () => set({ editProjectModalVisible: true }),
     hideEditProjectModal: () => set({ editProjectModalVisible: false }),
+
+    showCreateUserModal: () => set({ createUserModalVisible: true }),
+    hideCreateUserModal: () => set({ createUserModalVisible: false }),
 
 }));
 

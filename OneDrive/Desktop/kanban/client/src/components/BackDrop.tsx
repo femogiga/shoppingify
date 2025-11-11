@@ -26,6 +26,9 @@ const BackDrop = () => {
     hideDeleteProjectModal,
     showEditProjectModal,
     hideEditProjectModal,
+    createUserModalVisible,
+    hideCreateUserModal,
+    showCreateUserModal,
   } = useModalStore();
   const { columnModalVisible, hideColumnModal } = useColumnStore();
 
@@ -38,6 +41,7 @@ const BackDrop = () => {
     hideDeleteProjectModal();
     hideEditProjectModal();
     hideColumnModal();
+    hideCreateUserModal();
   };
   return (
     <div
@@ -56,7 +60,8 @@ const BackDrop = () => {
           deleteModalVisible ||
           editTaskModalVisible ||
           deleteProjectModal ||
-          editProjectModalVisible
+          editProjectModalVisible ||
+          createUserModalVisible
             ? 5
             : -5,
         background: 'rgba(0,0,0,.4)',

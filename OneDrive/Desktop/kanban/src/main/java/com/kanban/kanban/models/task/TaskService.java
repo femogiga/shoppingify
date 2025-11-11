@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -240,14 +241,32 @@ public class TaskService {
         );
     }
 
-    public void deleteTask(Long id){
-        Task task = taskRepository.findById(id).orElseThrow(()->new RuntimeException("Task not found"));
-        if (task.getProjectColumn() != null) {
-            task.getProjectColumn().removeTask(task);
-        }
-        task.getSubTasks().clear();
-        task.getTaskMembers().clear();
+    public void deleteTask(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
 
+        // 1. Remove task from all users (critical for many-to-many)
+        if (task.getTaskMembers() != null && !task.getTaskMembers().isEmpty()) {
+            // Create copy to avoid ConcurrentModificationException
+            List<User> membersCopy = new ArrayList<>(task.getTaskMembers());
+            for (User user : membersCopy) {
+                // Remove from user's task list (owning side)
+                user.getTasks().remove(task);
+                // Remove user from task's member list (inverse side)
+                task.getTaskMembers().remove(user);
+            }
+        }
+
+        // 2. Remove task from project column
+        if (task.getProjectColumn() != null) {
+            task.getProjectColumn().getTasks().remove(task);
+            task.setProjectColumn(null);
+        }
+
+        // 3. Clear subtasks (orphanRemoval=true will handle the actual deletion)
+        task.getSubTasks().clear();
+
+        // 4. Now delete the task
         taskRepository.delete(task);
     }
 

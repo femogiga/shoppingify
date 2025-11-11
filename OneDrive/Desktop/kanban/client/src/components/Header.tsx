@@ -20,6 +20,7 @@ const Header = () => {
     editProjectModal,
     showEditProjectModal,
     hideEditProjectModal,
+    showCreateUserModal,
   } = useModalStore();
   const [isOpen, setIsOpen] = useState(false);
   const { AllUserData, isUsersPending, isUserSError } = useUserdata();
@@ -67,6 +68,11 @@ const Header = () => {
     return filteredUser;
   };
 
+  const handleCreateUserModalVisibility = (e:React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    showCreateUserModal()
+  }
+
   useEffect(() => {}, []);
   const searchedOptions = handleSearchUsers();
   console.log(searchedOptions);
@@ -87,14 +93,7 @@ const Header = () => {
         className='avatar-container flex gap-x-1 item-center relative'
         style={{ width: '40%' }}>
         <form>
-          <input
-            id='users'
-            name='user'
-            value={searchedUser}
-            autoComplete='off'
-            style={{ paddingBlock: '.6rem' }}
-            onChange={(e) => setSearchedUser(e.target.value)}
-          />
+          <button onClick={handleCreateUserModalVisibility}>Add User</button>
           {searchedUser && (
             <article
               className='grid gap-y-05 absolute bg-darker p-y-05'
@@ -129,9 +128,9 @@ const Header = () => {
           )}
         </form>
         <div className='flex item-center gap-x-05'>
+          {/* <Avatar />
           <Avatar />
-          <Avatar />
-          <Avatar />
+          <Avatar /> */}
         </div>
       </div>
 

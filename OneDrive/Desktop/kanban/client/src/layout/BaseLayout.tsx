@@ -18,6 +18,7 @@ import DeleteModal from './../components/DeleteModal';
 import useModalStore from '../statemanagment/modalStore';
 import DeleteProjectModal from '../components/DeletePojectModal';
 import EditProjectModal from '../components/EditProjectModal';
+import CreateUserModal from '../components/CreateUserModal';
 
 const BaseLayout = () => {
   const {
@@ -38,9 +39,13 @@ const BaseLayout = () => {
   const body = document.querySelector('.home');
   const { mode } = useDarkMode();
   const { columnModalVisible } = useColumnStore();
-  const { deleteModalVisible, deleteProjectModal, editProjectModalVisible } =
-    useModalStore();
-  
+  const {
+    deleteModalVisible,
+    deleteProjectModal,
+    editProjectModalVisible,
+    createUserModalVisible,
+  } = useModalStore();
+
   return (
     <>
       <div className={`home ${mode === 'light' ? 'bg-light' : 'bg-darker'}`}>
@@ -61,6 +66,8 @@ const BaseLayout = () => {
             createPortal(<DeleteProjectModal mode={mode} />, body)}
           {editProjectModalVisible &&
             createPortal(<EditProjectModal mode={mode} />, body)}
+          {createUserModalVisible &&
+            createPortal(<CreateUserModal mode={mode} />, body)}
           <Outlet />
         </main>
       </div>

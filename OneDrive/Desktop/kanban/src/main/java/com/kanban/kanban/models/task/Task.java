@@ -40,7 +40,7 @@ public class Task {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL ,mappedBy = "task",orphanRemoval = true)
     private List<SubTask> subTasks = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "tasks")
+    @ManyToMany(mappedBy = "tasks" ,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<User> taskMembers = new ArrayList<>();
 
     @Transient

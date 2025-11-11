@@ -1,4 +1,4 @@
-import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query"
+import { QueryClient, useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query"
 import apiService from "../utils/apiService"
 
 
@@ -38,3 +38,24 @@ export const useAddUserToTaskMutation = (id) => {
 
     return { addUserToTaskMutation: mutate, isSuccess, isPending, isError, error };
 };
+
+
+
+export const useCreateUserMutation = () => {
+    const queryClient = useQueryClient();
+
+    const { isError, mutate, isSuccess, isPending, error, reset } = useMutation({
+        mutationFn: (data) => apiService.post(`/users`, data).then(res => res.data),
+        mutationKey: ['createUser'],
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['allProjects'] })
+            queryClient.invalidateQueries({ queryKey: ['projectById'] })
+
+        },
+
+        onError: (error) => console.error(error),
+        onSettled: () => setTimeout(() => reset, 3000)
+
+    })
+    return { createUserMutation: mutate, isSuccess, isCreating: isPending, error, reset, isError }
+}

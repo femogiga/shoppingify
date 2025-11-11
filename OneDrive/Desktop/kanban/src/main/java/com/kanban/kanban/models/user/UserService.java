@@ -3,6 +3,8 @@ package com.kanban.kanban.models.user;
 import com.kanban.kanban.exceptions.EmailAlreadyExistException;
 import com.kanban.kanban.exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +17,9 @@ import java.util.Optional;
 @Transactional
 public class UserService {
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
@@ -32,6 +37,7 @@ public class UserService {
         if(userRepository.existsByEmail(user.getEmail())){
             throw new EmailAlreadyExistException(user.getEmail());
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
