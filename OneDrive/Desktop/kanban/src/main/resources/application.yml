@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  servlet:
+    multipart:
+      max-file-size: 10MB        # Max size per file
+      max-request-size: 10MB     # Max size for entire request
+      enabled: true
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:}
+  api-key: ${CLOUDINARY_API_KEY:}
+  api-secret: ${CLOUDINARY_API_SECRET:}
+
+
+server:
+  port: ${SERVER_PORT:7000}
+

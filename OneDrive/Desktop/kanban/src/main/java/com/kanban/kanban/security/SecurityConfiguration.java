@@ -70,6 +70,9 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/subtasks/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/subtasks/**").authenticated()
 
+
+                        .requestMatchers(HttpMethod.GET, "/api/config/test").permitAll()
+
                         // Admin endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 

@@ -1,145 +1,311 @@
-import React, { useEffect, useState } from 'react';
-import { useCreateTask, useDeleteTaskMutation } from '../apis/taskData';
-import { useParams } from 'react-router-dom';
-import useTaskStore from '../statemanagment/taskStore';
-import { X } from 'lucide-react';
+import React, { useState } from 'react';
 import useModalStore from '../statemanagment/modalStore';
 import { useCreateUserMutation } from '../apis/userData';
 
 const CreateUserModal = () => {
-  const { hideCreateUserModal, showCreateUserModal } = useModalStore();
+  const { hideCreateUserModal } = useModalStore();
   const initialState = {
     firstname: '',
     lastname: '',
     email: '',
     password: '',
     repeatpassword: '',
-    photoUrl: '',
   };
   const [user, setUser] = useState(initialState);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
   const [message, setMessage] = useState('');
-  const { createUserMutation, isSuccess, isCreating, isPending, error, reset } =
-    useCreateUserMutation();
+  const [uploading, setUploading] = useState(false);
+
+  const { createUserMutation, isPending } = useCreateUserMutation();
 
   const handleInputChange = (e) => {
     setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  console.log(user);
 
-  const handleCreateNewUser = (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (user.password !== user.repeatpassword) {
-      setMessage('password  does not match');
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file
+    if (!file.type.startsWith('image/')) {
+      setMessage('Please select an image file (JPEG, PNG, etc.)');
       return;
     }
-    const userData = {
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      password: user.password,
-      photoUrl: user.photoUrl,
-    };
 
-    createUserMutation(userData, {
-      onSuccess: () => {
-        console.log('user successfully created');
-        setUser(initialState);
-        hideCreateUserModal();
-      },
-      onError: (error) => console.error(error),
-    });
+    if (file.size > 5 * 1024 * 1024) {
+      // 5MB limit
+      setMessage('File size should be less than 5MB');
+      return;
+    }
+
+    setSelectedFile(file);
+    setMessage('');
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handleCancel = (e: React.FormEvent<HTMLButtonElement>) => {
+  const removeImage = () => {
+    setSelectedFile(null);
+    setPreviewUrl('');
+    setMessage('');
+  };
+
+  const handleCreateNewUser = async (e) => {
     e.preventDefault();
+
+    // Validation
+    if (!user.firstname || !user.lastname || !user.email || !user.password) {
+      setMessage('Please fill in all required fields');
+      return;
+    }
+
+    if (user.password !== user.repeatpassword) {
+      setMessage('Passwords do not match');
+      return;
+    }
+
+    if (user.password.length < 4) {
+      setMessage('Password must be at least 4 characters');
+      return;
+    }
+
+    setUploading(true);
+    setMessage('');
+
+    try {
+      const formData = new FormData();
+      formData.append('firstname', user.firstname);
+      formData.append('lastname', user.lastname);
+      formData.append('email', user.email);
+      formData.append('password', user.password);
+
+      if (selectedFile) {
+        formData.append('photo', selectedFile);
+      }
+
+      createUserMutation(formData, {
+        onSuccess: () => {
+          console.log('User successfully created');
+          setUser(initialState);
+          setSelectedFile(null);
+          setPreviewUrl('');
+          hideCreateUserModal();
+        },
+        onError: (error) => {
+          console.error('Error creating user:', error);
+          setMessage(error.message || 'Failed to create user');
+        },
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      setMessage('An error occurred while creating user');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleCancel = (e) => {
+    e.preventDefault();
+    setUser(initialState);
+    setSelectedFile(null);
+    setPreviewUrl('');
+    setMessage('');
     hideCreateUserModal();
   };
+
   return (
     <article className='sub-task-modal' style={{ zIndex: '10' }}>
       <div className='grid gap-y-1 p-y-2 p-x-2'>
         <form>
-          <p className='mbe-1'>Add user board</p>
+          <p className='mbe-1'>Add User to Board</p>
+
+          {message && (
+            <div
+              className='mbe-1 p-y-05 p-x-1'
+              style={{
+                backgroundColor: '#ffebee',
+                color: '#c62828',
+                borderRadius: '0.5rem',
+                border: '1px solid #ffcdd2',
+              }}>
+              {message}
+            </div>
+          )}
+
           <fieldset className='grid mbe-1' style={{ rowGap: '0.5rem' }}>
             <input
               type='email'
-              placeholder='Email'
+              placeholder='Email *'
               style={{ display: 'block', width: '100%' }}
               className='p-y-05'
               value={user.email}
               name='email'
               onChange={handleInputChange}
+              required
+              disabled={uploading}
             />
             <input
               type='text'
-              placeholder='Firstname'
+              placeholder='First Name *'
               style={{ display: 'block', width: '100%' }}
               className='p-y-05'
               value={user.firstname}
               name='firstname'
               onChange={handleInputChange}
+              required
+              disabled={uploading}
             />
             <input
               type='text'
-              placeholder='Lastname'
+              placeholder='Last Name *'
               style={{ display: 'block', width: '100%' }}
               className='p-y-05'
               value={user.lastname}
               name='lastname'
               onChange={handleInputChange}
+              required
+              disabled={uploading}
             />
             <input
               type='password'
-              placeholder='Password'
+              placeholder='Password *'
               style={{ display: 'block', width: '100%' }}
               className='p-y-05'
               value={user.password}
               name='password'
               onChange={handleInputChange}
+              required
+              disabled={uploading}
             />
             <input
               type='password'
-              placeholder='Repeat password'
+              placeholder='Repeat Password *'
               style={{ display: 'block', width: '100%' }}
               className='p-y-05'
               value={user.repeatpassword}
               name='repeatpassword'
               onChange={handleInputChange}
+              required
+              disabled={uploading}
             />
 
-            <input
-              type='text'
-              placeholder='photoUrl'
-              style={{ display: 'block', width: '100%' }}
-              className='p-y-05'
-              value={user.photoUrl}
-              name='photoUrl'
-              onChange={handleInputChange}
-            />
+            {/* File Upload Section */}
+            <div className='mbe-1'>
+              <label className='block mbe-05'>Profile Photo</label>
+
+              <input
+                type='file'
+                id='photo-upload'
+                accept='image/*'
+                onChange={handleFileSelect}
+                disabled={uploading}
+                style={{ display: 'none' }}
+              />
+
+              <label
+                htmlFor='photo-upload'
+                className='p-y-05 p-x-1'
+                style={{
+                  display: 'inline-block',
+                  border: '2px dashed #ccc',
+                  borderRadius: '0.5rem',
+                  cursor: uploading ? 'not-allowed' : 'pointer',
+                  backgroundColor: uploading ? '#f5f5f5' : 'transparent',
+                  textAlign: 'center',
+                  width: '100%',
+                  opacity: uploading ? 0.6 : 1,
+                }}>
+                {uploading
+                  ? 'Uploading...'
+                  : previewUrl
+                  ? 'Change Photo'
+                  : '📷 Upload Profile Photo'}
+              </label>
+
+              {/* Image Preview */}
+              {previewUrl && (
+                <div
+                  className='mts-1'
+                  style={{ position: 'relative', display: 'inline-block' }}>
+                  <img
+                    src={previewUrl}
+                    alt='Profile preview'
+                    style={{
+                      width: '80px',
+                      height: '80px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '2px solid #e0e0e0',
+                    }}
+                  />
+                  <button
+                    type='button'
+                    onClick={removeImage}
+                    disabled={uploading}
+                    style={{
+                      position: 'absolute',
+                      top: '-5px',
+                      right: '-5px',
+                      background: '#ff4444',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      cursor: uploading ? 'not-allowed' : 'pointer',
+                      fontSize: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      opacity: uploading ? 0.5 : 1,
+                    }}>
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
           </fieldset>
+
           <div className='flex justify-between'>
             <button
               type='button'
               onClick={handleCreateNewUser}
+              disabled={uploading || isPending}
               className='p-y-05 p-x-05'
               style={{
                 width: '46%',
                 borderRadius: '1rem',
-                backgroundColor: 'hsl(0deg 78% 63%)',
+                backgroundColor:
+                  uploading || isPending ? '#ccc' : 'hsl(120deg 78% 63%)',
                 border: 'none',
                 outline: 'none',
                 color: '#ffff',
+                cursor: uploading || isPending ? 'not-allowed' : 'pointer',
               }}>
-              Delete
+              {uploading
+                ? 'Creating...'
+                : isPending
+                ? 'Creating...'
+                : 'Create User'}
             </button>
             <button
               type='button'
               onClick={handleCancel}
+              disabled={uploading}
               className='p-y-05 p-x-05'
               style={{
                 width: '46%',
                 borderRadius: '1rem',
                 border: 'none',
                 outline: 'none',
+                cursor: uploading ? 'not-allowed' : 'pointer',
+                backgroundColor: uploading ? '#f5f5f5' : 'transparent',
               }}>
               Cancel
             </button>

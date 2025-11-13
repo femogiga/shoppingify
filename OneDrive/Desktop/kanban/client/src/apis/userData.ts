@@ -45,7 +45,7 @@ export const useCreateUserMutation = () => {
     const queryClient = useQueryClient();
 
     const { isError, mutate, isSuccess, isPending, error, reset } = useMutation({
-        mutationFn: (data) => apiService.post(`/users`, data).then(res => res.data),
+        mutationFn: (data) => apiService.multiPartPost(`/users`, data).then(res => res.data),
         mutationKey: ['createUser'],
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['allProjects'] })

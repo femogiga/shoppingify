@@ -41,7 +41,6 @@ const post = (url: string, data: any) => {
 
 
 const authPost = (url: string, data: any) => {
-  const token = getToken();
 
   return axios.post(`${baseUrl}${url}`, data, {
     headers: {
@@ -49,6 +48,16 @@ const authPost = (url: string, data: any) => {
     },
   });
 };
+
+
+const multiPartPost = (url: string, data: any) => {
+  return axios.post(`${baseUrl}${url}`, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 
 const update = (url: string, data: any) => {
   const token = getToken();
@@ -70,4 +79,4 @@ const remove = (url: string, id: number) => {
   });
 };
 
-export default { get, getById, post, update, remove, authPost };
+export default { get, getById, post, update, remove, authPost, multiPartPost };

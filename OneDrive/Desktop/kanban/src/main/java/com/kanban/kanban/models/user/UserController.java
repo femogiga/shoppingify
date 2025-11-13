@@ -3,11 +3,14 @@ package com.kanban.kanban.models.user;
 
 import com.kanban.kanban.exceptions.EmailAlreadyExistException;
 import com.kanban.kanban.exceptions.UserNotFoundException;
+import com.kanban.kanban.services.FileUploadService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +22,7 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final UserService userService; // Add service layer
+
 
 
     public UserController(UserRepository userRepository ,UserService userService){
@@ -61,20 +65,23 @@ public class UserController {
 
 
     }
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody @Valid User user){
-        try{
-            User created = userService.create(user);
-            return new ResponseEntity<>(created , HttpStatus.CREATED);
-        }
-        catch(EmailAlreadyExistException e){
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-        catch(RuntimeException e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//    @PostMapping
+//    public ResponseEntity<User> createUser(@RequestBody @Valid User user){
+//        try{
+//            User created = userService.create(user);
+//            return new ResponseEntity<>(created , HttpStatus.CREATED);
+//        }
+//        catch(EmailAlreadyExistException e){
+//            return new ResponseEntity<>(HttpStatus.CONFLICT);
+//        }
+//        catch(RuntimeException e){
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//
+//        }
+//    }
 
-        }
-    }
+
+
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -106,6 +113,23 @@ public class UserController {
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<User> createUser(
+            @RequestParam String firstname,
+            @RequestParam String lastname,
+            @RequestParam String password,
+            @RequestParam String email,
+            @RequestParam(required = false) MultipartFile photo
+    ){
+        try{
+            User user = userService.createUser(firstname,lastname,email,password,photo);
+            return new ResponseEntity<>(user,HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
