@@ -158,7 +158,9 @@ const SubTaskModal = () => {
   // Call this when you know data has changed
 
   //      className={`${mode === 'light' ? 'bg-light' : 'bg-darker'} content`}
-
+const handleResetOperations = (callback) => {
+  callback();
+};
   return (
     <article
       className={`sub-task-modal  ${
@@ -178,7 +180,7 @@ const SubTaskModal = () => {
             <EllipsisVertical className='color-dark-white' size='30' />
           </Link>
         </div>
-        <p className='color-dark-white'>{activeTaskData?.description}</p>
+        <p className='color-dark-white mbe-1'>{activeTaskData?.description}</p>
 
         <div
           className='avatar-container flex gap-x-1  relative'
@@ -225,9 +227,9 @@ const SubTaskModal = () => {
               </article>
             )}
           </form>
-          <div className='flex item-center gap-x-05'>
+          <div className='flex item-center gap-x-1'>
             <Avatar />
-            {taskData?.taskMembers.map(user => <Avatar key={`taskMembers${user.id}` } src={user.photoUrl} />)}
+            {taskData?.taskMembers.map(user => <Avatar key={`taskMembers${user.id}`} src={user.photoUrl} onRestOperations={handleResetOperations } />)}
 
           </div>
         </div>
