@@ -158,9 +158,7 @@ const SubTaskModal = () => {
   // Call this when you know data has changed
 
   //      className={`${mode === 'light' ? 'bg-light' : 'bg-darker'} content`}
-const handleResetOperations = (callback) => {
-  callback();
-};
+
   return (
     <article
       className={`sub-task-modal  ${
@@ -229,7 +227,7 @@ const handleResetOperations = (callback) => {
           </form>
           <div className='flex item-center gap-x-1'>
             <Avatar />
-            {taskData?.taskMembers.map(user => <Avatar key={`taskMembers${user.id}`} src={user.photoUrl} onRestOperations={handleResetOperations } />)}
+            {taskData?.taskMembers.map(user => <Avatar key={`taskMembers${user.id}`} src={user.photoUrl} {...user} taskId={ activeTaskData.id} />)}
 
           </div>
         </div>

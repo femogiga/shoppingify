@@ -281,4 +281,17 @@ public class TaskService {
         taskRepository.save(task);
         return userRepository.save(user);
     }
+
+
+    public User removeUserFromTask(Long taskId,Long userId){
+        User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User does not exist"));
+        Task task = taskRepository.findById(taskId).orElseThrow(()-> new RuntimeException("Task does not exist"));
+        if(!task.getTaskMembers().contains(user)){
+            throw new RuntimeException("User does exist in task");
+        }
+        task.removeTaskMember(user);
+        user.removeTask(task);
+        taskRepository.save(task);
+        return userRepository.save(user);
+    }
 }

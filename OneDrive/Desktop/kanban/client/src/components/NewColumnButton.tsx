@@ -15,7 +15,7 @@ const NewColumnButton = ({ mode }) => {
   return (
     <Link
       onClick={handleButtonClick}
-      className={mode === 'light' ? 'bg-blue-sm' : 'hsl(235deg 12% 19%)'}
+      className={mode === 'light' ? 'bg-blue-sm' : 'bg-dark'}
       to=''
       style={{
         display: 'grid',

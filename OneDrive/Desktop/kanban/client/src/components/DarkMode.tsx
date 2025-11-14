@@ -7,7 +7,10 @@ const DarkMode = () => {
 
   console.log(mode);
   return (
-    <article className='dark-mode-toggle flex item-center gap-x-1 font-white justify-center'>
+    <article
+      className={`dark-mode-toggle flex item-center gap-x-1 font-white justify-center ${
+        mode === 'light' ? 'bg-light-blue' : 'bg-darker'
+      }`}>
       <label htmlFor='dark' className='grid '>
         <Sun size={20} color={'#979dac'} />
       </label>

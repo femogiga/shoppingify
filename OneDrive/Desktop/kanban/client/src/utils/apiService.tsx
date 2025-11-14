@@ -79,4 +79,23 @@ const remove = (url: string, id: number) => {
   });
 };
 
-export default { get, getById, post, update, remove, authPost, multiPartPost };
+const normDelete = (url: string) => {
+  const token = getToken();
+  return axios.delete(`${baseUrl}${url}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export default {
+  get,
+  getById,
+  post,
+  update,
+  remove,
+  authPost,
+  multiPartPost,
+  normDelete,
+};

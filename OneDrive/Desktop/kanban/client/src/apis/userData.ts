@@ -41,6 +41,35 @@ export const useAddUserToTaskMutation = (id) => {
 
 
 
+export const useRemoveUserFromTaskMutation = (taskId) => {
+    const queryClient = useQueryClient();
+
+    const { isError, mutate, isSuccess, isPending, error } = useMutation({
+        mutationFn: (userId) => apiService.normDelete(`/tasks/${parseInt(taskId)}/users/${parseInt(userId)}`).then(res => res.data),
+        mutationKey: ['removeUserToTask'],
+        onSuccess: async (data) => {
+            console.log('User added to task');
+
+            // Invalidate AND refetch to ensure fresh data
+
+            await queryClient.invalidateQueries({
+                queryKey: ['taskDataById', taskId]
+            });
+            // Optional: Force immediate refetch
+            await queryClient.refetchQueries({
+                queryKey: ['projectById', id]
+            });
+        },
+        onError: (error) => {
+            console.error('Add user to task error:', error);
+        }
+    });
+
+    return { removeUserToTaskMutation: mutate, isSuccess, isPending, isError, error };
+};
+
+
+
 export const useCreateUserMutation = () => {
     const queryClient = useQueryClient();
 

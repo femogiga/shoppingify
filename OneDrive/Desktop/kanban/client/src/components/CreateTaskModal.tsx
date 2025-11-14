@@ -3,11 +3,12 @@ import { useCreateTask } from '../apis/taskData';
 import { useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import { X } from 'lucide-react';
+import { useDarkMode } from '../context/DarkModeContext';
 
 const CreateTaskModal = () => {
   const { id } = useParams();
   const [subTasks, setSubTasks] = useState<string[]>(['']);
-
+  const{mode} = useDarkMode()
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
@@ -63,7 +64,11 @@ const CreateTaskModal = () => {
     setSubTasks(filtered)
   };
   return (
-    <article className='sub-task-modal'>
+    <article
+
+      className={`sub-task-modal ${
+        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+      }`}>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
         <p>Add New Task</p>
 
@@ -114,7 +119,9 @@ const CreateTaskModal = () => {
                       disabled={isCreating}
                       key={`subtaskInput${index}`}
                     />
-                    <button type='button' onClick={()=>handleCancelInput(index)}>
+                    <button
+                      type='button'
+                      onClick={() => handleCancelInput(index)}>
                       <X />
                     </button>
                   </div>

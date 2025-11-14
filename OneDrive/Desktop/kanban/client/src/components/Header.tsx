@@ -93,7 +93,11 @@ const Header = () => {
         className='avatar-container flex gap-x-1 item-center relative'
         style={{ width: '40%' }}>
         <form>
-          <button onClick={handleCreateUserModalVisibility}>Add User</button>
+          <button
+            onClick={handleCreateUserModalVisibility}
+            className={`${mode === 'light' ? 'bg-light-blue' : 'bg-darker'}`}>
+            Add User
+          </button>
           {searchedUser && (
             <article
               className='grid gap-y-05 absolute bg-darker p-y-05'
@@ -136,7 +140,9 @@ const Header = () => {
 
       <div className='relative'>
         <div className='flex gap-x-2 item-center '>
-          <button onClick={createTaskModalVisibility}>
+          <button
+            onClick={createTaskModalVisibility}
+            className={`${mode === 'light' ? 'bg-light-blue' : 'bg-darker'}`}>
             <span>+ </span> Add New Task
           </button>
           <Link to='' onClick={handleIsOpen}>

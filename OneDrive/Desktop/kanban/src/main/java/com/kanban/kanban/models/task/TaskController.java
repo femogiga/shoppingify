@@ -119,4 +119,14 @@ public ResponseEntity<Task> updateTask(@PathVariable Long id ,@RequestBody Task 
             return  new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
         }
 }
+
+    @DeleteMapping("/{taskId}/users/{userId}")
+    public  ResponseEntity<String> removeUserFromTask (@PathVariable  Long taskId , @PathVariable Long userId){
+        try{
+            User deletedUser =  taskService.removeUserFromTask(taskId, userId);
+            return new ResponseEntity<>("User removed from task", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return  new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
