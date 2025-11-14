@@ -35,10 +35,13 @@ const DeleteProjectModal = ({ mode, headerText, title, onDelete }) => {
     });
   };
   return (
-    <article className='sub-task-modal' style={{ zIndex: '10' }}>
+    <article
+      className={`sub-task-modal ${
+        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+      }`}>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
         <form>
-          <p>
+          <p className='bold'>
             Delete this <span>{headerText}</span> ?
           </p>
 

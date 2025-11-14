@@ -24,9 +24,9 @@ console.log({taskCount})
           <div
             className='circle'
             style={{ backgroundColor: statusColor }}></div>
-          <h3 className='font-white padding-block-1 color-dark-white'>
+          <h4 className='font-white padding-block-1 color-dark-white'>
             {heading} <span>({taskCount})</span>
-          </h3>
+          </h4>
         </div>
       )}
 

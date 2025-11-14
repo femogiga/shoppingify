@@ -51,7 +51,7 @@ const Card = (props) => {
     <article
       className={`${mode === 'light' ? 'lightmode' : 'bg-dark'} card`}
       style={style}
-      onDoubleClick={(e)=>handleTaskClick(e,props.id,props)}
+      onClick={(e)=>handleTaskClick(e,props.id,props)}
       ref={setNodeRef}
       {...attributes}
       {...listeners}>

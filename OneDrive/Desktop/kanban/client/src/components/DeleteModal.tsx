@@ -4,11 +4,13 @@ import { useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import { X } from 'lucide-react';
 import useModalStore from '../statemanagment/modalStore';
+import { useDarkMode } from '../context/DarkModeContext';
 
-const DeleteModal = ({ mode, headerText, title, onDelete }) => {
+const DeleteModal = ({ headerText, title, onDelete }) => {
   const { hideDeleteModal } = useModalStore();
   const { activeTaskData } = useTaskStore();
   const { deleteMutation } = useDeleteTaskMutation();
+  const { mode } = useDarkMode();
 
   const handleCancel = (e) => {
     e.preventDefault();
@@ -26,7 +28,10 @@ const DeleteModal = ({ mode, headerText, title, onDelete }) => {
     });
   };
   return (
-    <article className='sub-task-modal' style={{ zIndex: '10' }}>
+    <article
+      className={`sub-task-modal ${
+        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+      }`}>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
         <form>
           <p>
@@ -34,7 +39,7 @@ const DeleteModal = ({ mode, headerText, title, onDelete }) => {
           </p>
 
           <p className='mbe-1'>
-            Are you sure you want to delete <span>{title}</span> task and it's
+            Are you sure you want to delete "<span style={{color:'red'}}>{activeTaskData.title}</span>" task and it's
             subtasks? This action cannot be reversed
           </p>
 

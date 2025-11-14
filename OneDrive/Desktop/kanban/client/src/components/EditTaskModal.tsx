@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useCreateTask, useDeleteTaskMutation, useGetTaskById, useUpdateTask } from '../apis/taskData';
+import {
+  useCreateTask,
+  useDeleteTaskMutation,
+  useGetTaskById,
+  useUpdateTask,
+} from '../apis/taskData';
 import { useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import { InfinityIcon, X } from 'lucide-react';
@@ -17,7 +22,7 @@ const EditTaskModal = ({ mode }) => {
     activeTaskId,
     activeTaskData,
   } = useTaskStore();
-  const{deleteMutation} = useDeleteTaskMutation()
+  const { deleteMutation } = useDeleteTaskMutation();
   const { taskUpdateMutate } = useUpdateTask(activeTaskData.id);
   const [updateData, setUpdateData] = useState({
     id: activeTaskData.id,
@@ -64,8 +69,7 @@ const EditTaskModal = ({ mode }) => {
     taskUpdateMutate(updateData, {
       onSuccess: () => {
         console.log('Successfully updated');
-                setTimeout(hideEditTaskModal, 2000);
-
+        setTimeout(hideEditTaskModal, 2000);
       },
       onError: (error) => {
         console.error('Update failed:', error);
@@ -74,10 +78,11 @@ const EditTaskModal = ({ mode }) => {
     });
   };
 
-
-
   return (
-    <article className='sub-task-modal'>
+    <article
+      className={`sub-task-modal ${
+        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+      }`}>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
         <p>Edit Task</p>
 
@@ -95,6 +100,9 @@ const EditTaskModal = ({ mode }) => {
                 }
                 placeholder='title'
                 disabled={isCreating}
+                className={
+                  mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                }
               />
             </div>
             <div>
@@ -109,25 +117,34 @@ const EditTaskModal = ({ mode }) => {
                 }
                 placeholder='description'
                 disabled={isCreating}
+                className={
+                  mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                }
               />
             </div>
             <div>
               <label>Subtasks</label>
-              <div className='grid gap-y-05 mbe-1'>
+              <div className='grid gap-y-05 mbe-1 item-center'>
                 {updateData.subTasks.map((subTask, index) => (
-                  <div className='flex'>
+                  <div className='flex justify-between'>
                     <input
                       type='text'
-                      style={{ width: '100%', padding: '.4rem' }}
+                      style={{ width: '86%', padding: '.4rem' }}
                       name='title'
                       value={subTask.title}
                       placeholder='title'
                       disabled={isCreating}
                       key={`subtaskInput${index}`}
                       onChange={(e) => handleInputChange(index, e.target.value)}
+                      className={
+                        mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                      }
                     />
                     <button
                       type='button'
+                      className={`font-white
+                  ${mode === 'light' ? 'bg-blue-sm font-dark-white' : 'bg-darker '}`}
+                      style={{ width: '2rem' }}
                       onClick={() => handleCancelTaskInput(index)}>
                       <X />
                     </button>
@@ -136,11 +153,13 @@ const EditTaskModal = ({ mode }) => {
               </div>
               <button
                 type='button'
+                className={`font-white
+                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
                 onClick={handlAddSubTaskInput}
                 style={{
                   width: '100%',
                   paddingBlock: '.6rem',
-                  borderRadius: '1rem',
+                  // borderRadius: '1rem',
                   border: 'none',
                   outline: 'none',
                 }}>
@@ -149,9 +168,10 @@ const EditTaskModal = ({ mode }) => {
             </div>
             <button
               type='submit'
-              className='p-x-1 p-y-05 rounded-sm bg-blue-md rounded-md'
+              className={`p-x-1 p-y-05   font-white
+                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
               style={{
-                borderRadius: '1rem',
+                // borderRadius: '1rem',
                 border: 'none',
                 outline: 'none',
                 color: '#ffff',

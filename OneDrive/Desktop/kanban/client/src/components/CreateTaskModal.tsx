@@ -84,7 +84,9 @@ const CreateTaskModal = () => {
                 }
                 placeholder='title'
                 disabled={isCreating}
-                className={mode === 'light' ? 'bg-blue-sm' : 'bg-darker '}
+                className={
+                  mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                }
               />
             </div>
             <div>
@@ -98,7 +100,9 @@ const CreateTaskModal = () => {
                   setTaskData({ ...taskData, description: e.target.value })
                 }
                 placeholder='description'
-                className={mode === 'light' ? 'bg-blue-sm' : 'bg-darker '}
+                className={
+                  mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                }
                 disabled={isCreating}
               />
             </div>
@@ -110,7 +114,7 @@ const CreateTaskModal = () => {
                     <input
                       type='text'
                       className={
-                        mode === 'light' ? 'bg-blue-sm' : 'bg-dark font-grey'
+                        mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
                       }
                       style={{ width: '100%', padding: '.4rem' }}
                       name='title'

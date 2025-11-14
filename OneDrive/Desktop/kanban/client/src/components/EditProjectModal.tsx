@@ -109,7 +109,7 @@ const EditProjectModal = () => {
           />
 
           <div>
-            <label>Board Columns</label>
+            <label className="block mbe-1">Board Columns</label>
             <div className='grid gap-y-05 mbe-1'>
               {columns &&
                 columns.map((column, index) => (
@@ -124,7 +124,7 @@ const EditProjectModal = () => {
                       style={{ width: '100%', padding: '.4rem' }}
                       disabled={isUpdating}
                       className={
-                        mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                        mode === 'light' ? 'bg-blue-sm ' : 'bg-darker font-white'
                       }
                     />
                     {columns.length > 1 && (
@@ -132,7 +132,7 @@ const EditProjectModal = () => {
                         style={{ width: '2rem' }}
                         className={
                           mode === 'light'
-                            ? 'bg-blue-sm'
+                            ? 'bg-blue-sm font-dark-white'
                             : 'bg-darker font-white'
                         }
                         type='button'

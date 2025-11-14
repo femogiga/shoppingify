@@ -50,7 +50,7 @@ const BaseLayout = () => {
     <>
       <div className={`home ${mode === 'light' ? 'bg-light' : 'bg-darker'}`}>
         <BackDrop />
-        <Sidebar />
+         <Sidebar />
         <main className='main-content'>
           <Header />
           {modalVisible && createPortal(<SubTaskModal />, body)}

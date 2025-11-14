@@ -85,8 +85,6 @@ const SubTaskModal = () => {
   };
 
   const handleaddUserToTask = (user) => {
-
-
     // ✅ Move this INSIDE the function to use the newStatus
 
     const userData = {
@@ -97,11 +95,11 @@ const SubTaskModal = () => {
     addUserToTaskMutation(userData, {
       onSuccess: () => {
         console.log('Successfully added');
-                    queryClient.invalidateQueries({
-                      queryKey: ['projectById'],
-                    });
+        queryClient.invalidateQueries({
+          queryKey: ['projectById'],
 
-
+        });
+       setSearchedUser('')
       },
       onError: (error) => {
         console.error('Update failed:', error);
@@ -179,17 +177,66 @@ const SubTaskModal = () => {
           </Link>
         </div>
         <p className='color-dark-white mbe-1'>{activeTaskData?.description}</p>
-
+        <p>Task Members</p>
         <div
-          className='avatar-container flex gap-x-1  relative'
-          style={{ width: '40%' }}>
+          className={`flex item-center gap-x-1  ${
+            mode === 'light' ? 'bg-blue-sm' : 'bg-dark '
+          }`}
+          style={
+            {
+              // border: '1px solid white',
+            }
+          }>
+
+          <div
+            className='avatar-container grid'
+            style={{
+              gridAutoFlow: 'column',
+              columnGap: '.5rem',
+              // width: '14rem',
+              height: '5rem',
+              alignItems: 'center',
+              justifyItems: 'center',
+              overflow: 'scroll',
+              paddingInline: '.4rem',
+            }}>
+            {/* <Avatar />
+            <Avatar />
+            <Avatar />
+            <Avatar />
+
+            <Avatar /> */}
+            {taskData?.taskMembers.map((user) => (
+              <Avatar
+                key={`taskMembers${user.id}`}
+                src={user.photoUrl}
+                {...user}
+                taskId={activeTaskData.id}
+              />
+            ))}
+          </div>
+        </div>
+        <div
+          className='avatar-container  gap-x-1  relative'
+          style={{ width: '100%' }}>
           <form>
             <input
               id='users'
+              type='text'
               name='user'
               value={searchedUser}
+              placeholder='Search user'
+              className={mode === 'light' ? 'bg-blue-sm' : 'bg-dark '}
               autoComplete='off'
-              style={{ paddingBlock: '.4rem' }}
+              style={{
+                paddingBlock: '.4rem',
+                paddingInline: '.4rem',
+                width: '100%',
+                display: 'block',
+                marginBlockEnd: '1rem',
+                // boxShadow: 'unset',
+                border: 'none',
+              }}
               onChange={(e) => setSearchedUser(e.target.value)}
             />
             {searchedUser && (
@@ -225,13 +272,7 @@ const SubTaskModal = () => {
               </article>
             )}
           </form>
-          <div className='flex item-center gap-x-1'>
-            <Avatar />
-            {taskData?.taskMembers.map(user => <Avatar key={`taskMembers${user.id}`} src={user.photoUrl} {...user} taskId={ activeTaskData.id} />)}
-
-          </div>
         </div>
-
         <div>
           <p className='mbe-05 color-dark-white'>
             Subtask

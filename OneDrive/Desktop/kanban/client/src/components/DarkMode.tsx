@@ -11,7 +11,7 @@ const DarkMode = () => {
       className={`dark-mode-toggle flex item-center gap-x-1 font-white justify-center ${
         mode === 'light' ? 'bg-light-blue' : 'bg-darker'
       }`}>
-      <label htmlFor='dark' className='grid '>
+      <label htmlFor='dark' className='grid ' style={{ cursor: 'pointer' }}>
         <Sun size={20} color={'#979dac'} />
       </label>
       <input
@@ -27,11 +27,15 @@ const DarkMode = () => {
         id='light'
         className='hidden'
         onChange={handleModeChange}
+        
       />
-      <div className='toggle' onClick={handleModeChangeOnToggle}>
-        <div className={`circle ${mode}`}></div>
+      <div
+        className='toggle'
+        onClick={handleModeChangeOnToggle}
+        style={{ cursor: 'pointer' }}>
+        <div className={`circle ${mode}`} style={{ cursor: 'pointer' }}></div>
       </div>
-      <label htmlFor='light' className='grid'>
+      <label htmlFor='light' className='grid' style={{ cursor: 'pointer' }}>
         <Moon size={20} color={'#979dac'} />
       </label>
     </article>

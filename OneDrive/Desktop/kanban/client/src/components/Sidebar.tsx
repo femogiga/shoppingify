@@ -56,8 +56,8 @@ const Sidebar = () => {
                   path={project.id}
                 />
               ))}
-            
-            <li className='create nav-item flex item-center gap-x-1 font-white p-x-2'>
+
+            <li className='create nav-item flex item-center gap-x-1 font-white '>
               <SquareKanban size={'2rem'} />
               <button
                 onClick={handleModalVisibility}

@@ -21,11 +21,12 @@ const NewColumnButton = ({ mode }) => {
         display: 'grid',
         placeItems: 'center',
         height: '80vh',
-
+        cursor:'pointer',
         color: mode === 'light' ? 'black' : 'white',
         textDecoration: 'none',
         borderRadius: '1rem',
-        minWidth: '280px', // Added min-width for consistency
+        minWidth: '280px',
+
       }}>
       <span style={{ fontSize: '1.6rem' }} className='color-dark-white'>
         + New Column

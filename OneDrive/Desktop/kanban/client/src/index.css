@@ -74,6 +74,10 @@ fieldset {
   align-self: end;
 }
 
+.bold{
+  font-weight: bold;
+}
+
 .gap-x-05 {
   column-gap: .5rem;
 }
@@ -142,6 +146,10 @@ fieldset {
 
 .font-black {
   color: black;
+}
+
+.font-dark-white {
+  color: hsl(216deg 15% 57%);
 }
 
 .padding-block-1 {

@@ -126,10 +126,10 @@ const CreateUserModal = ({mode}) => {
       className={`sub-task-modal ${
         mode === 'light' ? 'bg-white font-black' : 'bg-dark'
       }`}
-      style={{ zIndex: '10' }}>
+      >
       <div className='grid gap-y-1 p-y-2 p-x-2'>
         <form>
-          <p className='mbe-1'>Add User to Board</p>
+          <p className='mbe-1 bold'>Add User to Board</p>
 
           {message && (
             <div
@@ -147,7 +147,7 @@ const CreateUserModal = ({mode}) => {
           <fieldset className='grid mbe-1' style={{ rowGap: '0.5rem' }}>
             <input
               type='email'
-              placeholder='Email *'
+              placeholder='Email'
               style={{
                 display: 'block',
                 width: '100%',
@@ -164,7 +164,7 @@ const CreateUserModal = ({mode}) => {
             />
             <input
               type='text'
-              placeholder='First Name *'
+              placeholder='First Name'
               style={{
                 display: 'block',
                 width: '100%',
@@ -181,7 +181,7 @@ const CreateUserModal = ({mode}) => {
             />
             <input
               type='text'
-              placeholder='Last Name *'
+              placeholder='Last Name'
               style={{
                 display: 'block',
                 width: '100%',
@@ -198,7 +198,7 @@ const CreateUserModal = ({mode}) => {
             />
             <input
               type='password'
-              placeholder='Password *'
+              placeholder='Password'
               style={{
                 display: 'block',
                 width: '100%',
@@ -215,7 +215,7 @@ const CreateUserModal = ({mode}) => {
             />
             <input
               type='password'
-              placeholder='Repeat Password *'
+              placeholder='Repeat Password'
               style={{
                 display: 'block',
                 width: '100%',
