@@ -50,6 +50,10 @@ fieldset {
   display: grid;
 }
 
+.block {
+  display: block;
+}
+
 .item-center {
   align-items: center;
 }

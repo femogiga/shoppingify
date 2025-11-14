@@ -4,9 +4,11 @@ import { useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import { useCreateColumn } from '../apis/columnData';
 import useColumnStore from '../statemanagment/columnStore';
+import { useDarkMode } from '../context/DarkModeContext';
 
-const CreateColumnModal = ({ mode }) => {
+const CreateColumnModal = () => {
   const [name, setName] = useState('');
+  const{mode}=useDarkMode()
   const { id } = useParams();
   const { createColumnMutation, reset, isPending, isError, isSuccess } =
     useCreateColumn(id);
@@ -27,11 +29,14 @@ const CreateColumnModal = ({ mode }) => {
   };
 
   return (
-    <article className='sub-task-modal'>
+    <article
+      className={`sub-task-modal ${
+        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+      }`}>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
         <p>Add New Column</p>
 
-        <form >
+        <form>
           <div className='grid gap-y-1'>
             <input
               type='text'

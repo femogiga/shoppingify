@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useCreateProject, useFetchProjectById, useUpdateProjectAndColumn } from '../apis/projectData';
+import {
+  useCreateProject,
+  useFetchProjectById,
+  useUpdateProjectAndColumn,
+} from '../apis/projectData';
 import { useParams } from 'react-router-dom';
 import { X } from 'lucide-react';
 import useModalStore from '../statemanagment/modalStore';
+import { useDarkMode } from '../context/DarkModeContext';
 
 const EditProjectModal = () => {
   const id = useParams()?.id;
+  const { mode } = useDarkMode();
   const { projectById } = useFetchProjectById(id);
   const activeColumns = projectById?.projectColumn || []; // Add fallback
   const activeTitle = projectById?.title;
@@ -13,19 +19,14 @@ const EditProjectModal = () => {
   const [columns, setColumns] = useState([]);
   // const { createProject, isCreating, isSuccess, isError, error } =
   //   useCreateProject();
-const { showEditProjectModal, hideEditProjectModal } = useModalStore();
+  const { showEditProjectModal, hideEditProjectModal } = useModalStore();
 
-  const {
-    updateProjectMutation,
-    isUpdating,
-    isError,
-    isSuccess,
-    error,
-  } = useUpdateProjectAndColumn(id);
+  const { updateProjectMutation, isUpdating, isError, isSuccess, error } =
+    useUpdateProjectAndColumn(id);
   useEffect(() => {
     setColumns(activeColumns);
     setTitle(activeTitle || '');
-  }, [id, activeColumns, activeTitle,]); // Removed title from dependencies
+  }, [id, activeColumns, activeTitle]); // Removed title from dependencies
 
   console.log(columns);
 
@@ -77,9 +78,8 @@ const { showEditProjectModal, hideEditProjectModal } = useModalStore();
       onSuccess: (data) => {
         console.log('Project created', data);
         setTitle('');
-        hideEditProjectModal()
+        hideEditProjectModal();
         // setColumns([]);
-
       },
       onError: (error) => {
         console.log('Error creating project:', error);
@@ -88,23 +88,29 @@ const { showEditProjectModal, hideEditProjectModal } = useModalStore();
   };
 
   return (
-    <article className='sub-task-modal'>
+    <article
+      className={`sub-task-modal ${
+        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+      }`}>
       <div className='grid gap-y-1 p-y-2 p-x-1'>
         <p>Edit Board</p>
         <form onSubmit={handleSubmit}>
-          <label htmlFor='title'>Board Name</label>
+          <label htmlFor='title' className='block mbe-05'>
+            Board Name
+          </label>
           <input
             type='text'
-            style={{ width: '100%', padding: '.4rem' }}
+            style={{ width: '100%', padding: '.4rem', marginBlockEnd: '1rem' }}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder='Enter project title'
             disabled={isUpdating}
+            className={mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'}
           />
 
           <div>
             <label>Board Columns</label>
-            <div className='grid gap-y-05'>
+            <div className='grid gap-y-05 mbe-1'>
               {columns &&
                 columns.map((column, index) => (
                   <div key={index} className='flex gap-x-2 items-center'>
@@ -117,10 +123,18 @@ const { showEditProjectModal, hideEditProjectModal } = useModalStore();
                       placeholder={`Column ${index + 1}`}
                       style={{ width: '100%', padding: '.4rem' }}
                       disabled={isUpdating}
+                      className={
+                        mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                      }
                     />
                     {columns.length > 1 && (
                       <button
                         style={{ width: '2rem' }}
+                        className={
+                          mode === 'light'
+                            ? 'bg-blue-sm'
+                            : 'bg-darker font-white'
+                        }
                         type='button'
                         onClick={() => removeColumn(index)}
                         disabled={isUpdating}>
@@ -132,14 +146,25 @@ const { showEditProjectModal, hideEditProjectModal } = useModalStore();
             </div>
             <button
               type='button'
+              className={`font-white mbe-1
+                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
               onClick={addNewColumn}
-              style={{ width: '100%', paddingBlock: '.6rem' }}
+              style={{
+                width: '100%',
+                paddingBlock: '.6rem',
+                marginBlockEnd: '1rem',
+              }}
               disabled={isUpdating}>
               <span>+ </span> Add New Column
             </button>
           </div>
 
-          <button type='submit' disabled={isUpdating || !title.trim()}>
+          <button
+            type='submit'
+            style={{ width: '100%', paddingBlock: '.6rem' }}
+            disabled={isUpdating || !title.trim()}
+            className={`font-white mbe-1
+                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}>
             {isUpdating ? 'Updating...' : 'Update Project'}
           </button>
         </form>

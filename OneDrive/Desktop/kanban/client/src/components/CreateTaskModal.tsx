@@ -8,7 +8,7 @@ import { useDarkMode } from '../context/DarkModeContext';
 const CreateTaskModal = () => {
   const { id } = useParams();
   const [subTasks, setSubTasks] = useState<string[]>(['']);
-  const{mode} = useDarkMode()
+  const { mode } = useDarkMode();
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
@@ -59,13 +59,11 @@ const CreateTaskModal = () => {
     setSubTasks([...subTasks, '']);
   };
   const handleCancelInput = (index) => {
-
-  const  filtered = subTasks.filter((_,i) => i !== index);
-    setSubTasks(filtered)
+    const filtered = subTasks.filter((_, i) => i !== index);
+    setSubTasks(filtered);
   };
   return (
     <article
-
       className={`sub-task-modal ${
         mode === 'light' ? 'bg-white font-black' : 'bg-dark'
       }`}>
@@ -86,6 +84,7 @@ const CreateTaskModal = () => {
                 }
                 placeholder='title'
                 disabled={isCreating}
+                className={mode === 'light' ? 'bg-blue-sm' : 'bg-darker '}
               />
             </div>
             <div>
@@ -99,16 +98,20 @@ const CreateTaskModal = () => {
                   setTaskData({ ...taskData, description: e.target.value })
                 }
                 placeholder='description'
+                className={mode === 'light' ? 'bg-blue-sm' : 'bg-darker '}
                 disabled={isCreating}
               />
             </div>
             <div>
               <label>Subtasks</label>
-              <div className='grid gap-y-05'>
+              <div className='grid gap-y-05 mbe-1'>
                 {subTasks.map((subTask, index) => (
-                  <div className='flex'>
+                  <div className='flex gap-x-05'>
                     <input
                       type='text'
+                      className={
+                        mode === 'light' ? 'bg-blue-sm' : 'bg-dark font-grey'
+                      }
                       style={{ width: '100%', padding: '.4rem' }}
                       name='title'
                       value={subTask}
@@ -119,8 +122,11 @@ const CreateTaskModal = () => {
                       disabled={isCreating}
                       key={`subtaskInput${index}`}
                     />
+
                     <button
                       type='button'
+                      className={`font-white
+                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
                       onClick={() => handleCancelInput(index)}>
                       <X />
                     </button>
@@ -129,12 +135,18 @@ const CreateTaskModal = () => {
               </div>
               <button
                 type='button'
+                className={`font-white
+                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
                 onClick={handNewSubTaskInput}
                 style={{ width: '100%', paddingBlock: '.6rem' }}>
                 <span>+ </span> Add New SubTask
               </button>
             </div>
-            <button type='submit' className='p-x-1 p-y-05 rounded-sm'>
+            <button
+              type='submit'
+              className={`p-x-1 p-y-05 rounded-sm font-white  ${
+                mode === 'light' ? 'bg-light-blue' : 'bg-darker font-white'
+              }`}>
               {isCreating ? 'Creating' : 'Submit'}
             </button>
           </div>

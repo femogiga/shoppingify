@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useModalStore from '../statemanagment/modalStore';
 import { useCreateUserMutation } from '../apis/userData';
 
-const CreateUserModal = () => {
+const CreateUserModal = ({mode}) => {
   const { hideCreateUserModal } = useModalStore();
   const initialState = {
     firstname: '',
@@ -120,9 +120,13 @@ const CreateUserModal = () => {
   };
 
 
-  
+
   return (
-    <article className='sub-task-modal' style={{ zIndex: '10' }}>
+    <article
+      className={`sub-task-modal ${
+        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+      }`}
+      style={{ zIndex: '10' }}>
       <div className='grid gap-y-1 p-y-2 p-x-2'>
         <form>
           <p className='mbe-1'>Add User to Board</p>
@@ -144,8 +148,14 @@ const CreateUserModal = () => {
             <input
               type='email'
               placeholder='Email *'
-              style={{ display: 'block', width: '100%' }}
-              className='p-y-05'
+              style={{
+                display: 'block',
+                width: '100%',
+                paddingInline: '0.4rem',
+              }}
+              className={`p-y-05 ${
+                mode === 'light' ? 'bg-blue-sm' : 'bg-darker '
+              }`}
               value={user.email}
               name='email'
               onChange={handleInputChange}
@@ -155,8 +165,14 @@ const CreateUserModal = () => {
             <input
               type='text'
               placeholder='First Name *'
-              style={{ display: 'block', width: '100%' }}
-              className='p-y-05'
+              style={{
+                display: 'block',
+                width: '100%',
+                paddingInline: '0.4rem',
+              }}
+              className={`p-y-05 ${
+                mode === 'light' ? 'bg-blue-sm' : 'bg-darker '
+              }`}
               value={user.firstname}
               name='firstname'
               onChange={handleInputChange}
@@ -166,8 +182,14 @@ const CreateUserModal = () => {
             <input
               type='text'
               placeholder='Last Name *'
-              style={{ display: 'block', width: '100%' }}
-              className='p-y-05'
+              style={{
+                display: 'block',
+                width: '100%',
+                paddingInline: '0.4rem',
+              }}
+              className={`p-y-05 ${
+                mode === 'light' ? 'bg-blue-sm' : 'bg-darker '
+              }`}
               value={user.lastname}
               name='lastname'
               onChange={handleInputChange}
@@ -177,8 +199,14 @@ const CreateUserModal = () => {
             <input
               type='password'
               placeholder='Password *'
-              style={{ display: 'block', width: '100%' }}
-              className='p-y-05'
+              style={{
+                display: 'block',
+                width: '100%',
+                paddingInline: '0.4rem',
+              }}
+              className={`p-y-05 ${
+                mode === 'light' ? 'bg-blue-sm' : 'bg-darker '
+              }`}
               value={user.password}
               name='password'
               onChange={handleInputChange}
@@ -188,8 +216,14 @@ const CreateUserModal = () => {
             <input
               type='password'
               placeholder='Repeat Password *'
-              style={{ display: 'block', width: '100%' }}
-              className='p-y-05'
+              style={{
+                display: 'block',
+                width: '100%',
+                paddingInline: '0.4rem',
+              }}
+              className={`p-y-05 ${
+                mode === 'light' ? 'bg-blue-sm' : 'bg-darker '
+              }`}
               value={user.repeatpassword}
               name='repeatpassword'
               onChange={handleInputChange}
@@ -283,8 +317,7 @@ const CreateUserModal = () => {
               style={{
                 width: '46%',
                 borderRadius: '1rem',
-                backgroundColor:
-                  uploading || isPending ? '#ccc' : 'hsl(120deg 78% 63%)',
+                backgroundColor: uploading || isPending ? '#ccc' : '#077443ff',
                 border: 'none',
                 outline: 'none',
                 color: '#ffff',
@@ -300,14 +333,14 @@ const CreateUserModal = () => {
               type='button'
               onClick={handleCancel}
               disabled={uploading}
-              className='p-y-05 p-x-05'
+              className='p-y-05 p-x-05 font-white'
               style={{
                 width: '46%',
                 borderRadius: '1rem',
                 border: 'none',
                 outline: 'none',
                 cursor: uploading ? 'not-allowed' : 'pointer',
-                backgroundColor: uploading ? '#f5f5f5' : 'transparent',
+                backgroundColor: uploading ? '#f5f5f5' : '#d40438ff',
               }}>
               Cancel
             </button>
