@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCreateProject } from '../apis/projectData';
 import { X } from 'lucide-react';
 import { useDarkMode } from '../context/DarkModeContext';
+import { AnimatePresence, motion } from 'motion/react';
 
 const CreateProjectModal = () => {
   const [title, setTitle] = useState('');
@@ -60,7 +61,10 @@ const CreateProjectModal = () => {
   };
 
   return (
-    <article
+    <motion.article
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       className={`sub-task-modal ${
         mode === 'light' ? 'bg-white font-black' : 'bg-dark'
       }`}>
@@ -129,7 +133,7 @@ const CreateProjectModal = () => {
           </button>
         </form>
       </div>
-    </article>
+    </motion.article>
   );
 };
 

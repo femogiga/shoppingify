@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import useModalStore from '../statemanagment/modalStore';
 import { useDarkMode } from '../context/DarkModeContext';
+import { AnimatePresence, motion } from 'motion/react';
 
 const DeleteEditModal = ({
   isOpen,
@@ -43,16 +44,20 @@ const DeleteEditModal = ({
   };
 
   return (
-    <div
-      className={`delete-edit-modal absolute font-white grid ${mode==='light' ? 'bg-white' : 'bg-dark'}`}
-      style={modalStyle}>
-      <Link onClick={onOpenEdit} className='color-dark-white'>
-        Edit <span>{headerText}</span>
-      </Link>
-      <Link onClick={onOpenDelete} className="font-red">
-        Delete <span>{headerText}</span>
-      </Link>
-    </div>
+    <AnimatePresence>
+      <motion.div
+        className={`delete-edit-modal absolute font-white grid ${
+          mode === 'light' ? 'bg-white' : 'bg-dark'
+        }`}
+        style={modalStyle}>
+        <Link onClick={onOpenEdit} className='color-dark-white'>
+          Edit <span>{headerText}</span>
+        </Link>
+        <Link onClick={onOpenDelete} className='font-red'>
+          Delete <span>{headerText}</span>
+        </Link>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

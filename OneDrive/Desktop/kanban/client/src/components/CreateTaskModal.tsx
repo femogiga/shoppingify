@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import { X } from 'lucide-react';
 import { useDarkMode } from '../context/DarkModeContext';
+import { AnimatePresence, motion } from 'motion/react';
 
 const CreateTaskModal = () => {
   const { id } = useParams();
@@ -63,100 +64,107 @@ const CreateTaskModal = () => {
     setSubTasks(filtered);
   };
   return (
-    <article
-      className={`sub-task-modal ${
-        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
-      }`}>
-      <div className='grid gap-y-1 p-y-2 p-x-1'>
-        <p>Add New Task</p>
+    <AnimatePresence>
+      <motion.article
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className={`sub-task-modal ${
+          mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+        }`}>
+        <div className='grid gap-y-1 p-y-2 p-x-1'>
+          <p>Add New Task</p>
 
-        <form onSubmit={handleSubmit}>
-          <div className='grid gap-y-1'>
-            <div>
-              <label htmlFor='title'>Title</label>
-              <input
-                type='text'
-                style={{ width: '100%', padding: '.4rem' }}
-                name='title'
-                value={taskData.title}
-                onChange={(e) =>
-                  setTaskData({ ...taskData, title: e.target.value })
-                }
-                placeholder='title'
-                disabled={isCreating}
-                className={
-                  mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
-                }
-              />
-            </div>
-            <div>
-              <label htmlFor='description'>Description</label>
+          <form onSubmit={handleSubmit}>
+            <div className='grid gap-y-1'>
+              <div>
+                <label htmlFor='title'>Title</label>
+                <input
+                  type='text'
+                  style={{ width: '100%', padding: '.4rem' }}
+                  name='title'
+                  value={taskData.title}
+                  onChange={(e) =>
+                    setTaskData({ ...taskData, title: e.target.value })
+                  }
+                  placeholder='title'
+                  disabled={isCreating}
+                  className={
+                    mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                  }
+                />
+              </div>
+              <div>
+                <label htmlFor='description'>Description</label>
 
-              <textarea
-                style={{ width: '100%', padding: '.4rem' }}
-                name='description'
-                value={taskData.description}
-                onChange={(e) =>
-                  setTaskData({ ...taskData, description: e.target.value })
-                }
-                placeholder='description'
-                className={
-                  mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
-                }
-                disabled={isCreating}
-              />
-            </div>
-            <div>
-              <label>Subtasks</label>
-              <div className='grid gap-y-05 mbe-1'>
-                {subTasks.map((subTask, index) => (
-                  <div className='flex gap-x-05'>
-                    <input
-                      type='text'
-                      className={
-                        mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
-                      }
-                      style={{ width: '100%', padding: '.4rem' }}
-                      name='title'
-                      value={subTask}
-                      onChange={(e) =>
-                        handleSubtaskInputChange(index, e.target.value)
-                      }
-                      placeholder='title'
-                      disabled={isCreating}
-                      key={`subtaskInput${index}`}
-                    />
+                <textarea
+                  style={{ width: '100%', padding: '.4rem' }}
+                  name='description'
+                  value={taskData.description}
+                  onChange={(e) =>
+                    setTaskData({ ...taskData, description: e.target.value })
+                  }
+                  placeholder='description'
+                  className={
+                    mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                  }
+                  disabled={isCreating}
+                />
+              </div>
+              <div>
+                <label>Subtasks</label>
+                <div className='grid gap-y-05 mbe-1'>
+                  {subTasks.map((subTask, index) => (
+                    <div className='flex gap-x-05'>
+                      <input
+                        type='text'
+                        className={
+                          mode === 'light'
+                            ? 'bg-blue-sm'
+                            : 'bg-darker font-white'
+                        }
+                        style={{ width: '100%', padding: '.4rem' }}
+                        name='title'
+                        value={subTask}
+                        onChange={(e) =>
+                          handleSubtaskInputChange(index, e.target.value)
+                        }
+                        placeholder='title'
+                        disabled={isCreating}
+                        key={`subtaskInput${index}`}
+                      />
 
-                    <button
-                      type='button'
-                      className={`font-white
+                      <button
+                        type='button'
+                        className={`font-white
                   ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
-                      onClick={() => handleCancelInput(index)}>
-                      <X />
-                    </button>
-                  </div>
-                ))}
+                        onClick={() => handleCancelInput(index)}>
+                        <X />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type='button'
+                  className={`font-white
+                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
+                  onClick={handNewSubTaskInput}
+                  style={{ width: '100%', paddingBlock: '.6rem' }}>
+                  <span>+ </span> Add New SubTask
+                </button>
               </div>
               <button
-                type='button'
-                className={`font-white
-                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
-                onClick={handNewSubTaskInput}
-                style={{ width: '100%', paddingBlock: '.6rem' }}>
-                <span>+ </span> Add New SubTask
+                type='submit'
+                className={`p-x-1 p-y-05 rounded-sm font-white  ${
+                  mode === 'light' ? 'bg-light-blue' : 'bg-darker font-white'
+                }`}>
+                {isCreating ? 'Creating' : 'Submit'}
               </button>
             </div>
-            <button
-              type='submit'
-              className={`p-x-1 p-y-05 rounded-sm font-white  ${
-                mode === 'light' ? 'bg-light-blue' : 'bg-darker font-white'
-              }`}>
-              {isCreating ? 'Creating' : 'Submit'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </article>
+          </form>
+        </div>
+      </motion.article>
+    </AnimatePresence>
   );
 };
 

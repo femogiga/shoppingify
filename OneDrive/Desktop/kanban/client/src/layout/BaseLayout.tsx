@@ -66,7 +66,7 @@ const BaseLayout = () => {
             createPortal(<DeleteProjectModal mode={mode} />, body)}
           {editProjectModalVisible &&
             createPortal(<EditProjectModal mode={mode} />, body)}
-          {createUserModalVisible &&
+        {createUserModalVisible &&
             createPortal(<CreateUserModal mode={mode} />, body)}
           <Outlet />
         </main>

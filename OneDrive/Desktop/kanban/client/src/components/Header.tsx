@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { EllipsisVertical } from 'lucide-react';
 import { useDarkMode } from '../context/DarkModeContext';
 import useTaskStore from '../statemanagment/taskStore';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import DeleteEditModal from './DeleteEditModal';
 import useModalStore from '../statemanagment/modalStore';
 import { AuthAvatarButton } from './AuthAvatarButton';
 import Avatar from './Avatar';
 import { useUserdata } from '../apis/userData';
 import { generateFullname } from '../utils/fullname';
+import { useFetchProjectById } from '../apis/projectData';
 
 const Header = () => {
   const { mode } = useDarkMode();
@@ -22,15 +23,19 @@ const Header = () => {
     hideEditProjectModal,
     showCreateUserModal,
   } = useModalStore();
+  const { id } = useParams();
   const [isOpen, setIsOpen] = useState(false);
   const { AllUserData, isUsersPending, isUserSError } = useUserdata();
   const [searchedUser, setSearchedUser] = useState('');
   console.log({ AllUserData });
+  const { projectById } = useFetchProjectById(id);
   const handleIsOpen = (e) => {
     e.preventDefault();
     setIsOpen(true);
   };
+
   // @Handler  handleShowAuthModal handles the visibility of login ,register @Component AuthAvatarButton
+
   const handleShowAuthModal = (e) => {
     e.preventDefault();
     setShowAuthModal(!showAuthModal);
@@ -68,10 +73,12 @@ const Header = () => {
     return filteredUser;
   };
 
-  const handleCreateUserModalVisibility = (e:React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    showCreateUserModal()
-  }
+  const handleCreateUserModalVisibility = (
+    e: React.FormEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    showCreateUserModal();
+  };
 
   useEffect(() => {}, []);
   const searchedOptions = handleSearchUsers();
@@ -80,7 +87,7 @@ const Header = () => {
     <header className={`${mode === 'light' ? 'lightmode' : 'darkmode'} header`}>
       <div className='flex items-center gap-x-2'>
         <h2 className={mode === 'light' ? 'font-black' : 'font-white'}>
-          Platform Launch
+          {projectById?.title}
         </h2>
         <AuthAvatarButton
           showAuthModal={showAuthModal}

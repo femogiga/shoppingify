@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { X } from 'lucide-react';
 import useModalStore from '../statemanagment/modalStore';
 import { useDarkMode } from '../context/DarkModeContext';
+import { AnimatePresence, motion } from 'motion/react';
 
 const EditProjectModal = () => {
   const id = useParams()?.id;
@@ -88,88 +89,101 @@ const EditProjectModal = () => {
   };
 
   return (
-    <article
-      className={`sub-task-modal ${
-        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
-      }`}>
-      <div className='grid gap-y-1 p-y-2 p-x-1'>
-        <p>Edit Board</p>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor='title' className='block mbe-05'>
-            Board Name
-          </label>
-          <input
-            type='text'
-            style={{ width: '100%', padding: '.4rem', marginBlockEnd: '1rem' }}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder='Enter project title'
-            disabled={isUpdating}
-            className={mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'}
-          />
-
-          <div>
-            <label className="block mbe-1">Board Columns</label>
-            <div className='grid gap-y-05 mbe-1'>
-              {columns &&
-                columns.map((column, index) => (
-                  <div key={index} className='flex gap-x-2 items-center'>
-                    <input
-                      type='text'
-                      value={column.name || ''} // FIXED: Use column.name
-                      onChange={(e) =>
-                        handleColumnChange(index, e.target.value)
-                      }
-                      placeholder={`Column ${index + 1}`}
-                      style={{ width: '100%', padding: '.4rem' }}
-                      disabled={isUpdating}
-                      className={
-                        mode === 'light' ? 'bg-blue-sm ' : 'bg-darker font-white'
-                      }
-                    />
-                    {columns.length > 1 && (
-                      <button
-                        style={{ width: '2rem' }}
-                        className={
-                          mode === 'light'
-                            ? 'bg-blue-sm font-dark-white'
-                            : 'bg-darker font-white'
-                        }
-                        type='button'
-                        onClick={() => removeColumn(index)}
-                        disabled={isUpdating}>
-                        <X />
-                      </button>
-                    )}
-                  </div>
-                ))}
-            </div>
-            <button
-              type='button'
-              className={`font-white mbe-1
-                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
-              onClick={addNewColumn}
+    <AnimatePresence>
+      <motion.article
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className={`sub-task-modal ${
+          mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+        }`}>
+        <div className='grid gap-y-1 p-y-2 p-x-1'>
+          <p>Edit Board</p>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor='title' className='block mbe-05'>
+              Board Name
+            </label>
+            <input
+              type='text'
               style={{
                 width: '100%',
-                paddingBlock: '.6rem',
+                padding: '.4rem',
                 marginBlockEnd: '1rem',
               }}
-              disabled={isUpdating}>
-              <span>+ </span> Add New Column
-            </button>
-          </div>
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder='Enter project title'
+              disabled={isUpdating}
+              className={
+                mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+              }
+            />
 
-          <button
-            type='submit'
-            style={{ width: '100%', paddingBlock: '.6rem' }}
-            disabled={isUpdating || !title.trim()}
-            className={`font-white mbe-1
+            <div>
+              <label className='block mbe-1'>Board Columns</label>
+              <div className='grid gap-y-05 mbe-1'>
+                {columns &&
+                  columns.map((column, index) => (
+                    <div key={index} className='flex gap-x-2 items-center'>
+                      <input
+                        type='text'
+                        value={column.name || ''} // FIXED: Use column.name
+                        onChange={(e) =>
+                          handleColumnChange(index, e.target.value)
+                        }
+                        placeholder={`Column ${index + 1}`}
+                        style={{ width: '100%', padding: '.4rem' }}
+                        disabled={isUpdating}
+                        className={
+                          mode === 'light'
+                            ? 'bg-blue-sm '
+                            : 'bg-darker font-white'
+                        }
+                      />
+                      {columns.length > 1 && (
+                        <button
+                          style={{ width: '2rem' }}
+                          className={
+                            mode === 'light'
+                              ? 'bg-blue-sm font-dark-white'
+                              : 'bg-darker font-white'
+                          }
+                          type='button'
+                          onClick={() => removeColumn(index)}
+                          disabled={isUpdating}>
+                          <X />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+              </div>
+              <button
+                type='button'
+                className={`font-white mbe-1
+                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
+                onClick={addNewColumn}
+                style={{
+                  width: '100%',
+                  paddingBlock: '.6rem',
+                  marginBlockEnd: '1rem',
+                }}
+                disabled={isUpdating}>
+                <span>+ </span> Add New Column
+              </button>
+            </div>
+
+            <button
+              type='submit'
+              style={{ width: '100%', paddingBlock: '.6rem' }}
+              disabled={isUpdating || !title.trim()}
+              className={`font-white mbe-1
                   ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}>
-            {isUpdating ? 'Updating...' : 'Update Project'}
-          </button>
-        </form>
-      </div>
-    </article>
+              {isUpdating ? 'Updating...' : 'Update Project'}
+            </button>
+          </form>
+        </div>
+      </motion.article>
+    </AnimatePresence>
   );
 };
 

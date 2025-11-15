@@ -11,7 +11,7 @@ import useModalStore from '../statemanagment/modalStore';
 import Avatar from './Avatar';
 import { generateFullname } from '../utils/fullname';
 import { useAddUserToTaskMutation, useUserdata } from '../apis/userData';
-
+import { AnimatePresence ,motion} from 'motion/react';
 const SubTaskModal = () => {
   const { activeTaskId, activeTaskData, showEditTaskModal, hideEditTaskModal } =
     useTaskStore();
@@ -158,200 +158,212 @@ const SubTaskModal = () => {
   //      className={`${mode === 'light' ? 'bg-light' : 'bg-darker'} content`}
 
   return (
-    <article
-      className={`sub-task-modal  ${
-        mode === 'light' ? 'bg-white' : 'bg-darker'
-      }`}>
-      <div className='grid gap-y-1 p-y-2 p-x-1'>
-        <div className='flex item-center justify-between'>
-          <p
-            style={{
-              color: mode === 'light' ? 'black' : 'white',
-              fontWeight: 'bold',
-            }}>
-            {activeTaskData?.title ||
-              'Lorem ipsum dolor sit amet consectetur adipisicing elit.Recusandaeut'}
+    <AnimatePresence>
+      <motion.article
+        initial={{  opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{  opacity: 0 }}
+        className={`sub-task-modal  ${
+          mode === 'light' ? 'bg-white' : 'bg-darker'
+        }`}>
+        <div className='grid gap-y-1 p-y-2 p-x-1'>
+          <div className='flex item-center justify-between'>
+            <p
+              style={{
+                color: mode === 'light' ? 'black' : 'white',
+                fontWeight: 'bold',
+              }}>
+              {activeTaskData?.title ||
+                'Lorem ipsum dolor sit amet consectetur adipisicing elit.Recusandaeut'}
+            </p>
+            <Link onClick={handleShowEditModal}>
+              <EllipsisVertical className='color-dark-white' size='30' />
+            </Link>
+          </div>
+          <p className='color-dark-white mbe-1'>
+            {activeTaskData?.description}
           </p>
-          <Link onClick={handleShowEditModal}>
-            <EllipsisVertical className='color-dark-white' size='30' />
-          </Link>
-        </div>
-        <p className='color-dark-white mbe-1'>{activeTaskData?.description}</p>
-        <p className={mode === 'light' ? 'color-dark-white' : 'font-white'}>
-          Task Members
-        </p>
-        <div
-          className={`flex item-center gap-x-1  ${
-            mode === 'light' ? 'bg-blue-sm' : 'bg-dark '
-          }`}
-          style={
-            {
-              // border: '1px solid white',
-            }
-          }>
+          <p className={mode === 'light' ? 'color-dark-white' : 'font-white'}>
+            Task Members
+          </p>
           <div
-            className='avatar-container grid'
-            style={{
-              gridAutoFlow: 'column',
-              columnGap: '.5rem',
-              // width: '14rem',
-              height: '5rem',
-              alignItems: 'center',
-              justifyItems: 'center',
-              overflow: 'scroll',
-              paddingInline: '.4rem',
-            }}>
-            {/* <Avatar />
+            className={`flex item-center gap-x-1  ${
+              mode === 'light' ? 'bg-blue-sm' : 'bg-dark '
+            }`}
+            style={
+              {
+                // border: '1px solid white',
+              }
+            }>
+            <div
+              className='avatar-container grid'
+              style={{
+                gridAutoFlow: 'column',
+                columnGap: '.5rem',
+                // width: '14rem',
+                height: '5rem',
+                alignItems: 'center',
+                justifyItems: 'center',
+                overflow: 'scroll',
+                paddingInline: '.4rem',
+              }}>
+              {/* <Avatar />
             <Avatar />
             <Avatar />
             <Avatar />
 
             <Avatar /> */}
-            {taskData?.taskMembers.map((user) => (
-              <Avatar
-                key={`taskMembers${user.id}`}
-                src={user.photoUrl}
-                {...user}
-                taskId={activeTaskData.id}
-              />
-            ))}
-          </div>
-        </div>
-        <div
-          className='avatar-container  gap-x-1  relative'
-          style={{ width: '100%' }}>
-          <form>
-            <input
-              id='users'
-              type='text'
-              name='user'
-              value={searchedUser}
-              placeholder='Search and add user '
-              className={
-                mode === 'light' ? 'bg-blue-sm' : 'bg-dark color-dark-white'
-              }
-              autoComplete='off'
-              style={{
-                paddingBlock: '.4rem',
-                paddingInline: '.4rem',
-                width: '100%',
-                display: 'block',
-                marginBlockEnd: '1rem',
-                // boxShadow: 'unset',
-                border: 'none',
-              }}
-              onChange={(e) => setSearchedUser(e.target.value)}
-            />
-            {searchedUser && (
-              <article
-                className='grid gap-y-05 absolute bg-darker p-y-05'
-                style={{
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.5)',
-                  width: '12rem',
-                  backgroundColor: '',
-                  top: '3rem',
-                }}>
-                {searchedOptions &&
-                  searchedOptions.map((user) => (
-                    <div onClick={() => handleaddUserToTask(user)}>
-                      <div
-                        className='flex gap-x-05  item-center justify-between p-x-05 '
-                        style={{ color: 'white' }}>
-                        <p>{generateFullname(user.firstname, user.lastname)}</p>
-                        <img
-                          src={user.photoUrl}
-                          style={{
-                            width: '2rem',
-                            height: '2rem',
-                            borderRadius: '50%',
-                            objectFit: 'cover',
-                            zIndex: 10,
-                            overflowClipMargin: 'unset',
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-              </article>
-            )}
-          </form>
-        </div>
-        <div>
-          <p
-            className={`mbe-05 ${
-                  mode === 'light' ? 'color-dark-white' : 'font-white'
-                }`}>
-            Subtask
-            <span>
-              ({reCalcCount && reCalcCount.length} of{' '}
-              {activeTaskData?.subTasks.length})
-            </span>
-          </p>
-          <form>
-            <fieldset style={{ marginBlockEnd: '2rem' }}>
-              {activeTaskData?.subTasks?.map((subtask) => (
-                <SubstackCheckbox key={`subTask-${subtask.id}`} {...subtask} />
+              {taskData?.taskMembers.map((user) => (
+                <Avatar
+                  key={`taskMembers${user.id}`}
+                  src={user.photoUrl}
+                  {...user}
+                  taskId={activeTaskData.id}
+                />
               ))}
-            </fieldset>
-            <fieldset>
-              <label
+            </div>
+          </div>
+          <div
+            className='avatar-container  gap-x-1  relative'
+            style={{ width: '100%' }}>
+            <form>
+              <input
+                id='users'
+                type='text'
+                name='user'
+                value={searchedUser}
+                placeholder='Search and add user '
                 className={
-                  mode === 'light' ? 'color-dark-white' : 'font-white'
-                }>
-                Current Status
-              </label>
-              <select
-                value={status}
-                onChange={handleTaskStatusChange}
-                className={`rounded-sm ${
-                  mode === 'light' ? 'bg-blue-sm' : 'bg-dark'
-                }`}
+                  mode === 'light' ? 'bg-blue-sm' : 'bg-dark color-dark-white'
+                }
+                autoComplete='off'
                 style={{
+                  paddingBlock: '.4rem',
+                  paddingInline: '.4rem',
                   width: '100%',
-                  padding: '.4rem',
-                  background:
-                    mode === 'light'
-                      ? 'bg-blue-sm color-dark-white'
-                      : 'bg-dark',
-                  color:
-                    mode === 'light'
-                      ? 'hsl(216deg 15% 57%)'
-                      : 'hsl(216deg 15% 57%)',
-                  // border: '1px solid #979dac',
+                  display: 'block',
+                  marginBlockEnd: '1rem',
+                  // boxShadow: 'unset',
+                  border: 'none',
                 }}
-                disabled={isPending} // ✅ Disable during update
-              >
-                {activeTaskData?.projectColumns?.map((col) => (
-                  <option key={col.id} value={col.name}>
-                    {col.name}
-                  </option>
+                onChange={(e) => setSearchedUser(e.target.value)}
+              />
+              {searchedUser && (
+                <article
+                  className='grid gap-y-05 absolute bg-darker p-y-05'
+                  style={{
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.5)',
+                    width: '12rem',
+                    backgroundColor: '',
+                    top: '3rem',
+                  }}>
+                  {searchedOptions &&
+                    searchedOptions.map((user) => (
+                      <div onClick={() => handleaddUserToTask(user)}>
+                        <div
+                          className='flex gap-x-05  item-center justify-between p-x-05 '
+                          style={{ color: 'white' }}>
+                          <p>
+                            {generateFullname(user.firstname, user.lastname)}
+                          </p>
+                          <img
+                            src={user.photoUrl}
+                            style={{
+                              width: '2rem',
+                              height: '2rem',
+                              borderRadius: '50%',
+                              objectFit: 'cover',
+                              zIndex: 10,
+                              overflowClipMargin: 'unset',
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                </article>
+              )}
+            </form>
+          </div>
+          <div>
+            <p
+              className={`mbe-05 ${
+                mode === 'light' ? 'color-dark-white' : 'font-white'
+              }`}>
+              Subtask
+              <span>
+                ({reCalcCount && reCalcCount.length} of{' '}
+                {activeTaskData?.subTasks.length})
+              </span>
+            </p>
+            <form>
+              <fieldset style={{ marginBlockEnd: '2rem' }}>
+                {activeTaskData?.subTasks?.map((subtask) => (
+                  <SubstackCheckbox
+                    key={`subTask-${subtask.id}`}
+                    {...subtask}
+                  />
                 ))}
-                {/* <option value='TODO'>Todo</option>
+              </fieldset>
+              <fieldset>
+                <label
+                  className={
+                    mode === 'light' ? 'color-dark-white' : 'font-white'
+                  }>
+                  Current Status
+                </label>
+                <select
+                  value={status}
+                  onChange={handleTaskStatusChange}
+                  className={`rounded-sm ${
+                    mode === 'light' ? 'bg-blue-sm' : 'bg-dark'
+                  }`}
+                  style={{
+                    width: '100%',
+                    padding: '.4rem',
+                    background:
+                      mode === 'light'
+                        ? 'bg-blue-sm color-dark-white'
+                        : 'bg-dark',
+                    color:
+                      mode === 'light'
+                        ? 'hsl(216deg 15% 57%)'
+                        : 'hsl(216deg 15% 57%)',
+                    // border: '1px solid #979dac',
+                  }}
+                  disabled={isPending} // ✅ Disable during update
+                >
+                  {activeTaskData?.projectColumns?.map((col) => (
+                    <option key={col.id} value={col.name}>
+                      {col.name}
+                    </option>
+                  ))}
+                  {/* <option value='TODO'>Todo</option>
                 <option value='DOING'>Doing</option>
                 <option value='DONE'>Done</option> */}
-              </select>
-              {isPending && <div>Updating...</div>}
-            </fieldset>
-          </form>
+                </select>
+                {isPending && <div>Updating...</div>}
+              </fieldset>
+            </form>
 
-          {isOpen && (
-            <DeleteEditModal
-              onOpenEdit={handleShowEditTaskModal}
-              onOpenDelete={handleShowDeleteModal}
-              headerText={'Task'}
-              setIsOpen={setIsOpen}
-              modalStyle={{
-                right: '2rem',
-                width: '10rem',
-                top: '3rem',
-                background: '#fff',
-                color: 'black',
-              }}
-            />
-          )}
+            {isOpen && (
+              <DeleteEditModal
+                onOpenEdit={handleShowEditTaskModal}
+                onOpenDelete={handleShowDeleteModal}
+                headerText={'Task'}
+                setIsOpen={setIsOpen}
+                modalStyle={{
+                  right: '2rem',
+                  width: '10rem',
+                  top: '3rem',
+                  background: '#fff',
+                  color: 'black',
+                }}
+              />
+            )}
+          </div>
         </div>
-      </div>
-    </article>
+      </motion.article>
+    </AnimatePresence>
   );
 };
 

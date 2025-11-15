@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import useTaskStore from '../statemanagment/taskStore';
 import { InfinityIcon, X } from 'lucide-react';
 import { useUpdateSubTask } from './../apis/subTaskData';
+import { AnimatePresence, motion } from 'motion/react';
 
 const EditTaskModal = ({ mode }) => {
   const { id } = useParams();
@@ -79,110 +80,126 @@ const EditTaskModal = ({ mode }) => {
   };
 
   return (
-    <article
-      className={`sub-task-modal ${
-        mode === 'light' ? 'bg-white font-black' : 'bg-dark'
-      }`}>
-      <div className='grid gap-y-1 p-y-2 p-x-1'>
-        <p>Edit Task</p>
+    <AnimatePresence>
+      <motion.article
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className={`sub-task-modal ${
+          mode === 'light' ? 'bg-white font-black' : 'bg-dark'
+        }`}>
+        <div className='grid gap-y-1 p-y-2 p-x-1'>
+          <p>Edit Task</p>
 
-        <form onSubmit={handleSubmit}>
-          <div className='grid gap-y-1'>
-            <div>
-              <label htmlFor='title'>Title</label>
-              <input
-                type='text'
-                style={{ width: '100%', padding: '.4rem' }}
-                name='title'
-                value={updateData.title}
-                onChange={(e) =>
-                  setUpdateData({ ...updateData, title: e.target.value })
-                }
-                placeholder='title'
-                disabled={isCreating}
-                className={
-                  mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
-                }
-              />
-            </div>
-            <div>
-              <label htmlFor='description'>Description</label>
+          <form onSubmit={handleSubmit}>
+            <div className='grid gap-y-1'>
+              <div>
+                <label htmlFor='title'>Title</label>
+                <input
+                  type='text'
+                  style={{ width: '100%', padding: '.4rem' }}
+                  name='title'
+                  value={updateData.title}
+                  onChange={(e) =>
+                    setUpdateData({ ...updateData, title: e.target.value })
+                  }
+                  placeholder='title'
+                  disabled={isCreating}
+                  className={
+                    mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                  }
+                />
+              </div>
+              <div>
+                <label htmlFor='description'>Description</label>
 
-              <textarea
-                style={{ width: '100%', padding: '.4rem' }}
-                name='description'
-                value={updateData.description}
-                onChange={(e) =>
-                  setUpdateData({ ...updateData, description: e.target.value })
-                }
-                placeholder='description'
-                disabled={isCreating}
-                className={
-                  mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
-                }
-              />
-            </div>
-            <div>
-              <label>Subtasks</label>
-              <div className='grid gap-y-05 mbe-1 item-center'>
-                {updateData.subTasks.map((subTask, index) => (
-                  <div className='flex justify-between'>
-                    <input
-                      type='text'
-                      style={{ width: '86%', padding: '.4rem' }}
-                      name='title'
-                      value={subTask.title}
-                      placeholder='title'
-                      disabled={isCreating}
-                      key={`subtaskInput${index}`}
-                      onChange={(e) => handleInputChange(index, e.target.value)}
-                      className={
-                        mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
-                      }
-                    />
-                    <button
-                      type='button'
-                      className={`font-white
-                  ${mode === 'light' ? 'bg-blue-sm font-dark-white' : 'bg-darker '}`}
-                      style={{ width: '2rem' }}
-                      onClick={() => handleCancelTaskInput(index)}>
-                      <X />
-                    </button>
-                  </div>
-                ))}
+                <textarea
+                  style={{ width: '100%', padding: '.4rem' }}
+                  name='description'
+                  value={updateData.description}
+                  onChange={(e) =>
+                    setUpdateData({
+                      ...updateData,
+                      description: e.target.value,
+                    })
+                  }
+                  placeholder='description'
+                  disabled={isCreating}
+                  className={
+                    mode === 'light' ? 'bg-blue-sm' : 'bg-darker font-white'
+                  }
+                />
+              </div>
+              <div>
+                <label>Subtasks</label>
+                <div className='grid gap-y-05 mbe-1 item-center'>
+                  {updateData.subTasks.map((subTask, index) => (
+                    <div className='flex justify-between'>
+                      <input
+                        type='text'
+                        style={{ width: '86%', padding: '.4rem' }}
+                        name='title'
+                        value={subTask.title}
+                        placeholder='title'
+                        disabled={isCreating}
+                        key={`subtaskInput${index}`}
+                        onChange={(e) =>
+                          handleInputChange(index, e.target.value)
+                        }
+                        className={
+                          mode === 'light'
+                            ? 'bg-blue-sm'
+                            : 'bg-darker font-white'
+                        }
+                      />
+                      <button
+                        type='button'
+                        className={`font-white
+                  ${
+                    mode === 'light'
+                      ? 'bg-blue-sm font-dark-white'
+                      : 'bg-darker '
+                  }`}
+                        style={{ width: '2rem' }}
+                        onClick={() => handleCancelTaskInput(index)}>
+                        <X />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type='button'
+                  className={`font-white
+                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
+                  onClick={handlAddSubTaskInput}
+                  style={{
+                    width: '100%',
+                    paddingBlock: '.6rem',
+                    // borderRadius: '1rem',
+                    border: 'none',
+                    outline: 'none',
+                  }}>
+                  <span>+ </span> Add New SubTask
+                </button>
               </div>
               <button
-                type='button'
-                className={`font-white
+                type='submit'
+                className={`p-x-1 p-y-05   font-white
                   ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
-                onClick={handlAddSubTaskInput}
                 style={{
-                  width: '100%',
-                  paddingBlock: '.6rem',
                   // borderRadius: '1rem',
                   border: 'none',
                   outline: 'none',
+                  color: '#ffff',
+                  paddingBlock: '.6rem',
                 }}>
-                <span>+ </span> Add New SubTask
+                {isCreating ? 'Creating' : 'Save changes'}
               </button>
             </div>
-            <button
-              type='submit'
-              className={`p-x-1 p-y-05   font-white
-                  ${mode === 'light' ? 'bg-light-blue  ' : 'bg-darker '}`}
-              style={{
-                // borderRadius: '1rem',
-                border: 'none',
-                outline: 'none',
-                color: '#ffff',
-                paddingBlock: '.6rem',
-              }}>
-              {isCreating ? 'Creating' : 'Save changes'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </article>
+          </form>
+        </div>
+      </motion.article>
+    </AnimatePresence>
   );
 };
 

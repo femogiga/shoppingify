@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import React, { useMemo } from 'react';
 import { useDarkMode } from '../context/DarkModeContext';
 import useTaskStore from '../statemanagment/taskStore';
+import { AnimatePresence, motion } from 'motion/react';
 
 const Card = (props) => {
   const {
@@ -48,20 +49,26 @@ const Card = (props) => {
   console.log({ totalTask })
   console.log(completedTask.length)
   return (
-    <article
-      className={`${mode === 'light' ? 'lightmode' : 'bg-dark'} card`}
-      style={style}
-      onClick={(e)=>handleTaskClick(e,props.id,props)}
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}>
-      <p className={mode === 'light' ? 'font-black' : 'font-white'}>
-        {props.title || 'Build UI for onboarding flow'}
-      </p>
-      <p className='color-dark-white font-sm'>
-        <span>{completedTask.length} </span>of<span> {totalTask} </span>subtasks
-      </p>
-    </article>
+    <AnimatePresence>
+      <motion.article
+        initial={{scale:0, opacity: 0 }}
+        animate={{scale:1, opacity: 1 }}
+        exit={{scale:0, opacity: 0 }}
+        className={`${mode === 'light' ? 'lightmode' : 'bg-dark'} card`}
+        style={style}
+        onClick={(e) => handleTaskClick(e, props.id, props)}
+        ref={setNodeRef}
+        {...attributes}
+        {...listeners}>
+        <p className={mode === 'light' ? 'font-black' : 'font-white'}>
+          {props.title || 'Build UI for onboarding flow'}
+        </p>
+        <p className='color-dark-white font-sm'>
+          <span>{completedTask.length} </span>of<span> {totalTask} </span>
+          subtasks
+        </p>
+      </motion.article>
+    </AnimatePresence>
   );
 };
 
