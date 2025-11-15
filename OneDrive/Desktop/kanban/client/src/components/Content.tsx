@@ -39,7 +39,7 @@ const Content = () => {
 
   return (
     <section
-      className={`${mode === 'light' ? 'bg-light' : 'bg-darker'} content`}
+      className={`${mode === 'light' ? 'bg-white' : 'bg-darker'} content`}
       style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
       {projectById?.projectColumn.map((column, index) => (
         <ColumnContainer

@@ -2,9 +2,11 @@ import { Check, Plus, User, X } from 'lucide-react';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useRemoveUserFromTaskMutation } from '../apis/userData';
+import { useDarkMode } from '../context/DarkModeContext';
 
 const Avatar = ({ src,id ,taskId}) => {
   const [operations, setOperations] = useState(false);
+  const { mode } = useDarkMode();
 const { removeUserToTaskMutation } = useRemoveUserFromTaskMutation(taskId);
   const handleAvatarClick = (e) => {
     e.preventDefault();
@@ -35,7 +37,7 @@ const { removeUserToTaskMutation } = useRemoveUserFromTaskMutation(taskId);
           className='absolute flex items-center'
           style={{ top: '-1.2rem', columnGap: '.5rem', left: '-.4rem' }}>
           <button onClick={handleRemoveUserFromTask}>
-            <X size={18} />
+            <X size={18} className = {mode === 'light' ? '' : ''} />
           </button>
           <Check size={18} />
         </div>

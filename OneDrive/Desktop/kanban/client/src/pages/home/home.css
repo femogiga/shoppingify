@@ -82,11 +82,14 @@
     border-radius: 8px;
     margin-block-end: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+
 }
 
 .card:hover{
     cursor: pointer;
-    filter:contrast(90%)
+     filter:contrast(90%);
+    /* z-index:1; */
+    /* transform:scale(1.00001) */
 }
 
 .circle {
@@ -256,4 +259,10 @@
 
 ::-webkit-scrollbar {
     display: none;
+}
+
+.auth-modal input{
+    border-radius:.1rem;
+    border:none;
+    padding:.2rem;
 }

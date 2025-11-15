@@ -44,7 +44,7 @@ const SubstackCheckbox = (props) => {
         onChange={handleStatusChange}
         checked={isChecked}
       />
-      <p>{props.title}</p>
+      <p style={{textDecoration:isChecked ? 'line-through':'none'}}>{props.title}</p>
     </div>
   );
 };

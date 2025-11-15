@@ -10,6 +10,7 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../statemanagment/AuthStore';
 import { useFetchProjects } from '../apis/projectData';
 import { User } from 'lucide-react';
+import { useDarkMode } from '../context/DarkModeContext';
 
 interface IAuthModal {
   showAuthModal: boolean;
@@ -29,7 +30,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
   const [firstname, setFirstname] = useState<string>('');
   const [lastname, setLastname] = useState<string>('');
   const [photoUrl, setphotoUrl] = useState<string>('');
-
+  const { mode } = useDarkMode();
   const { loginMutate, isLoggingIn, error, isError, isSuccess, reset } =
     useLoginMutation();
   const { registerMutate, isRegistering } = useRegisterMutation();
@@ -109,7 +110,9 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
   };
 
   return (
-    <div className='relative flex item-center'>
+    <div
+      className={`auth-modal relative flex item-center `}
+      style={{ zIndex: 12, boxShadow: 'o 2px 4 rgba(0,0,0,0.5)' }}>
       <Link onClick={onShowAuthModal}>
         {isAuthenticated ? (
           <img
@@ -128,12 +131,13 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
         ) : (
           <div>
             <User
-              color='white'
+              color={mode === 'light' ? 'black' : 'white'}
               size='36'
               style={{
                 borderRadius: '50%',
                 border: '1px solid white',
                 padding: '.1rem',
+                borderColor: mode === 'light' ? 'black' : 'white',
               }}
             />
           </div>
@@ -141,9 +145,10 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
       </Link>
       {showAuthModal && (
         <div
+          className={mode === 'light' ? 'light-blue' : 'bg-dark'}
           style={{
             color: 'white',
-            border: '1px solid white',
+            // border: '1px solid white',
             display: 'grid',
             width: '20rem',
             paddingBlock: '.5rem',
@@ -153,42 +158,52 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
             rowGap: '.4rem',
             top: '3rem',
             borderRadius: '.8rem',
+            boxShadow: '0 2px 4px rgba(0,0,0,.1)',
           }}>
           {isAuthenticated && (
             <Link style={{ color: 'red' }} onClick={handleLogout}>
               Sign out
             </Link>
           )}
-          <div className='flex justify-between'>
+          <div
+            className='flex justify-between'
+            style={{ color: mode === 'light' ? 'black' : 'white' }}>
             {!isAuthenticated && (
               <Link onClick={handleLoginFormType}>Sign in</Link>
             )}
-            {!isAuthenticated && <Link onClick={handleRegisterFormType}>Register</Link>}
+            {!isAuthenticated && (
+              <Link onClick={handleRegisterFormType}>Register</Link>
+            )}
           </div>
-          <input
-            type='email'
-            style={{
-              maxWidth: '100%',
-              display: 'block',
-              paddingBlock: '.4rem',
-            }}
-            placeholder='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type='password'
-            style={{
-              maxWidth: '100%',
-              display: 'block',
-              paddingBlock: '.4rem',
-            }}
-            placeholder='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          {!isAuthenticated && (
+            <>
+              {' '}
+              <input
+                type='email'
+                style={{
+                  maxWidth: '100%',
+                  display: 'block',
+                  paddingBlock: '.4rem',
+                }}
+                placeholder='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <input
+                type='password'
+                style={{
+                  maxWidth: '100%',
+                  display: 'block',
+                  paddingBlock: '.4rem',
+                }}
+                placeholder='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </>
+          )}
           {formType && (
-            <div className='grid ' style={{ rowGap: '.4rem' }}>
+            <div className='grid mbe-1' style={{ rowGap: '.8rem' }}>
               <input
                 type='password'
                 style={{
@@ -239,10 +254,15 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
             </div>
           )}
           <div style={{ display: 'grid', rowGap: '.4rem' }}>
-            {!formType && (
+            {(!formType && !isAuthenticated )&& (
               <button
+                className={` ${
+                  mode === 'light'
+                    ? 'bg-light font-black'
+                    : 'bg-darker font-white'
+                }`}
                 type='button'
-                style={{ width: '100%' }}
+                style={{ width: '100%', marginBlockStart: '1rem' }}
                 onClick={handleLogin}>
                 Login
               </button>
@@ -250,6 +270,11 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
             {formType && (
               <button
                 type='button'
+                className={
+                  mode === 'light'
+                    ? 'bg-dark font-black'
+                    : 'bg-darker font-white'
+                }
                 style={{ width: '100%' }}
                 onClick={handleRegister}>
                 Register

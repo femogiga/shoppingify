@@ -177,7 +177,9 @@ const SubTaskModal = () => {
           </Link>
         </div>
         <p className='color-dark-white mbe-1'>{activeTaskData?.description}</p>
-        <p>Task Members</p>
+        <p className={mode === 'light' ? 'color-dark-white' : 'font-white'}>
+          Task Members
+        </p>
         <div
           className={`flex item-center gap-x-1  ${
             mode === 'light' ? 'bg-blue-sm' : 'bg-dark '
@@ -187,7 +189,6 @@ const SubTaskModal = () => {
               // border: '1px solid white',
             }
           }>
-
           <div
             className='avatar-container grid'
             style={{
@@ -225,8 +226,10 @@ const SubTaskModal = () => {
               type='text'
               name='user'
               value={searchedUser}
-              placeholder='Search user'
-              className={mode === 'light' ? 'bg-blue-sm' : 'bg-dark '}
+              placeholder='Search and add user '
+              className={
+                mode === 'light' ? 'bg-blue-sm' : 'bg-dark color-dark-white'
+              }
               autoComplete='off'
               style={{
                 paddingBlock: '.4rem',
@@ -288,17 +291,30 @@ const SubTaskModal = () => {
               ))}
             </fieldset>
             <fieldset>
-              <label className='color-dark-white'>Current Status</label>
+              <label
+                className={
+                  mode === 'light' ? 'color-dark-white' : 'font-white'
+                }>
+                Current Status
+              </label>
               <select
                 value={status}
                 onChange={handleTaskStatusChange}
-                className='rounded-sm'
+                className={`rounded-sm ${
+                  mode === 'light' ? 'bg-blue-sm' : 'bg-dark'
+                }`}
                 style={{
                   width: '100%',
                   padding: '.4rem',
-                  background: mode === 'light' ? 'white' : '#33415c',
-                  color: mode === 'light' ? 'black' : 'white',
-                  border: '1px solid #979dac',
+                  background:
+                    mode === 'light'
+                      ? 'bg-blue-sm color-dark-white'
+                      : 'bg-dark',
+                  color:
+                    mode === 'light'
+                      ? 'hsl(216deg 15% 57%)'
+                      : 'hsl(216deg 15% 57%)',
+                  // border: '1px solid #979dac',
                 }}
                 disabled={isPending} // ✅ Disable during update
               >
