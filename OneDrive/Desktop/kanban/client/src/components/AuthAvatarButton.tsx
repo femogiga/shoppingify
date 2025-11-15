@@ -145,7 +145,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
       </Link>
       {showAuthModal && (
         <div
-          className={mode === 'light' ? 'light-blue' : 'bg-dark'}
+          className={mode === 'light' ? 'bg-blue-sm' : 'bg-dark'}
           style={{
             color: 'white',
             // border: '1px solid white',
@@ -158,7 +158,9 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
             rowGap: '.4rem',
             top: '3rem',
             borderRadius: '.8rem',
-            boxShadow: '0 2px 4px rgba(0,0,0,.1)',
+            boxShadow: '0 2px 2px  rgba(0,0,0,.1)',
+            minHeight:'5rem'
+            // border:'1px solid black'
           }}>
           {isAuthenticated && (
             <Link style={{ color: 'red' }} onClick={handleLogout}>
@@ -184,6 +186,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
                   maxWidth: '100%',
                   display: 'block',
                   paddingBlock: '.4rem',
+                  paddingInline: '.4rem',
                 }}
                 placeholder='email'
                 value={email}
@@ -195,6 +198,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
                   maxWidth: '100%',
                   display: 'block',
                   paddingBlock: '.4rem',
+                  paddingInline: '.4rem',
                 }}
                 placeholder='password'
                 value={password}
@@ -210,6 +214,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
                   width: '100%',
                   display: 'block',
                   paddingBlock: '.4rem',
+                  paddingInline: '.4rem',
                 }}
                 placeholder='repeat password'
                 value={repeatPassword}
@@ -221,6 +226,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
                   width: '100%',
                   display: 'block',
                   paddingBlock: '.4rem',
+                  paddingInline: '.4rem',
                 }}
                 name='firstname'
                 placeholder='firstname'
@@ -233,6 +239,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
                   width: '100%',
                   display: 'block',
                   paddingBlock: '.4rem',
+                  paddingInline: '.4rem',
                 }}
                 name='lastname'
                 placeholder='lastname'
@@ -245,6 +252,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
                   width: '100%',
                   display: 'block',
                   paddingBlock: '.4rem',
+                  paddingInline: '.4rem',
                 }}
                 name='imgUrl'
                 placeholder='photo'
@@ -254,11 +262,11 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
             </div>
           )}
           <div style={{ display: 'grid', rowGap: '.4rem' }}>
-            {(!formType && !isAuthenticated )&& (
+            {!formType && !isAuthenticated && (
               <button
                 className={` ${
                   mode === 'light'
-                    ? 'bg-light font-black'
+                    ? 'bg-blue-md font-black'
                     : 'bg-darker font-white'
                 }`}
                 type='button'

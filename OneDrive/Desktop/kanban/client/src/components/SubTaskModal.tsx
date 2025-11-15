@@ -277,7 +277,10 @@ const SubTaskModal = () => {
           </form>
         </div>
         <div>
-          <p className='mbe-05 color-dark-white'>
+          <p
+            className={`mbe-05 ${
+                  mode === 'light' ? 'color-dark-white' : 'font-white'
+                }`}>
             Subtask
             <span>
               ({reCalcCount && reCalcCount.length} of{' '}
