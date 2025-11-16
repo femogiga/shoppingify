@@ -1,28 +1,31 @@
-import { Check, Plus, User, X } from 'lucide-react';
-import React, { useState } from 'react'
+import { Check,  X } from 'lucide-react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRemoveUserFromTaskMutation } from '../apis/userData';
 import { useDarkMode } from '../context/DarkModeContext';
 
-const Avatar = ({ src,id ,taskId}) => {
+interface IAvatar {
+  src: string;
+  id: number;
+  taskId: number;
+}
+const Avatar: React.FC<IAvatar> = ({ src, id, taskId }) => {
   const [operations, setOperations] = useState(false);
   const { mode } = useDarkMode();
-const { removeUserToTaskMutation } = useRemoveUserFromTaskMutation(taskId);
-  const handleAvatarClick = (e) => {
+  const { removeUserToTaskMutation } = useRemoveUserFromTaskMutation(taskId);
+
+  const handleAvatarClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    setOperations((prev) => !prev);
+  };
 
-
-      setOperations((prev) => !prev);
-    }
-
-  const handleRemoveUserFromTask = (e) => {
+  const handleRemoveUserFromTask = (e: React.MouseEvent<HTMLButtonElement>) => {
     // ✅ Move this INSIDE the function to use the newStatus
-    e.preventDefault()
+    e.preventDefault();
     removeUserToTaskMutation(id, {
       onSuccess: () => {
         console.log('Successfully deleted');
-         setOperations((prev) => !prev);
-
+        setOperations((prev) => !prev);
       },
       onError: (error) => {
         console.error('Update failed:', error);
@@ -37,12 +40,12 @@ const { removeUserToTaskMutation } = useRemoveUserFromTaskMutation(taskId);
           className='absolute flex items-center'
           style={{ top: '-1.2rem', columnGap: '.5rem', left: '-.4rem' }}>
           <button onClick={handleRemoveUserFromTask}>
-            <X size={18} className = {mode === 'light' ? '' : ''} />
+            <X size={18} className={mode === 'light' ? '' : ''} />
           </button>
           <Check size={18} />
         </div>
       )}
-      <Link onClick={handleAvatarClick}>
+      <Link to ="#" onClick={handleAvatarClick}>
         <img
           style={{
             width: '2rem',
@@ -59,6 +62,6 @@ const { removeUserToTaskMutation } = useRemoveUserFromTaskMutation(taskId);
       </Link>
     </div>
   );
-}
+};
 
-export default Avatar
+export default Avatar;

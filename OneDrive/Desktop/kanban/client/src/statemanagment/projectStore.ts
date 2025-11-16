@@ -1,6 +1,15 @@
 import { create } from 'zustand';
 
-const useProjectStore = create((set) => ({
+
+interface ProjectState{
+    activeLink: string | number | null;
+    projectModalVisible: boolean;
+    showProjectModal: ()=>void
+    hideProjectModal:()=> void
+    changeActiveLink: (newLink : string)=>void
+    toggleActiveLink: ()=> void
+}
+const useProjectStore = create<ProjectState>((set) => ({
     activeLink: 1,
     projectModalVisible: false,
     showProjectModal: () => set({ projectModalVisible: true }),

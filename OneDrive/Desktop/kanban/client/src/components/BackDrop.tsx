@@ -1,5 +1,3 @@
-import React from 'react';
-import { useCreateTask } from './../apis/taskData';
 import useTaskStore from '../statemanagment/taskStore';
 import useProjectStore from '../statemanagment/projectStore';
 import useColumnStore from '../statemanagment/columnStore';
@@ -9,7 +7,6 @@ const BackDrop = () => {
   const {
     createTaskModalVisible,
     hideCreateTaskModal,
-    showModal,
     hideModal,
     modalVisible,
     editTaskModalVisible,
@@ -22,13 +19,10 @@ const BackDrop = () => {
     hideDeleteModal,
     deleteProjectModal,
     editProjectModalVisible,
-    showDeleteProjectModal,
     hideDeleteProjectModal,
-    showEditProjectModal,
     hideEditProjectModal,
     createUserModalVisible,
     hideCreateUserModal,
-    showCreateUserModal,
   } = useModalStore();
   const { columnModalVisible, hideColumnModal } = useColumnStore();
 

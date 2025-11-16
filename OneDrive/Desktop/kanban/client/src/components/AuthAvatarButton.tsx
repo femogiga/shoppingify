@@ -1,22 +1,24 @@
 import React, {
-  useEffect,
   useState,
   type Dispatch,
   type SetStateAction,
 } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLoginMutation, useRegisterMutation } from '../apis/authData';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import {  useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../statemanagment/AuthStore';
 import { useFetchProjects } from '../apis/projectData';
 import { User } from 'lucide-react';
 import { useDarkMode } from '../context/DarkModeContext';
+import type { Credentials, RegisterType } from '../types/apiTypes';
 
 interface IAuthModal {
   showAuthModal: boolean;
   onShowAuthModal: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   setShowAuthModal: Dispatch<SetStateAction<boolean>>;
 }
+
+
 
 export const AuthAvatarButton: React.FC<IAuthModal> = ({
   showAuthModal,
@@ -34,7 +36,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
   const { loginMutate, isLoggingIn, error, isError, isSuccess, reset } =
     useLoginMutation();
   const { registerMutate, isRegistering } = useRegisterMutation();
-  const { data } = useFetchProjects();
+  // const { data } = useFetchProjects();
   const { user, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -45,22 +47,22 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
    * the link clicked  is either Sign in or register
    * formType is set in @handlers handleLoginFormType and handleRegisterFormType
    */
-  const handleLoginFormType = (e) => {
+  const handleLoginFormType = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setFormType(false);
   };
 
-  const handleRegisterFormType = (e) => {
+  const handleRegisterFormType = (e:React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setFormType(true);
   };
 
   const handleLogin = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const loginData = { email: email.trim(), password: password.trim() };
+    const loginData:Credentials = { email: email.trim(), password: password.trim() };
 
     loginMutate(loginData, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         // localStorage.setItem('auth', JSON.stringify(data));
         setEmail('');
         setPassword('');
@@ -77,7 +79,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
     if (password !== repeatPassword) {
       console.log('Password is not the same');
     }
-    const registerData = {
+    const registerData:RegisterType = {
       email: email.trim(),
       password: password.trim(),
       firstname: firstname.trim(),
@@ -86,7 +88,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
     };
 
     registerMutate(registerData, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         setEmail('');
         setPassword('');
         setShowAuthModal(false);
@@ -113,7 +115,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
     <div
       className={`auth-modal relative flex item-center `}
       style={{ zIndex: 12, boxShadow: 'o 2px 4 rgba(0,0,0,0.5)' }}>
-      <Link onClick={onShowAuthModal}>
+      <Link to="#" onClick={onShowAuthModal}>
         {isAuthenticated ? (
           <img
             style={{
@@ -163,7 +165,7 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
             // border:'1px solid black'
           }}>
           {isAuthenticated && (
-            <Link style={{ color: 'red' }} onClick={handleLogout}>
+            <Link to="#" style={{ color: 'red' }} onClick={handleLogout}>
               Sign out
             </Link>
           )}
@@ -171,10 +173,10 @@ export const AuthAvatarButton: React.FC<IAuthModal> = ({
             className='flex justify-between'
             style={{ color: mode === 'light' ? 'black' : 'white' }}>
             {!isAuthenticated && (
-              <Link onClick={handleLoginFormType}>Sign in</Link>
+              <Link to="#" onClick={handleLoginFormType}>Sign in</Link>
             )}
             {!isAuthenticated && (
-              <Link onClick={handleRegisterFormType}>Register</Link>
+              <Link to="#" onClick={handleRegisterFormType}>Register</Link>
             )}
           </div>
           {!isAuthenticated && (

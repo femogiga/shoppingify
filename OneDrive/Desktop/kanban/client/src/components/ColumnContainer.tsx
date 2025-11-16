@@ -1,24 +1,24 @@
-import { useDroppable } from '@dnd-kit/core';
 import React from 'react';
 
-const ColumnContainer = ({ children, id, heading, noBorder, taskCount,statusColor }) => {
-  const { isOver, setNodeRef } = useDroppable({
-    id: id,
-  });
+interface IColumnContainer {
+  children: React.ReactNode;
 
-  const style = {
-    backgroundColor: isOver ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
-    border: isOver && !noBorder ? '2px dashed #6366f1' : 'none',
-    borderRadius: '8px',
-    transition: 'all 0.2s ease',
-  };
-console.log({taskCount})
+  heading: string;
+  noBorder?: boolean;
+  taskCount: number;
+  statusColor: string;
+}
+
+const ColumnContainer: React.FC<IColumnContainer> = ({
+  children,
+  heading,
+  noBorder,
+  taskCount,
+  statusColor,
+}) => {
+  console.log({ taskCount });
   return (
-    <div
-      className='column-container p-x-1 '
-      ref={setNodeRef}
-      style={style}
-      id={id}>
+    <div className='column-container p-x-1 '>
       {!noBorder && (
         <div className='flex item-center gap-x-05'>
           <div

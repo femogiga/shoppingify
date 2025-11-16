@@ -1,16 +1,6 @@
-import { DndContext } from '@dnd-kit/core';
-import React, { useEffect, useState } from 'react';
-import ColumnContainer from './ColumnContainer';
-import Card from './Card';
-import { Link, useParams } from 'react-router-dom';
-import { useDarkMode } from '../context/DarkModeContext';
-import { useFetchProjectById, useFetchProjects } from '../apis/projectData';
-import NewColumnButton from './NewColumnButton';
-import CreateColumnModal from './CreateColumnModal';
-import { colorGenerator } from '../utils/colorGenerator';
+import { useDarkMode } from "../context/DarkModeContext";
 
 const BlankContent = () => {
-  const [parent, setParent] = useState(null);
   const { mode } = useDarkMode();
 
   return (
@@ -29,7 +19,7 @@ const BlankContent = () => {
           </h3>
         </div>
         <>
-          
+
         </>
       </div>
     </section>

@@ -1,65 +1,57 @@
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import React, { useMemo } from 'react';
 import { useDarkMode } from '../context/DarkModeContext';
 import useTaskStore from '../statemanagment/taskStore';
 import { AnimatePresence, motion } from 'motion/react';
+import type { ProjectColumn, SubTask, Task, User } from '../types/apiTypes';
 
-const Card = (props) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: props.id });
-  const { mode } = useDarkMode()
+interface CardProps {
+  id: number;
+  title: string;
+  description: string;
+  subTasks: SubTask[];
+  status: string;
+  taskMembers: User[];
+  projectColumns?: ProjectColumn;
+}
+
+const Card: React.FC<CardProps> = (props) => {
+  console.log('Props ====>', props);
+  const { mode } = useDarkMode();
   // console.log('props' ,props)
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
+
   const {
-    activeTaskId,
-    modalVisible,
     setActiveTaskId,
     showModal,
-    hideModal,
+
     setActiveTaskData,
   } = useTaskStore();
 
-  const handleTaskClick = (e, taskId,props) => {
-    e.preventDefault();
+  const handleTaskClick = (taskId: number, props: Task) => {
     setActiveTaskId(taskId);
-     setActiveTaskData(props);
+    setActiveTaskData(props);
     showModal();
-    return
+    return;
   };
   // console.log("=====>",props.projectColumns)
   // console.log('activeTaskId',activeTaskId);
 
-  console.log(props)
+  // console.log(props);
   const totalTask = props.subTasks.length;
   const completedTask = useMemo(
-    () => props.subTasks.filter((subTask) => subTask.status === 'DONE'),
+    () =>
+      props.subTasks.filter((subTask: SubTask) => subTask.status === 'DONE'),
     [props.subTasks]
   );
-  console.log({ totalTask })
-  console.log(completedTask.length)
+  console.log({ totalTask });
+  console.log(completedTask.length);
   return (
     <AnimatePresence>
       <motion.article
-        initial={{scale:0, opacity: 0 }}
-        animate={{scale:1, opacity: 1 }}
-        exit={{scale:0, opacity: 0 }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0, opacity: 0 }}
         className={`${mode === 'light' ? 'lightmode' : 'bg-dark'} card`}
-        style={style}
-        onClick={(e) => handleTaskClick(e, props.id, props)}
-        ref={setNodeRef}
-        {...attributes}
-        {...listeners}>
+        onClick={() => handleTaskClick(props.id, props)}>
         <p className={mode === 'light' ? 'font-black' : 'font-white'}>
           {props.title || 'Build UI for onboarding flow'}
         </p>

@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query"
+import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import apiService from "../utils/apiService"
 
 
@@ -12,13 +12,13 @@ export const useUserdata = () => {
     return { AllUserData: data, isUsersPending: isPending, isUserSError: error }
 }
 
-export const useAddUserToTaskMutation = (id) => {
+export const useAddUserToTaskMutation = (id:string ) => {
     const queryClient = useQueryClient();
 
     const { isError, mutate, isSuccess, isPending, error } = useMutation({
         mutationFn: (data) => apiService.post(`/tasks/${parseInt(id)}/users`, data).then(res => res.data),
         mutationKey: ['addUserToTask', id],
-        onSuccess: async (data) => {
+        onSuccess: async () => {
             console.log('User added to task');
 
             // Invalidate AND refetch to ensure fresh data
@@ -41,13 +41,13 @@ export const useAddUserToTaskMutation = (id) => {
 
 
 
-export const useRemoveUserFromTaskMutation = (taskId) => {
+export const useRemoveUserFromTaskMutation = (taskId:number) => {
     const queryClient = useQueryClient();
 
     const { isError, mutate, isSuccess, isPending, error } = useMutation({
-        mutationFn: (userId) => apiService.normDelete(`/tasks/${parseInt(taskId)}/users/${parseInt(userId)}`).then(res => res.data),
+        mutationFn: (userId:number) => apiService.normDelete(`/tasks/${taskId}/users/${userId}`).then(res => res.data),
         mutationKey: ['removeUserToTask'],
-        onSuccess: async (data) => {
+        onSuccess: async () => {
             console.log('User added to task');
 
             // Invalidate AND refetch to ensure fresh data
@@ -57,7 +57,7 @@ export const useRemoveUserFromTaskMutation = (taskId) => {
             });
             // Optional: Force immediate refetch
             await queryClient.refetchQueries({
-                queryKey: ['projectById', id]
+                queryKey: ['projectById']
             });
         },
         onError: (error) => {
@@ -76,7 +76,7 @@ export const useCreateUserMutation = () => {
     const { isError, mutate, isSuccess, isPending, error, reset } = useMutation({
         mutationFn: (data) => apiService.multiPartPost(`/users`, data).then(res => res.data),
         mutationKey: ['createUser'],
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['allProjects'] })
             queryClient.invalidateQueries({ queryKey: ['projectById'] })
 

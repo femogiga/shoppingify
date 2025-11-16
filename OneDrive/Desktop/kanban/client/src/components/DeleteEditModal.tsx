@@ -6,50 +6,46 @@ import { useDarkMode } from '../context/DarkModeContext';
 import { AnimatePresence, motion } from 'motion/react';
 
 const DeleteEditModal = ({
-  isOpen,
   setIsOpen,
-  children,
-  modalStyle,
-  onOpen,
+
   headerText,
   onOpenEdit,
-  onOpenDelete
+  onOpenDelete,
 }) => {
-  const {
-    showEditTaskModal,
-    hideEditTaskModal,
+  // const {
+  //   showEditTaskModal,
+  //   hideEditTaskModal,
 
-    modalVisible,
-    hideModal,
-    showModal,
-  } = useTaskStore();
-  const { showDeleteModal, hideDeleteModal } = useModalStore();
-  const {mode} = useDarkMode()
-  const handleShowEditModal = (e) => {
-    e.preventDefault();
-    showEditTaskModal();
-    hideDeleteModal();
-    hideModal();
-    setIsOpen(false);
-  };
+  //   modalVisible,
+  //   hideModal,
+  //   showModal,
+  // } = useTaskStore();
+  // const { showDeleteModal, hideDeleteModal } = useModalStore();
+  const { mode } = useDarkMode();
+  // const handleShowEditModal = (e) => {
+  //   e.preventDefault();
+  //   showEditTaskModal();
+  //   hideDeleteModal();
+  //   hideModal();
+  //   setIsOpen(false);
+  // };
 
-  const handleShowDeleteModal = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    showDeleteModal();
-    setIsOpen(false);
-    hideEditTaskModal();
+  // const handleShowDeleteModal = (e) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   showDeleteModal();
+  //   setIsOpen(false);
+  //   hideEditTaskModal();
 
-    hideModal();
-  };
+  //   hideModal();
+  // };
 
   return (
     <AnimatePresence>
       <motion.div
         className={`delete-edit-modal absolute font-white grid ${
           mode === 'light' ? 'bg-white' : 'bg-dark'
-        }`}
-        style={modalStyle}>
+        }`}>
         <Link onClick={onOpenEdit} className='color-dark-white'>
           Edit <span>{headerText}</span>
         </Link>

@@ -1,39 +1,25 @@
-import { DndContext } from '@dnd-kit/core';
-import React, { useEffect, useState } from 'react';
+import  { useEffect } from 'react';
 import ColumnContainer from './ColumnContainer';
 import Card from './Card';
-import { Link, useParams } from 'react-router-dom';
+import {  useParams, type Params } from 'react-router-dom';
 import { useDarkMode } from '../context/DarkModeContext';
 import { useFetchProjectById, useFetchProjects } from '../apis/projectData';
 import NewColumnButton from './NewColumnButton';
-import CreateColumnModal from './CreateColumnModal';
 import { colorGenerator } from '../utils/colorGenerator';
+import type { ProjectColumn } from '../types/apiTypes';
 
 const Content = () => {
-  const [parent, setParent] = useState(null);
   const { mode } = useDarkMode();
-  const params = useParams();
-  const id = parseInt(params.id);
+  const params: Readonly<Params<string>> = useParams();
+  const id = parseInt(params.id || '1', 10) || 1;
+
 
   const { data: projectData } = useFetchProjects();
-  const { projectById, refetch: refetchProjectById } = useFetchProjectById(id);
+  const { projectById } = useFetchProjectById(id);
 
   useEffect(() => {}, [id, params, projectData]);
 
   console.log('project', projectById);
-
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const taskId = parseInt(active.id);
-    const overId = over.id;
-
-    console.log('Drag ended:', { taskId, overId, over });
-
-    // TODO: Implement your drag and drop logic here
-    // You'll need to create a mutation for updating task status/column
-  };
 
   console.log('==========>', projectById);
 
@@ -41,25 +27,21 @@ const Content = () => {
     <section
       className={`${mode === 'light' ? 'bg-white' : 'bg-darker'} content`}
       style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
-      {projectById?.projectColumn.map((column, index) => (
-        <ColumnContainer
-          key={column.name}
-          heading={column.name}
-          taskCount={column?.tasks.length}
-          statusColor={colorGenerator(index)}
-          id={column.name}>
-          {column.tasks.map((task) => (
-            <div key={`todo-${task.id}`}>
-              <Card
-                id={task.id}
-                title={task.title}
-                {...task}
-                projectColumns={projectById.projectColumn}
-              />
-            </div>
-          ))}
-        </ColumnContainer>
-      ))}
+      {projectById?.projectColumn.map(
+        (column: ProjectColumn, index: number) => (
+          <ColumnContainer
+            key={column.name}
+            heading={column.name}
+            taskCount={column?.tasks.length}
+            statusColor={colorGenerator(index)}>
+            {column.tasks.map((task) => (
+              <div key={`todo-${task.id}`}>
+                <Card {...task} projectColumns={projectById.projectColumn} />
+              </div>
+            ))}
+          </ColumnContainer>
+        )
+      )}
 
       <div>
         <div className='flex item-center gap-x-05'>

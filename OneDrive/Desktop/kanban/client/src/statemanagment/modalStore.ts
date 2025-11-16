@@ -1,6 +1,26 @@
 import { create } from 'zustand';
 
-const useModalStore = create((set) => ({
+
+interface ModalState{
+    createUserModalVisible: boolean,
+    deleteModalVisible: boolean,
+    deleteEditModal: boolean,
+    deleteProjectModal: boolean,
+    editProjectModalVisible: boolean,
+    showDeleteModal:()=>void
+    hideDeleteModal:()=>void
+    showDeleteEditModal:()=>void
+    hideDeleteEditModal:()=>void
+    showDeleteProjectModal:()=>void
+    hideDeleteProjectModal:()=>void
+    showEditProjectModal:()=>void
+    hideEditProjectModal:()=>void
+    showCreateUserModal:()=>void
+    hideCreateUserModal:()=>void
+}
+
+
+const useModalStore = create<ModalState>((set) => ({
     createUserModalVisible:false,
     deleteModalVisible: false,
     deleteEditModal: false,
