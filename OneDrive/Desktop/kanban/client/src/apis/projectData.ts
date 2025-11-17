@@ -7,7 +7,7 @@ import {
     QueryClientProvider,
 } from '@tanstack/react-query'
 import apiService from '../utils/apiService'
-import type { CreateProjectType, Project } from '../types/apiTypes'
+import type { CreateProjectType, EditProjectType, Project } from '../types/apiTypes'
 
 // Create a client
 
@@ -24,7 +24,7 @@ export const useFetchProjects = () => {
 }
 
 
-export const useFetchProjectById = (id:number) => {
+export const useFetchProjectById = (id: number) => {
     const { isPending, data, error } = useQuery({
         queryKey: ['projectById', id],
         queryFn: () => apiService.getById("/projects", id).then(res => res.data),
@@ -44,7 +44,7 @@ export const useCreateProject = () => {
         mutationKey: ['createProject'],
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['allProjects'] })
-            queryClient.setQueryData(['allProjects'], (old:Project[]) => old ? [...old, data] : [data])
+            queryClient.setQueryData(['allProjects'], (old: Project[]) => old ? [...old, data] : [data])
         },
         onError: (error) => {
             console.error('Failed to create project:', error);
@@ -70,10 +70,10 @@ export const useCreateProject = () => {
 
 
 
-export const useUpdateProjectAndColumn = (id:string ) => {
+export const useUpdateProjectAndColumn = (id: string) => {
     const queryClient = useQueryClient();
     const { mutate, isError, isSuccess, reset, error, isPending } = useMutation({
-        mutationFn: (data) => apiService.update(`/projects/${parseInt(id)}`, data).then(res => res.data),
+        mutationFn: (data:EditProjectType) => apiService.update(`/projects/${parseInt(id)}`, data).then(res => res.data),
         mutationKey: ['updateProject'],
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['allProjects'] })
@@ -93,7 +93,7 @@ export const useDeleteProjectMutation = () => {
     const queryClient = useQueryClient();
 
     const { mutate, isError, isSuccess, reset, error, isPending } = useMutation({
-        mutationFn: (id) => apiService.remove("/projects", parseInt(id)).then(res => res.data),
+        mutationFn: (id: string) => apiService.remove("/projects", parseInt(id)).then(res => res.data),
         mutationKey: ['deleteProject'],
         onSuccess: () => {
             console.log("Project successfullly deleted")

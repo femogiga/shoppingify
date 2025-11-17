@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useCreateTask, useDeleteTaskMutation } from '../apis/taskData';
-import { useParams } from 'react-router-dom';
+import React from 'react';
+import { useDeleteTaskMutation } from '../apis/taskData';
 import useTaskStore from '../statemanagment/taskStore';
-import { X } from 'lucide-react';
 import useModalStore from '../statemanagment/modalStore';
 import { useDarkMode } from '../context/DarkModeContext';
 import { AnimatePresence, motion } from 'motion/react';
 
-const DeleteModal = ({ headerText, title, onDelete }) => {
+interface IDeleteModal {
+  headerText: string;
+  title: string;
+  onDelete: () => void;
+}
+const DeleteModal: React.FC<IDeleteModal> = ({ headerText }) => {
   const { hideDeleteModal } = useModalStore();
   const { activeTaskData } = useTaskStore();
   const { deleteMutation } = useDeleteTaskMutation();
   const { mode } = useDarkMode();
 
-  const handleCancel = (e) => {
+  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     hideDeleteModal();
   };
 
-  const handleDeleteTask = (e) => {
+  const handleDeleteTask = (e: React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     deleteMutation(activeTaskData.id, {
       onSuccess: () => {

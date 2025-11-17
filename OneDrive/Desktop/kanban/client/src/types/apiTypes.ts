@@ -61,6 +61,14 @@ export type CreateProjectType = ProjectTitleType & {
 };
 
 
+// type ProjectDetails = Pick<Project, "id" | "title" >;
+// type ColumnDetails = Omit<ProjectColumn, "status" | "project">;
+
+// export type EditProjectType = ProjectDetails & {
+//     projectColumns: ColumnDetails[];
+// }
+
+
 export type CreateTaskType = Pick<Task, "title" | "description" | "status"> &
     Pick<ProjectColumn ,"project_id">
 

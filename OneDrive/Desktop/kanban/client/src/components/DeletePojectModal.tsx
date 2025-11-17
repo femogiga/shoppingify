@@ -1,30 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { useCreateTask, useDeleteTaskMutation } from '../apis/taskData';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import useTaskStore from '../statemanagment/taskStore';
-import { X } from 'lucide-react';
 import useModalStore from '../statemanagment/modalStore';
 import {
   useDeleteProjectMutation,
   useFetchProjectById,
 } from '../apis/projectData';
 import { AnimatePresence, motion } from 'motion/react';
+import { useDarkMode } from '../context/DarkModeContext';
 
-const DeleteProjectModal = ({ mode, headerText, title, onDelete }) => {
-  const { hideDeleteModal, hideDeleteProjectModal, showDeleteProjectModal } =
+interface IDeleteProjectModal {
+  headerText:string;
+  title:string;
+  onDelete : ()=> void;
+}
+
+
+const DeleteProjectModal:React.FC<IDeleteProjectModal> = ({ headerText }) => {
+  const{mode} = useDarkMode()
+  const { hideDeleteModal, hideDeleteProjectModal } =
     useModalStore();
   const { deleteProjectMutation } = useDeleteProjectMutation();
-  const id = useParams().id ;
+  const id = useParams().id;
+  if (!id) {
+    return
+  }
   const navigate = useNavigate()
   console.log(id);
   const { projectById } = useFetchProjectById(parseInt(id));
-  const handleCancel = (e) => {
+  const handleCancel = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     hideDeleteModal();
     hideDeleteProjectModal();
   };
   // console.log({ projectById });
-  const handleDeleteProject = (e) => {
+  const handleDeleteProject = (e:React.FormEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     deleteProjectMutation(id, {
       onSuccess: () => {

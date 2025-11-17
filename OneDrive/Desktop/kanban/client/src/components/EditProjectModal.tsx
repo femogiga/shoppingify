@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  useCreateProject,
   useFetchProjectById,
   useUpdateProjectAndColumn,
 } from '../apis/projectData';
@@ -10,20 +9,27 @@ import useModalStore from '../statemanagment/modalStore';
 import { useDarkMode } from '../context/DarkModeContext';
 import { AnimatePresence, motion } from 'motion/react';
 
+interface Column {
+  project_id: string;
+  name: string;
+  id?:number
+}
+
 const EditProjectModal = () => {
   const id = useParams()?.id;
   const { mode } = useDarkMode();
-  const { projectById } = useFetchProjectById(id);
+  if (!id) {
+    return;
+  }
+  const { projectById } = useFetchProjectById(parseInt(id));
   const activeColumns = projectById?.projectColumn || []; // Add fallback
   const activeTitle = projectById?.title;
   const [title, setTitle] = useState(activeTitle || ''); // Fixed: Use || instead of ??
-  const [columns, setColumns] = useState([]);
-  // const { createProject, isCreating, isSuccess, isError, error } =
-  //   useCreateProject();
-  const { showEditProjectModal, hideEditProjectModal } = useModalStore();
+  const [columns, setColumns] = useState<Column[]>([]);
 
-  const { updateProjectMutation, isUpdating, isError, isSuccess, error } =
-    useUpdateProjectAndColumn(id);
+  const { hideEditProjectModal } = useModalStore();
+
+  const { updateProjectMutation, isUpdating } = useUpdateProjectAndColumn(id);
   useEffect(() => {
     setColumns(activeColumns);
     setTitle(activeTitle || '');
