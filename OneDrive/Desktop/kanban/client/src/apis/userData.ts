@@ -1,5 +1,6 @@
 import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import apiService from "../utils/apiService"
+import type { CreateUserType } from "../types/apiTypes"
 
 
 
@@ -74,7 +75,7 @@ export const useCreateUserMutation = () => {
     const queryClient = useQueryClient();
 
     const { isError, mutate, isSuccess, isPending, error, reset } = useMutation({
-        mutationFn: (data) => apiService.multiPartPost(`/users`, data).then(res => res.data),
+        mutationFn: (data: FormData) => apiService.multiPartPost(`/users`, data).then(res => res.data),
         mutationKey: ['createUser'],
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['allProjects'] })

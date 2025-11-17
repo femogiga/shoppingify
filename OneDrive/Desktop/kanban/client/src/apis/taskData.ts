@@ -1,14 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import apiService from "../utils/apiService"
+import type { CreateTaskType } from "../types/apiTypes"
 
 
 export const useCreateTask = () => {
     const queryClient = useQueryClient()
 
     const { mutate, isSuccess, reset, isPending, isError, } = useMutation({
-        mutationFn: (taskData) => apiService.post('/tasks', taskData).then(res => res.data),
+        mutationFn: (taskData :CreateTaskType) => apiService.post('/tasks', taskData).then(res => res.data),
         mutationKey: ['createTask'],
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['projectById'] })
         },
         onError: (error) => {

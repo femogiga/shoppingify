@@ -1,13 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import useTaskStore from '../statemanagment/taskStore';
-import useModalStore from '../statemanagment/modalStore';
+
 import { useDarkMode } from '../context/DarkModeContext';
 import { AnimatePresence, motion } from 'motion/react';
 
-const DeleteEditModal = ({
-  setIsOpen,
-
+interface IDeleteEditModal {
+  headerText: string;
+  onOpenEdit: () => void;
+  onOpenDelete: () => void;
+}
+const DeleteEditModal: React.FC<IDeleteEditModal> = ({
   headerText,
   onOpenEdit,
   onOpenDelete,
@@ -46,10 +48,10 @@ const DeleteEditModal = ({
         className={`delete-edit-modal absolute font-white grid ${
           mode === 'light' ? 'bg-white' : 'bg-dark'
         }`}>
-        <Link onClick={onOpenEdit} className='color-dark-white'>
+        <Link to='#' onClick={onOpenEdit} className='color-dark-white'>
           Edit <span>{headerText}</span>
         </Link>
-        <Link onClick={onOpenDelete} className='font-red'>
+        <Link to='#' onClick={onOpenDelete} className='font-red'>
           Delete <span>{headerText}</span>
         </Link>
       </motion.div>

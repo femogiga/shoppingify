@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import useModalStore from '../statemanagment/modalStore';
 import { useCreateUserMutation } from '../apis/userData';
+import { useDarkMode } from '../context/DarkModeContext';
 
-const CreateUserModal = ({mode}) => {
+const CreateUserModal = () => {
+  const {mode} = useDarkMode()
   const { hideCreateUserModal } = useModalStore();
   const initialState = {
     firstname: '',
@@ -12,19 +14,20 @@ const CreateUserModal = ({mode}) => {
     repeatpassword: '',
   };
   const [user, setUser] = useState(initialState);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>('');
   const [message, setMessage] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  const { createUserMutation, isPending } = useCreateUserMutation();
+  const { createUserMutation, isCreating } = useCreateUserMutation();
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleFileSelect = (e) => {
-    const file = e.target.files[0];
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    const file = e.target.files?.[0];
     if (!file) return;
 
     // Validate file
@@ -45,7 +48,13 @@ const CreateUserModal = ({mode}) => {
     // Create preview
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreviewUrl(reader.result);
+      if (reader.result && typeof reader.result === 'string') {
+        setPreviewUrl(reader.result);
+      }
+      else {
+        setPreviewUrl(null)
+      }
+
     };
     reader.readAsDataURL(file);
   };
@@ -56,7 +65,7 @@ const CreateUserModal = ({mode}) => {
     setMessage('');
   };
 
-  const handleCreateNewUser = async (e) => {
+  const handleCreateNewUser = async (e:React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     // Validation
@@ -110,7 +119,7 @@ const CreateUserModal = ({mode}) => {
     }
   };
 
-  const handleCancel = (e) => {
+  const handleCancel = (e:React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setUser(initialState);
     setSelectedFile(null);
@@ -125,8 +134,7 @@ const CreateUserModal = ({mode}) => {
     <article
       className={`sub-task-modal ${
         mode === 'light' ? 'bg-white font-black' : 'bg-dark'
-      }`}
-      >
+      }`}>
       <div className='grid gap-y-1 p-y-2 p-x-2'>
         <form>
           <p className='mbe-1 bold'>Add User to Board</p>
@@ -312,20 +320,20 @@ const CreateUserModal = ({mode}) => {
             <button
               type='button'
               onClick={handleCreateNewUser}
-              disabled={uploading || isPending}
+              disabled={uploading || isCreating}
               className='p-y-05 p-x-05'
               style={{
                 width: '46%',
                 borderRadius: '1rem',
-                backgroundColor: uploading || isPending ? '#ccc' : '#077443ff',
+                backgroundColor: uploading || isCreating ? '#ccc' : '#077443ff',
                 border: 'none',
                 outline: 'none',
                 color: '#ffff',
-                cursor: uploading || isPending ? 'not-allowed' : 'pointer',
+                cursor: uploading || isCreating ? 'not-allowed' : 'pointer',
               }}>
               {uploading
                 ? 'Creating...'
-                : isPending
+                : isCreating
                 ? 'Creating...'
                 : 'Create User'}
             </button>

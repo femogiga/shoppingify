@@ -8,13 +8,16 @@ const CreateColumnModal = () => {
   const [name, setName] = useState('');
   const { mode } = useDarkMode();
   const { id } = useParams();
-  const { createColumnMutation, reset, isPending, isError, isSuccess } =
+  if (id === undefined) {
+    return null
+  }
+  const { createColumnMutation,  isPending} =
     useCreateColumn(id);
   const { hideColumnModal } = useColumnStore();
 
-  const handleCreateColumn = (e) => {
+  const handleCreateColumn = (e:React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const data = { project_id: id, name };
+    const data = { project_id: parseInt(id), name };
     createColumnMutation(data, {
       onSuccess: () => {
         console.log('column successfully created');
@@ -47,7 +50,9 @@ const CreateColumnModal = () => {
 
             <button
               className='p-x-1 p-y-05 rounded-sm'
-              onClick={handleCreateColumn}>
+              onClick={handleCreateColumn}
+              disabled = {isPending }
+            >
               Submit
             </button>
           </div>

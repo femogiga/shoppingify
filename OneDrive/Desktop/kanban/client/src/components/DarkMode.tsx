@@ -1,5 +1,4 @@
 import { Moon, Sun } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
 import { useDarkMode } from '../context/DarkModeContext';
 
 const DarkMode = () => {
@@ -27,7 +26,7 @@ const DarkMode = () => {
         id='light'
         className='hidden'
         onChange={handleModeChange}
-        
+
       />
       <div
         className='toggle'

@@ -10,14 +10,17 @@ const CreateTaskModal = () => {
   const { id } = useParams();
   const [subTasks, setSubTasks] = useState<string[]>(['']);
   const { mode } = useDarkMode();
+  if (id === undefined) {
+    return
+  }
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
     project_id: parseInt(id),
     status: 'TODO',
   });
-  const { createTask, isCreating, isError, isSuccess } = useCreateTask();
-  const { showCreateTaskModal, hideCreateTaskModal } = useTaskStore();
+  const { createTask, isCreating } = useCreateTask();
+  const {  hideCreateTaskModal } = useTaskStore();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     if (!taskData.title.trim() || !taskData.description.trim()) {
@@ -30,21 +33,18 @@ const CreateTaskModal = () => {
     e.preventDefault();
     const dataToSend = { ...taskData, subTasks: subTasksData };
     createTask(dataToSend, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         console.log('Task successfully created');
         setTaskData({ ...taskData, title: '', description: '' });
         setTimeout(hideCreateTaskModal, 2000);
       },
-      isError: (error) => {
+      onError: (error) => {
         console.log('Error creating project:', error);
       },
     });
   };
 
-  const createTaskModalVisibility = (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    showCreateTaskModal();
-  };
+
   useEffect(() => {
     // console.log(taskData);
   }, [taskData]);
@@ -55,11 +55,11 @@ const CreateTaskModal = () => {
     setSubTasks(updatedSubtasks);
   };
 
-  const handNewSubTaskInput = (e) => {
+  const handNewSubTaskInput = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setSubTasks([...subTasks, '']);
   };
-  const handleCancelInput = (index) => {
+  const handleCancelInput = (index : number) => {
     const filtered = subTasks.filter((_, i) => i !== index);
     setSubTasks(filtered);
   };
@@ -155,6 +155,7 @@ const CreateTaskModal = () => {
               </div>
               <button
                 type='submit'
+                disabled={isCreating}
                 className={`p-x-1 p-y-05 rounded-sm font-white  ${
                   mode === 'light' ? 'bg-light-blue' : 'bg-darker font-white'
                 }`}>

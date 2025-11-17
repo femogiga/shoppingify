@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { useCreateProject } from '../apis/projectData';
 import { X } from 'lucide-react';
 import { useDarkMode } from '../context/DarkModeContext';
-import { AnimatePresence, motion } from 'motion/react';
+import { motion } from 'motion/react';
 
 const CreateProjectModal = () => {
   const [title, setTitle] = useState('');
-  const{mode} = useDarkMode()
+  const { mode } = useDarkMode();
   const [columns, setColumns] = useState<string[]>(['']);
-  const { createProject, isCreating, isSuccess, isError, error } =
-    useCreateProject();
+  const { createProject, isCreating } = useCreateProject();
 
   const handleColumnChange = (index: number, value: string) => {
     const updatedColumns = [...columns];
